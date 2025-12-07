@@ -29,5 +29,10 @@
     "exclude": [
       "data/index/"
     ]
+  },
+  "probitas": {
+    "includes": [
+      "probitas/**/*.probitas.ts"
+    ]
   }
 }
