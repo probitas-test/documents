@@ -87,6 +87,7 @@ export function Layout(
         <link href={CDN.fonts} rel="stylesheet" />
         <link rel="stylesheet" href={CDN.tablerIcons} />
         <link rel="stylesheet" href="/static/style.css" />
+        <link rel="icon" href="/static/favicon.ico" />
         <link
           id="hljs-theme"
           rel="stylesheet"
