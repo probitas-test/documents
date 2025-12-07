@@ -43,35 +43,35 @@ Guidelines for writing and maintaining documentation content.
 
 #### Core Packages (from `probitas/`)
 
-| Package | Description |
-| --- | --- |
-| `@probitas/probitas` | Primary user-facing API |
-| `@probitas/builder` | Type-safe scenario definition |
-| `@probitas/runner` | Scenario execution engine |
-| `@probitas/reporter` | Output formatters |
-| `@probitas/scenario` | Scenario loading/filtering |
-| `@probitas/discover` | File discovery |
-| `@probitas/cli` | Command-line interface |
+| Package              | Description                   |
+| -------------------- | ----------------------------- |
+| `@probitas/probitas` | Primary user-facing API       |
+| `@probitas/builder`  | Type-safe scenario definition |
+| `@probitas/runner`   | Scenario execution engine     |
+| `@probitas/reporter` | Output formatters             |
+| `@probitas/scenario` | Scenario loading/filtering    |
+| `@probitas/discover` | File discovery                |
+| `@probitas/cli`      | Command-line interface        |
 
 #### Client Packages (from `probitas-client/`)
 
-| Package | Description |
-| --- | --- |
-| `@probitas/client` | Client base and factory |
-| `@probitas/client-http` | HTTP/HTTPS client |
-| `@probitas/client-grpc` | gRPC client |
-| `@probitas/client-graphql` | GraphQL client |
-| `@probitas/client-connectrpc` | Connect/gRPC/gRPC-Web client |
-| `@probitas/client-redis` | Redis client |
-| `@probitas/client-mongodb` | MongoDB client |
-| `@probitas/client-deno-kv` | Deno KV client |
-| `@probitas/client-rabbitmq` | RabbitMQ (AMQP) client |
-| `@probitas/client-sqs` | AWS SQS client |
-| `@probitas/client-sql` | SQL client base |
-| `@probitas/client-sql-postgres` | PostgreSQL client |
-| `@probitas/client-sql-mysql` | MySQL client |
-| `@probitas/client-sql-sqlite` | SQLite client |
-| `@probitas/client-sql-duckdb` | DuckDB client |
+| Package                         | Description                  |
+| ------------------------------- | ---------------------------- |
+| `@probitas/client`              | Client base and factory      |
+| `@probitas/client-http`         | HTTP/HTTPS client            |
+| `@probitas/client-grpc`         | gRPC client                  |
+| `@probitas/client-graphql`      | GraphQL client               |
+| `@probitas/client-connectrpc`   | Connect/gRPC/gRPC-Web client |
+| `@probitas/client-redis`        | Redis client                 |
+| `@probitas/client-mongodb`      | MongoDB client               |
+| `@probitas/client-deno-kv`      | Deno KV client               |
+| `@probitas/client-rabbitmq`     | RabbitMQ (AMQP) client       |
+| `@probitas/client-sqs`          | AWS SQS client               |
+| `@probitas/client-sql`          | SQL client base              |
+| `@probitas/client-sql-postgres` | PostgreSQL client            |
+| `@probitas/client-sql-mysql`    | MySQL client                 |
+| `@probitas/client-sql-sqlite`   | SQLite client                |
+| `@probitas/client-sql-duckdb`   | DuckDB client                |
 
 ## Writing Style
 
@@ -80,7 +80,7 @@ Guidelines for writing and maintaining documentation content.
 Every concept should have a runnable code example:
 
 ```typescript
-import { scenario, client, expect } from "probitas";
+import { client, expect, scenario } from "probitas";
 
 export default scenario("Example")
   .resource("http", client.http.createHttpClient())

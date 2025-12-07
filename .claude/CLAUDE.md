@@ -15,7 +15,8 @@ Repository: `probitas/documents`
 ```bash
 deno task dev      # Start dev server with watch mode
 deno task start    # Start production server
-deno check main.ts # Type check
+deno task check    # Type check all .ts files
+deno task verify   # Run fmt, lint, and check
 ```
 
 ## Deployment
@@ -24,12 +25,12 @@ This project uses the **new Deno Deploy** (not Deploy Classic).
 
 ### Key Differences from Deploy Classic
 
-| Feature | New Deno Deploy | Deploy Classic |
-| --- | --- | --- |
-| URL format | `{app}.{org}.deno.net` | `{project}.deno.dev` |
-| Console | `console.deno.com` | `dash.deno.com` |
-| Build | Integrated CI/CD or external | External only (`deployctl`) |
-| CLI | `deno` CLI built-in | Separate `deployctl` |
+| Feature    | New Deno Deploy              | Deploy Classic              |
+| ---------- | ---------------------------- | --------------------------- |
+| URL format | `{app}.{org}.deno.net`       | `{project}.deno.dev`        |
+| Console    | `console.deno.com`           | `dash.deno.com`             |
+| Build      | Integrated CI/CD or external | External only (`deployctl`) |
+| CLI        | `deno` CLI built-in          | Separate `deployctl`        |
 
 ### New Deno Deploy Features
 
@@ -82,7 +83,7 @@ Examples: `git restore`, `git reset`, `git checkout` (with uncommitted changes),
 BEFORE reporting task completion, run and ensure zero errors/warnings:
 
 ```bash
-deno check main.ts
+deno task verify
 ```
 
 ### 4. English for Version-Controlled Content
