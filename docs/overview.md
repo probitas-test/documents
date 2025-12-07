@@ -42,6 +42,21 @@ deno install -grAf -n probitas jsr:@probitas/cli
 - `-f` Force overwrite existing
 - `-n probitas` Command name
 
+### Using Nix
+
+Use the flake to run or install the CLI without Deno-level globals:
+
+```bash
+# Run without installing
+nix run github:jsr-probitas/probitas
+
+# Install into your profile
+nix profile install github:jsr-probitas/probitas#probitas
+```
+
+The flake packages a wrapper that runs the bundled CLI with the repository
+import map and lockfile.
+
 ## Quick Start
 
 ```typescript
