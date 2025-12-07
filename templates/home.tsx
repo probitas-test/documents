@@ -174,14 +174,16 @@ function AiFriendlySection() {
         <div class="ai-friendly-card">
           <div class="ai-friendly-card-header">
             <i class="ti ti-file-stack" />
-            <span>/llms-full.txt</span>
+            <span>Root Markdown</span>
           </div>
           <p>
-            Complete documentation in a single file. Perfect for loading entire
-            docs into an LLM's context window.
+            Access <code>/</code> with <code>curl</code> or an
+            <code>Accept: text/markdown</code>{" "}
+            header to get an LLM-friendly Markdown overview. Add{" "}
+            <code>?human=1</code> for the full HTML page.
           </p>
-          <a href="/llms-full.txt" class="ai-friendly-link">
-            View llms-full.txt <i class="ti ti-arrow-right" />
+          <a href="/?human=1" class="ai-friendly-link">
+            View human homepage <i class="ti ti-arrow-right" />
           </a>
         </div>
 

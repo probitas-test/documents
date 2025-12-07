@@ -90,14 +90,6 @@ export default scenario("Probitas docs site health", {
       .contentType(/text\/markdown/)
       .textContains("## Documentation")
       .textContains("## API Reference");
-
-    const fullRes = await resources.http.get("/llms-full.txt");
-    expect(fullRes)
-      .ok()
-      .status(200)
-      .contentType(/text\/markdown/)
-      .textContains("# Probitas - Complete Documentation")
-      .textContains("## Additional Resources");
   })
   .step("renders API index and package JSON", async ({ resources }) => {
     const indexRes = await resources.http.get("/api", {

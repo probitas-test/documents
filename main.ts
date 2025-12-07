@@ -3,7 +3,7 @@ import { serveStatic } from "hono/deno";
 import { docPages } from "./data/docs.ts";
 import type { PackageDoc } from "./lib/api-docs.ts";
 import { generateApiMarkdown } from "./lib/api-markdown.ts";
-import { generateLlmsFullTxt, generateLlmsTxt } from "./lib/llms.ts";
+import { generateLlmsTxt } from "./lib/llms.ts";
 import { ApiIndexPage, PackagePage } from "./templates/api/ApiPage.tsx";
 import { MarkdownDocFromFile } from "./templates/docs/MarkdownDoc.tsx";
 import { HomePage } from "./templates/home.tsx";
@@ -42,12 +42,6 @@ app.get("/", async (c) => {
 // LLM-friendly endpoints (llms.txt standard)
 app.get("/llms.txt", async (c) => {
   return c.text(await generateLlmsTxt(), 200, {
-    "Content-Type": "text/markdown; charset=utf-8",
-  });
-});
-
-app.get("/llms-full.txt", async (c) => {
-  return c.text(await generateLlmsFullTxt(), 200, {
     "Content-Type": "text/markdown; charset=utf-8",
   });
 });
