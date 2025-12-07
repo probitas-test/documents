@@ -75,7 +75,7 @@ function Hero({ sampleCodes }: { sampleCodes: SampleCode[] }) {
       <div class="hero-badge">
         <span>●</span> TypeScript Native
       </div>
-      <h1>Probitas</h1>
+      <h1 class="hero-title">Probitas</h1>
       <p class="tagline">
         Scenario-based testing framework designed for API, database, and message
         queue testing
@@ -141,7 +141,10 @@ export async function HomePage() {
   const sampleCodes = await loadSampleCodes();
 
   return (
-    <Layout title="Probitas - Scenario-based Testing Framework">
+    <Layout
+      title="Probitas - Scenario-based Testing Framework"
+      showLogo={false}
+    >
       <Hero sampleCodes={sampleCodes} />
       <FeaturesSection />
       <ClientsSection />

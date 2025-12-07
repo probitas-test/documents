@@ -7,6 +7,10 @@
   --accent-dark: #4f46e5;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Dark theme (default) */
 :root,
 [data-theme="dark"] {
@@ -19,6 +23,7 @@
   --border: #334155;
   --hero-gradient: rgba(99, 102, 241, 0.15);
   --link-color: var(--accent-light);
+  --header-bg: rgba(15, 23, 42, 0.1);
 }
 
 /* Light theme */
@@ -32,6 +37,7 @@
   --border: #e2e8f0;
   --hero-gradient: rgba(99, 102, 241, 0.08);
   --link-color: var(--accent-dark);
+  --header-bg: rgba(248, 250, 252, 0.1);
 }
 
 /* ========================================
@@ -71,6 +77,20 @@ header {
   align-items: center;
 }
 
+/* Sticky header for documentation pages */
+.doc-layout ~ footer,
+.doc-layout {
+  /* Enable sticky header when doc-layout is present */
+}
+
+body:has(.doc-layout) header {
+  position: sticky;
+  padding: 1rem 2rem;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--bg-primary);
+}
+
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
@@ -90,6 +110,37 @@ header {
   justify-content: center;
   font-size: 1rem;
   color: #fff;
+}
+
+.logo-icon-svg {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+  margin-right: 1.5rem;
+}
+
+.header-nav a {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.header-nav a:hover {
+  color: var(--text-heading);
 }
 
 .header-right {
@@ -203,6 +254,22 @@ h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.hero-title {
+  position: relative;
+}
+
+.hero-title::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: url("/static/probitas.png") center / contain no-repeat;
+  opacity: 0.15;
 }
 
 .tagline {
@@ -473,12 +540,347 @@ a.client-tag:hover {
 }
 
 /* ========================================
-   Footer
+   Documentation Layout
    ======================================== */
-footer {
-  text-align: center;
-  padding: 3rem 1.5rem;
+.doc-layout {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  gap: 3rem;
+}
+
+.doc-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.doc-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 800px;
+}
+
+/* Table of Contents */
+.toc {
+  position: fixed;
+  width: 200px;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox: hide by default */
+  --fade-top: transparent;
+  --fade-bottom: transparent;
+  mask-image: linear-gradient(
+    to bottom,
+    var(--fade-top),
+    black 5rem,
+    black calc(100% - 5rem),
+    var(--fade-bottom)
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    var(--fade-top),
+    black 5rem,
+    black calc(100% - 5rem),
+    var(--fade-bottom)
+  );
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-top: -3rem;
+}
+
+.toc.scroll-top {
+  --fade-top: black;
+}
+
+.toc.scroll-bottom {
+  --fade-bottom: black;
+}
+
+.toc::-webkit-scrollbar {
+  width: 3px;
+}
+
+.toc::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toc::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 1.5px;
+}
+
+/* Show scrollbar on hover */
+.toc:hover {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent; /* Firefox */
+}
+
+.toc:hover::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.toc:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.toc h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc li {
+  margin: 0;
+}
+
+.toc a {
+  display: block;
+  padding: 0.375rem 0;
   font-size: 0.875rem;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.toc a:hover {
+  color: var(--accent-light);
+}
+
+/* Documentation Article */
+.doc-article {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+}
+
+.doc-article h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1rem;
+  background: none;
+  -webkit-text-fill-color: var(--text-heading);
+  color: var(--text-heading);
+}
+
+.doc-article .lead {
+  font-size: 1.125rem;
+  color: var(--text-muted);
+  margin: 0 0 2rem;
+  line-height: 1.7;
+}
+
+.doc-section {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
   border-top: 1px solid var(--border);
+}
+
+.doc-section:first-of-type {
+  margin-top: 2rem;
+  padding-top: 0;
+  border-top: none;
+}
+
+.doc-article h2 {
+  font-size: 1.5rem;
+  color: var(--text-heading);
+  margin: 0 0 1rem;
+  scroll-margin-top: 5rem;
+}
+
+.doc-article h3 {
+  font-size: 1.125rem;
+  color: var(--text-heading);
+  margin: 1.5rem 0 0.75rem;
+  scroll-margin-top: 5rem;
+}
+
+.doc-article p {
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.doc-article ul {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+}
+
+.doc-article li {
+  margin: 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.doc-article code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.875em;
+  background: var(--bg-primary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  color: var(--accent-light);
+}
+
+.doc-article pre {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.doc-article pre code {
+  display: block;
+  padding: 1.25rem;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* Parameter table */
+.param-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.param-table th,
+.param-table td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.param-table th {
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.param-table td:first-child,
+.param-table td:nth-child(2) {
+  white-space: nowrap;
+}
+
+.param-table td:last-child {
+  color: var(--text-muted);
+}
+
+.param-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Feature list in docs */
+.feature-list {
+  list-style: none;
+  padding: 0;
+}
+
+.feature-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.feature-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* Next steps list */
+.next-steps-list {
+  list-style: none;
+  padding: 0;
+}
+
+.next-steps-list li {
+  margin: 0.75rem 0;
+  padding: 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+.next-steps-list li:hover {
+  border-color: var(--accent);
+}
+
+.next-steps-list a {
+  font-weight: 600;
+}
+
+/* Table styles */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.doc-article table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.doc-article th,
+.doc-article td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.doc-article th {
+  background: var(--bg-primary);
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.doc-article td {
+  color: var(--text-primary);
+}
+
+.doc-article td code {
+  font-size: 0.8rem;
+  color: var(--accent-light);
+}
+
+.doc-article tbody tr:hover {
+  background: var(--bg-primary);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .doc-layout {
+    flex-direction: column;
+    padding-top: 1.5rem;
+  }
+
+  .doc-sidebar {
+    width: 100%;
+  }
+
+  .toc {
+    display: none;
+  }
+
+  .doc-article {
+    padding: 1.5rem;
+  }
+
+  .doc-article h1 {
+    font-size: 2rem;
+  }
 }

@@ -34,6 +34,10 @@ function initCarousel() {
   const slides = document.querySelectorAll('.carousel-slide');
   const prevBtn = document.querySelector('.carousel-prev');
   const nextBtn = document.querySelector('.carousel-next');
+
+  // Skip if carousel elements not found
+  if (!tabs.length || !slides.length || !prevBtn || !nextBtn) return;
+
   const totalSlides = slides.length;
 
   function goToSlide(index) {
@@ -67,9 +71,26 @@ function initCarousel() {
   });
 }
 
+function initTocFade() {
+  const toc = document.querySelector('.toc');
+  if (!toc) return;
+
+  function updateFade() {
+    const atTop = toc.scrollTop <= 10;
+    const atBottom = toc.scrollTop + toc.clientHeight >= toc.scrollHeight - 10;
+
+    toc.classList.toggle('scroll-top', atTop);
+    toc.classList.toggle('scroll-bottom', atBottom);
+  }
+
+  updateFade();
+  toc.addEventListener('scroll', updateFade, { passive: true });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   hljs.highlightAll();
   updateHljsTheme(document.documentElement.getAttribute('data-theme') || 'dark');
   initCarousel();
+  initTocFade();
 });
 `;

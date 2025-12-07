@@ -2,6 +2,7 @@
  * Base HTML layout component
  */
 import type { Child } from "hono/jsx";
+import { docPages } from "../data/docs.ts";
 import { themeInitScript } from "./scripts.ts";
 
 const GITHUB_URL = "https://github.com/jsr-probitas/probitas";
@@ -17,9 +18,11 @@ const CDN = {
 interface LayoutProps {
   title: string;
   children: Child;
+  /** Show logo in header (default: true) */
+  showLogo?: boolean;
 }
 
-export function Layout({ title, children }: LayoutProps) {
+export function Layout({ title, children, showLogo = true }: LayoutProps) {
   return (
     <html lang="en">
       <head>
@@ -45,21 +48,28 @@ export function Layout({ title, children }: LayoutProps) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
-        <Header />
+        <Header showLogo={showLogo} />
         {children}
-        <Footer />
       </body>
     </html>
   );
 }
 
-function Header() {
+function Header({ showLogo }: { showLogo: boolean }) {
   return (
     <header>
-      <a href="/" class="logo">
-        <span class="logo-icon">P</span>
-        <span>Probitas</span>
-      </a>
+      {showLogo
+        ? (
+          <a href="/" class="logo">
+            <img src="/static/probitas.png" alt="Probitas" class="logo-img" />
+            <span>Probitas</span>
+          </a>
+        )
+        : <div />}
+      <nav class="header-nav">
+        {docPages.map((doc) => <a key={doc.path} href={doc.path}>{doc.label}
+        </a>)}
+      </nav>
       <div class="header-right">
         <button
           type="button"
@@ -81,13 +91,5 @@ function Header() {
         </a>
       </div>
     </header>
-  );
-}
-
-function Footer() {
-  return (
-    <footer>
-      <p>Probitas - Scenario-based testing framework</p>
-    </footer>
   );
 }
