@@ -432,22 +432,15 @@ export function Examples({ examples }: ExamplesProps) {
       <h5>Examples</h5>
       {examples.map((example, i) => {
         const trimmed = example.trim();
-        // Check if already a markdown code block
-        if (trimmed.startsWith("```")) {
-          const html = parseMarkdown(trimmed);
-          return (
-            <div
-              key={i}
-              class="example-markdown"
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          );
-        }
-        // Plain code without markdown fence - wrap in code block
+        // Always parse as markdown - examples may contain description text
+        // followed by code blocks (e.g., "Basic usage\n```ts\n...")
+        const html = parseMarkdown(trimmed);
         return (
-          <pre key={i} class="example-code">
-            <code class="language-typescript">{trimmed}</code>
-          </pre>
+          <div
+            key={i}
+            class="example-markdown"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
         );
       })}
     </div>
