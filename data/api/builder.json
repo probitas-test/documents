@@ -1,7 +1,7 @@
 {
   "name": "builder",
   "specifier": "@probitas/builder",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "moduleDoc": "Builder module - Public API\n\nExports the scenario builder factory function and types for building scenario definitions.\n",
   "exports": [
     {
@@ -1192,5 +1192,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T10:55:41.752Z"
+  "generatedAt": "2025-12-07T13:20:44.912Z"
 }

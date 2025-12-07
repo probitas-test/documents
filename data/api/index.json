@@ -3,7 +3,7 @@
     {
       "name": "builder",
       "specifier": "@probitas/builder",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "exportCount": 10,
       "counts": {
         "classes": 0,
@@ -31,7 +31,7 @@
     {
       "name": "client-connectrpc",
       "specifier": "@probitas/client-connectrpc",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "exportCount": 31,
       "counts": {
         "classes": 8,
@@ -73,7 +73,7 @@
     {
       "name": "client-grpc",
       "specifier": "@probitas/client-grpc",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "exportCount": 26,
       "counts": {
         "classes": 7,
@@ -101,7 +101,7 @@
     {
       "name": "client-mongodb",
       "specifier": "@probitas/client-mongodb",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "exportCount": 36,
       "counts": {
         "classes": 7,
@@ -129,7 +129,7 @@
     {
       "name": "client-redis",
       "specifier": "@probitas/client-redis",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "exportCount": 25,
       "counts": {
         "classes": 4,
@@ -227,7 +227,7 @@
     {
       "name": "discover",
       "specifier": "@probitas/discover",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "exportCount": 2,
       "counts": {
         "classes": 0,
@@ -241,7 +241,7 @@
     {
       "name": "logger",
       "specifier": "@probitas/logger",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "exportCount": 5,
       "counts": {
         "classes": 0,
@@ -255,7 +255,7 @@
     {
       "name": "probitas",
       "specifier": "@probitas/probitas",
-      "version": "0.3.1",
+      "version": "0.3.3",
       "exportCount": 79,
       "counts": {
         "classes": 7,
@@ -269,7 +269,7 @@
     {
       "name": "reporter",
       "specifier": "@probitas/reporter",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "exportCount": 18,
       "counts": {
         "classes": 5,
@@ -283,7 +283,7 @@
     {
       "name": "runner",
       "specifier": "@probitas/runner",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "exportCount": 30,
       "counts": {
         "classes": 5,
@@ -297,7 +297,7 @@
     {
       "name": "scenario",
       "specifier": "@probitas/scenario",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "exportCount": 25,
       "counts": {
         "classes": 0,
@@ -309,5 +309,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T10:55:44.605Z"
+  "generatedAt": "2025-12-07T13:20:47.738Z"
 }

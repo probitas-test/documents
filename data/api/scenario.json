@@ -1,7 +1,7 @@
 {
   "name": "scenario",
   "specifier": "@probitas/scenario",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "moduleDoc": "Scenario module - Core scenario definition types and utilities\n\nThis module exports the fundamental types for scenario definitions,\nalong with loader and selector utilities.\n",
   "exports": [
     {
@@ -3343,5 +3343,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T10:55:44.593Z"
+  "generatedAt": "2025-12-07T13:20:47.727Z"
 }
