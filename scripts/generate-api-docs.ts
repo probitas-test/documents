@@ -212,7 +212,27 @@ async function main(): Promise<void> {
   // Save index
   await saveIndex(packageInfos);
 
+  // Format generated files
+  console.log("\nFormatting generated files...");
+  await formatGeneratedFiles();
+
   console.log("\nDone!");
+}
+
+/**
+ * Run deno fmt on generated API docs
+ */
+async function formatGeneratedFiles(): Promise<void> {
+  const command = new Deno.Command("deno", {
+    args: ["fmt", API_DIR.pathname],
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+
+  const { code } = await command.output();
+  if (code !== 0) {
+    console.error("Warning: deno fmt failed");
+  }
 }
 
 // Run
