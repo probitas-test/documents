@@ -2292,6 +2292,117 @@ body:has(.api-layout) .global-header {
 }
 
 /* ========================================
+   Small Mobile Responsive (480px)
+   ======================================== */
+@media (max-width: 480px) {
+  /* Header - compact layout */
+  .global-header {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  body:has(.doc-layout) .global-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .header-nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .header-nav a {
+    font-size: 0.8rem;
+  }
+
+  .header-right {
+    gap: 0.5rem;
+  }
+
+  .theme-toggle,
+  .github-link {
+    width: 36px;
+    height: 36px;
+  }
+
+  .theme-toggle i,
+  .github-link i {
+    font-size: 18px;
+  }
+
+  /* Hero section */
+  .hero {
+    padding: 6rem 1rem 3rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .cta-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  /* Carousel */
+  .carousel-nav {
+    display: none;
+  }
+
+  .code-preview {
+    border-radius: 12px;
+  }
+
+  pre code {
+    font-size: 0.75rem;
+    padding: 1rem;
+  }
+
+  /* Features */
+  .features {
+    padding: 2rem 1rem;
+  }
+
+  .feature {
+    padding: 1.25rem;
+  }
+
+  /* API/Doc articles */
+  .api-article,
+  .doc-article {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .api-article h1,
+  .doc-article h1 {
+    font-size: 1.25rem;
+  }
+
+  .package-header {
+    margin: -1rem -1rem 1rem -1rem;
+    padding: 1rem;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .api-signature pre code {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+}
+
+/* ========================================
    Overloads (collapsible)
    ======================================== */
 .overload-count {
