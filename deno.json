@@ -4,7 +4,7 @@
     "jsxImportSource": "hono/jsx"
   },
   "tasks": {
-    "dev": "deno run --allow-net --allow-read --watch main.ts",
+    "dev": "deno run --allow-net --allow-read --allow-env --watch main.ts",
     "start": "deno run --allow-net --allow-read main.ts",
     "build": "deno run --allow-net --allow-read --allow-write --allow-env scripts/build.ts",
     "preview": "deno run --allow-net --allow-read jsr:@std/http/file-server ./dist",
