@@ -2391,9 +2391,41 @@ body:has(.api-layout) .global-header {
   }
 
   .package-header {
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
     margin: -1rem -1rem 1rem -1rem;
     padding: 1rem;
+    padding-top: 2.5rem;
     border-radius: 12px 12px 0 0;
+  }
+
+  .package-header h1 {
+    font-size: 1.1rem;
+    word-break: break-all;
+  }
+
+  .package-header .api-source-links {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .package-header-meta {
+    position: static;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .package-version {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .jsr-link {
+    font-size: 0.75rem;
   }
 
   .api-signature pre code {
