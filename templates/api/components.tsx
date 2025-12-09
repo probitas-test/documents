@@ -17,6 +17,7 @@ import {
   formatType,
   formatTypeParams,
   getDescription,
+  getDescriptionSummary,
   getExamples,
   getParamDocs,
   getReturnDoc,
@@ -34,6 +35,9 @@ import {
   formatTypeAliasSignature,
 } from "../../lib/signature-formatters.ts";
 import {
+  extractClassRefs,
+  extractFunctionRefs,
+  extractInterfaceRefs,
   extractTypeParamRefs,
   extractTypeRefs,
 } from "../../lib/type-references.ts";
@@ -353,6 +357,58 @@ export function TypeParamsDisplay({ typeParams }: TypeParamsDisplayProps) {
 }
 
 // ============================================================================
+// Member Summary Table (for interface/type overview)
+// ============================================================================
+
+interface MemberSummaryItem {
+  name: string;
+  description?: string;
+  isMethod?: boolean;
+}
+
+interface MemberSummaryTableProps {
+  /** Parent type name (used for generating anchor IDs) */
+  parentName: string;
+  items: MemberSummaryItem[];
+}
+
+/**
+ * Summary table for properties/methods overview
+ * Each name links to the detailed section below
+ */
+function MemberSummaryTable({ parentName, items }: MemberSummaryTableProps) {
+  if (items.length === 0) return null;
+
+  return (
+    <div class="api-member-summary">
+      <table class="member-summary-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.name}>
+              <td>
+                <a href={`#${parentName}-${item.name}`} class="member-link">
+                  <code>{item.name}</code>
+                  {item.isMethod && <span class="method-indicator">()</span>}
+                </a>
+              </td>
+              <td class="member-summary-desc">
+                {item.description || <span class="no-desc">—</span>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ============================================================================
 // Parameter Display
 // ============================================================================
 
@@ -493,6 +549,20 @@ export function FunctionDoc(
 
   const hasOverloads = overloads && overloads.length > 1;
 
+  // Collect type refs from all overloads (or just this function if no overloads)
+  const typeRefs = new Set<string>();
+  if (hasOverloads) {
+    for (const overloadNode of overloads) {
+      for (const ref of extractFunctionRefs(overloadNode.functionDef)) {
+        typeRefs.add(ref);
+      }
+    }
+  } else {
+    for (const ref of extractFunctionRefs(def)) {
+      typeRefs.add(ref);
+    }
+  }
+
   return (
     <div class="api-item api-function" id={node.name}>
       <div class="api-item-header">
@@ -546,6 +616,13 @@ export function FunctionDoc(
 
       <Examples
         examples={examples}
+        localTypes={localTypes}
+        typeToPackage={typeToPackage}
+        currentPackage={currentPackage}
+      />
+
+      <RelatedTypes
+        typeRefs={typeRefs}
         localTypes={localTypes}
         typeToPackage={typeToPackage}
         currentPackage={currentPackage}
@@ -663,6 +740,25 @@ export function ClassDoc(
     p.accessibility !== "private" && !p.name.startsWith("_")
   );
 
+  // Collect all type refs from the class definition
+  const typeRefs = extractClassRefs(def);
+
+  // Build summary items for the overview table
+  const summaryItems: MemberSummaryItem[] = [
+    ...publicProps.map((prop) => ({
+      name: prop.name,
+      description: getDescriptionSummary(prop),
+      isMethod: false,
+    })),
+    ...publicMethods.map((method) => ({
+      name: method.name,
+      description: getDescriptionSummary(method),
+      isMethod: true,
+    })),
+  ];
+
+  const hasMembers = publicProps.length > 0 || publicMethods.length > 0;
+
   return (
     <div class="api-item api-class" id={node.name}>
       <div class="api-item-header">
@@ -681,6 +777,51 @@ export function ClassDoc(
         </pre>
       </div>
 
+      {/* Hierarchy info (extends/implements) */}
+      {(def.extends || (def.implements && def.implements.length > 0)) && (
+        <div class="api-hierarchy">
+          {def.extends && (
+            <div class="hierarchy-item">
+              <span class="hierarchy-label">Extends</span>
+              <span class="hierarchy-value">
+                <TypeDisplay
+                  type={{
+                    kind: "typeRef",
+                    repr: def.extends,
+                    typeRef: {
+                      typeName: def.extends,
+                      typeParams: def.superTypeParams,
+                    },
+                  }}
+                  localTypes={localTypes}
+                  typeToPackage={typeToPackage}
+                  currentPackage={currentPackage}
+                />
+              </span>
+            </div>
+          )}
+          {def.implements && def.implements.length > 0 && (
+            <div class="hierarchy-item">
+              <span class="hierarchy-label">Implements</span>
+              <span class="hierarchy-value">
+                {def.implements.map((impl, i) => (
+                  <>
+                    {i > 0 && ", "}
+                    <TypeDisplay
+                      key={i}
+                      type={impl}
+                      localTypes={localTypes}
+                      typeToPackage={typeToPackage}
+                      currentPackage={currentPackage}
+                    />
+                  </>
+                ))}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       <Description
         text={description}
         localTypes={localTypes}
@@ -693,6 +834,11 @@ export function ClassDoc(
         typeToPackage={typeToPackage}
         currentPackage={currentPackage}
       />
+
+      {/* Summary table */}
+      {hasMembers && (
+        <MemberSummaryTable parentName={node.name} items={summaryItems} />
+      )}
 
       {/* Constructor */}
       {def.constructors.length > 0 && (
@@ -730,7 +876,11 @@ export function ClassDoc(
             {publicProps.map((prop) => {
               const desc = getDescription(prop);
               return (
-                <li key={prop.name} class="property-item">
+                <li
+                  key={prop.name}
+                  id={`${node.name}-${prop.name}`}
+                  class="property-item"
+                >
                   <div class="property-header">
                     {prop.isStatic && (
                       <span class="member-badge member-static">static</span>
@@ -777,6 +927,7 @@ export function ClassDoc(
           {publicMethods.map((method) => (
             <MethodDisplay
               key={method.name}
+              parentName={node.name}
               method={method}
               localTypes={localTypes}
               typeToPackage={typeToPackage}
@@ -785,16 +936,26 @@ export function ClassDoc(
           ))}
         </div>
       )}
+
+      <RelatedTypes
+        typeRefs={typeRefs}
+        localTypes={localTypes}
+        typeToPackage={typeToPackage}
+        currentPackage={currentPackage}
+      />
     </div>
   );
 }
 
 interface MethodDisplayProps extends TypeLinkContext {
+  /** Parent type name (used for generating anchor IDs) */
+  parentName?: string;
   method: MethodDef;
 }
 
 function MethodDisplay(
-  { method, localTypes, typeToPackage, currentPackage }: MethodDisplayProps,
+  { parentName, method, localTypes, typeToPackage, currentPackage }:
+    MethodDisplayProps,
 ) {
   const paramDocs = method.jsDoc?.tags
     ?.filter((t) => t.kind === "param")
@@ -803,8 +964,10 @@ function MethodDisplay(
       return acc;
     }, new Map<string, string>());
 
+  const methodId = parentName ? `${parentName}-${method.name}` : undefined;
+
   return (
-    <div class="method-item">
+    <div class="method-item" id={methodId}>
       <div class="method-signature api-signature">
         <pre>
           <code class="language-typescript">
@@ -852,6 +1015,25 @@ export function InterfaceDoc(
   const description = getDescription(node);
   const examples = getExamples(node);
 
+  // Collect all type refs from the interface definition
+  const typeRefs = extractInterfaceRefs(def);
+
+  // Build summary items for the overview table
+  const summaryItems: MemberSummaryItem[] = [
+    ...def.properties.map((prop) => ({
+      name: prop.name,
+      description: getDescriptionSummary(prop),
+      isMethod: false,
+    })),
+    ...def.methods.map((method) => ({
+      name: method.name,
+      description: getDescriptionSummary(method),
+      isMethod: true,
+    })),
+  ];
+
+  const hasMembers = def.properties.length > 0 || def.methods.length > 0;
+
   return (
     <div class="api-item api-interface" id={node.name}>
       <div class="api-item-header">
@@ -883,6 +1065,11 @@ export function InterfaceDoc(
         currentPackage={currentPackage}
       />
 
+      {/* Summary table */}
+      {hasMembers && (
+        <MemberSummaryTable parentName={node.name} items={summaryItems} />
+      )}
+
       {/* Properties */}
       {def.properties.length > 0 && (
         <div class="api-properties">
@@ -891,7 +1078,11 @@ export function InterfaceDoc(
             {def.properties.map((prop) => {
               const desc = getDescription(prop);
               return (
-                <li key={prop.name} class="property-item">
+                <li
+                  key={prop.name}
+                  id={`${node.name}-${prop.name}`}
+                  class="property-item"
+                >
                   <div class="property-header">
                     {prop.readonly && (
                       <span class="member-badge member-readonly">readonly</span>
@@ -935,6 +1126,7 @@ export function InterfaceDoc(
           {def.methods.map((method) => (
             <MethodDisplay
               key={method.name}
+              parentName={node.name}
               method={method}
               localTypes={localTypes}
               typeToPackage={typeToPackage}
@@ -943,6 +1135,13 @@ export function InterfaceDoc(
           ))}
         </div>
       )}
+
+      <RelatedTypes
+        typeRefs={typeRefs}
+        localTypes={localTypes}
+        typeToPackage={typeToPackage}
+        currentPackage={currentPackage}
+      />
     </div>
   );
 }
@@ -970,6 +1169,27 @@ export function TypeAliasDoc(
     typeRefs.add(ref);
   }
 
+  // Check if this is a type literal (struct-like type)
+  const typeLiteral = def.tsType?.typeLiteral;
+  const hasMembers = typeLiteral &&
+    (typeLiteral.properties.length > 0 || typeLiteral.methods.length > 0);
+
+  // Build summary items for struct-like types
+  const summaryItems: MemberSummaryItem[] = typeLiteral
+    ? [
+      ...typeLiteral.properties.map((prop) => ({
+        name: prop.name,
+        description: getDescriptionSummary(prop),
+        isMethod: false,
+      })),
+      ...typeLiteral.methods.map((method) => ({
+        name: method.name,
+        description: getDescriptionSummary(method),
+        isMethod: true,
+      })),
+    ]
+    : [];
+
   return (
     <div class="api-item api-type-alias" id={node.name}>
       <div class="api-item-header">
@@ -994,6 +1214,77 @@ export function TypeAliasDoc(
         typeToPackage={typeToPackage}
         currentPackage={currentPackage}
       />
+
+      {/* Summary table for struct-like types */}
+      {hasMembers && (
+        <MemberSummaryTable parentName={node.name} items={summaryItems} />
+      )}
+
+      {/* Properties for struct-like types */}
+      {typeLiteral && typeLiteral.properties.length > 0 && (
+        <div class="api-properties">
+          <h5>Properties</h5>
+          <ul class="property-list">
+            {typeLiteral.properties.map((prop) => {
+              const desc = getDescription(prop);
+              return (
+                <li
+                  key={prop.name}
+                  id={`${node.name}-${prop.name}`}
+                  class="property-item"
+                >
+                  <div class="property-header">
+                    {prop.readonly && (
+                      <span class="member-badge member-readonly">readonly</span>
+                    )}
+                    <code class="property-name">
+                      {prop.name}
+                      {prop.optional && <span class="param-optional">?</span>}
+                    </code>
+                    <span class="property-type">
+                      <TypeDisplay
+                        type={prop.tsType}
+                        localTypes={localTypes}
+                        typeToPackage={typeToPackage}
+                        currentPackage={currentPackage}
+                      />
+                    </span>
+                  </div>
+                  {desc && (
+                    <div
+                      class="property-desc api-markdown"
+                      dangerouslySetInnerHTML={{
+                        __html: parseApiMarkdown(desc, {
+                          localTypes,
+                          typeToPackage,
+                          currentPackage,
+                        }),
+                      }}
+                    />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {/* Methods for struct-like types */}
+      {typeLiteral && typeLiteral.methods.length > 0 && (
+        <div class="api-methods">
+          <h5>Methods</h5>
+          {typeLiteral.methods.map((method) => (
+            <MethodDisplay
+              key={method.name}
+              parentName={node.name}
+              method={method}
+              localTypes={localTypes}
+              typeToPackage={typeToPackage}
+              currentPackage={currentPackage}
+            />
+          ))}
+        </div>
+      )}
 
       <RelatedTypes
         typeRefs={typeRefs}

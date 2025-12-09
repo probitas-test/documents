@@ -47,8 +47,22 @@ export function formatMethodSignature(method: MethodDef): string {
 export function formatClassSignature(name: string, def: ClassDef): string {
   const abstractPrefix = def.isAbstract ? "abstract " : "";
   const typeParams = formatTypeParams(def.typeParams);
-  const extendsClause = def.extends ? ` extends ${def.extends}` : "";
-  return `${abstractPrefix}class ${name}${typeParams}${extendsClause}`;
+
+  // Extends clause with super type params
+  let extendsClause = "";
+  if (def.extends) {
+    extendsClause = ` extends ${def.extends}`;
+    if (def.superTypeParams && def.superTypeParams.length > 0) {
+      extendsClause += `<${def.superTypeParams.map(formatType).join(", ")}>`;
+    }
+  }
+
+  // Implements clause
+  const implementsClause = def.implements && def.implements.length > 0
+    ? ` implements ${def.implements.map(formatType).join(", ")}`
+    : "";
+
+  return `${abstractPrefix}class ${name}${typeParams}${extendsClause}${implementsClause}`;
 }
 
 /**

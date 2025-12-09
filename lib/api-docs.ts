@@ -471,6 +471,26 @@ export function getDescription(node: { jsDoc?: JsDoc }): string | undefined {
 }
 
 /**
+ * Get just the first sentence or line of the description (for summaries)
+ */
+export function getDescriptionSummary(
+  node: { jsDoc?: JsDoc },
+): string | undefined {
+  const doc = node.jsDoc?.doc;
+  if (!doc) return undefined;
+
+  // Try to get first sentence (ending with period followed by space/newline)
+  const sentenceMatch = doc.match(/^([^.]+\.)\s/);
+  if (sentenceMatch) {
+    return sentenceMatch[1];
+  }
+
+  // Otherwise get first line
+  const firstLine = doc.split("\n")[0].trim();
+  return firstLine || undefined;
+}
+
+/**
  * Get JSDoc tags by kind
  */
 export function getTagsByKind(
