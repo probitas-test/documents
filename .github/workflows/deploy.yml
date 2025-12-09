@@ -1,8 +1,5 @@
 name: Build and Deploy
 
-env:
-  DENO_VERSION: 2.x
-
 on:
   push:
     branches:
@@ -27,20 +24,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: ${{ env.DENO_VERSION }}
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
 
       # Lint and type check
-      - run: deno fmt --check
-      - run: deno lint
-      - run: deno task check
+      - run: nix develop --command deno fmt --check
+      - run: nix develop --command deno lint
+      - run: nix develop --command deno task check
 
       # Run tests
-      - run: deno task test
+      - run: nix develop --command deno task test
 
       # Build static site (BASE_PATH for GitHub Pages subdirectory)
-      - run: deno task build
+      - run: nix develop --command deno task build
         env:
           BASE_PATH: /documents
 
