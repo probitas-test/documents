@@ -463,7 +463,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 72,
         "col": 0,
         "byteIndex": 2579
@@ -530,7 +530,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 75,
         "col": 0,
         "byteIndex": 2681
@@ -588,7 +588,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 78,
         "col": 0,
         "byteIndex": 2795
@@ -646,7 +646,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 81,
         "col": 0,
         "byteIndex": 2903
@@ -716,7 +716,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 84,
         "col": 0,
         "byteIndex": 3017
@@ -774,7 +774,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 87,
         "col": 0,
         "byteIndex": 3122
@@ -832,7 +832,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 90,
         "col": 0,
         "byteIndex": 3225
@@ -890,7 +890,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 93,
         "col": 0,
         "byteIndex": 3328
@@ -948,7 +948,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 96,
         "col": 0,
         "byteIndex": 3437
@@ -1006,7 +1006,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 99,
         "col": 0,
         "byteIndex": 3536
@@ -1043,7 +1043,7 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.1.1/expect.ts",
+        "filename": "https://jsr.io/@probitas/expect/0.1.2/expect.ts",
         "line": 100,
         "col": 0,
         "byteIndex": 3597
@@ -12656,5 +12656,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-09T22:08:00.293Z"
+  "generatedAt": "2025-12-09T22:09:51.944Z"
 }
