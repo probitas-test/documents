@@ -1,14 +1,14 @@
 {
   "name": "client-deno-kv",
   "specifier": "@probitas/client-deno-kv",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "moduleDoc": "Deno KV client for [Probitas](https://github.com/jsr-probitas/probitas) scenario testing framework.\n\nThis package provides a Deno KV client with fluent assertion APIs, designed for\nintegration testing of applications using Deno KV storage.\n\n## Features\n\n- **Key-Value Operations**: get, set, delete with structured keys\n- **Listing**: Iterate over keys by prefix, start, end\n- **Atomic Transactions**: Atomic operations with version checking\n- **Fluent Assertions**: `expectDenoKvResult()` for testing KV operations\n- **Type Safety**: Generic type parameters for stored values\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-deno-kv\n```\n\n## Quick Start\n\n```ts\nimport {\n  createDenoKvClient,\n  expectDenoKvResult,\n} from \"@probitas/client-deno-kv\";\n\nconst kv = await createDenoKvClient();\n\n// Set a value\nconst setResult = await kv.set([\"users\", \"1\"], { name: \"Alice\", age: 30 });\nexpectDenoKvResult(setResult).ok().hasVersionstamp();\n\n// Get a value with type\nconst getResult = await kv.get<{ name: string; age: number }>([\"users\", \"1\"]);\nexpectDenoKvResult(getResult).ok().hasContent().dataContains({ name: \"Alice\" });\n\n// List entries by prefix\nconst listResult = await kv.list<{ name: string }>({ prefix: [\"users\"] });\nexpectDenoKvResult(listResult).ok().countAtLeast(1);\n\nawait kv.close();\n```\n\n## Atomic Operations\n\n```ts\n// Atomic transaction with version check\nconst atomic = kv.atomic();\natomic.check({ key: [\"counter\"], versionstamp: null }); // Only if key doesn't exist\natomic.set([\"counter\"], 1n);\nconst atomicResult = await atomic.commit();\nexpectDenoKvResult(atomicResult).ok();\n\n// Atomic increment\nconst current = await kv.get<bigint>([\"counter\"]);\nconst atomic2 = kv.atomic();\natomic2.check({ key: [\"counter\"], versionstamp: current.versionstamp });\natomic2.set([\"counter\"], (current.value ?? 0n) + 1n);\nawait atomic2.commit();\n```\n\n## Using with `using` Statement\n\n```ts\nawait using kv = await createDenoKvClient();\n\nawait kv.set([\"test\"], \"value\");\nconst result = await kv.get([\"test\"]);\nexpectDenoKvResult(result).ok();\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client`](https://jsr.io/@probitas/client) | Core utilities and types |\n| [`@probitas/client-redis`](https://jsr.io/@probitas/client-redis) | Redis client |\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas-client)\n- [Probitas Framework](https://github.com/jsr-probitas/probitas)\n- [Deno KV](https://deno.land/manual/runtime/kv)\n",
   "exports": [
     {
       "name": "DenoKvClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 106
@@ -38,7 +38,7 @@
               "doc": "Path to the KV database file.\nIf not specified, uses in-memory storage or Deno Deploy's KV."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
               "line": 11,
               "col": 2,
               "byteIndex": 282
@@ -64,7 +64,7 @@
       "name": "DenoKvSetOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
         "line": 17,
         "col": 0,
         "byteIndex": 348
@@ -94,7 +94,7 @@
               "doc": "Time-to-live in milliseconds.\nThe entry will automatically expire after this duration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
               "line": 22,
               "col": 2,
               "byteIndex": 517
@@ -120,7 +120,7 @@
       "name": "DenoKvListOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
         "line": 28,
         "col": 0,
         "byteIndex": 588
@@ -150,7 +150,7 @@
               "doc": "Maximum number of entries to return."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
               "line": 32,
               "col": 2,
               "byteIndex": 703
@@ -172,7 +172,7 @@
               "doc": "Cursor for pagination."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 771
@@ -194,7 +194,7 @@
               "doc": "Whether to iterate in reverse order."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/types.ts",
               "line": 42,
               "col": 2,
               "byteIndex": 854
@@ -220,7 +220,7 @@
       "name": "DenoKvError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 108
@@ -278,7 +278,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 9,
               "col": 2,
               "byteIndex": 208
@@ -300,7 +300,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 7,
               "col": 2,
               "byteIndex": 157
@@ -319,7 +319,7 @@
       "name": "DenoKvAtomicCheckError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
         "line": 17,
         "col": 0,
         "byteIndex": 404
@@ -386,7 +386,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 26,
               "col": 2,
               "byteIndex": 666
@@ -408,7 +408,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 18,
               "col": 2,
               "byteIndex": 464
@@ -431,7 +431,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 19,
               "col": 2,
               "byteIndex": 517
@@ -467,7 +467,7 @@
             "isStatic": false,
             "name": "failedChecks",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 24,
               "col": 2,
               "byteIndex": 617
@@ -486,7 +486,7 @@
       "name": "DenoKvQuotaError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
         "line": 39,
         "col": 0,
         "byteIndex": 921
@@ -529,7 +529,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 1068
@@ -551,7 +551,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 40,
               "col": 2,
               "byteIndex": 975
@@ -574,7 +574,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/errors.ts",
               "line": 41,
               "col": 2,
               "byteIndex": 1022
@@ -593,7 +593,7 @@
       "name": "DenoKvGetResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 4,
         "col": 0,
         "byteIndex": 38
@@ -611,7 +611,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 5,
               "col": 2,
               "byteIndex": 78
@@ -633,7 +633,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 6,
               "col": 2,
               "byteIndex": 110
@@ -652,7 +652,7 @@
           {
             "name": "key",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 7,
               "col": 2,
               "byteIndex": 134
@@ -674,7 +674,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 8,
               "col": 2,
               "byteIndex": 162
@@ -707,7 +707,7 @@
           {
             "name": "versionstamp",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 9,
               "col": 2,
               "byteIndex": 190
@@ -737,7 +737,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 10,
               "col": 2,
               "byteIndex": 230
@@ -767,7 +767,7 @@
       "name": "DenoKvSetResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 16,
         "col": 0,
         "byteIndex": 298
@@ -785,7 +785,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 335
@@ -807,7 +807,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 18,
               "col": 2,
               "byteIndex": 367
@@ -826,7 +826,7 @@
           {
             "name": "versionstamp",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 19,
               "col": 2,
               "byteIndex": 391
@@ -845,7 +845,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 20,
               "col": 2,
               "byteIndex": 424
@@ -871,7 +871,7 @@
       "name": "DenoKvDeleteResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 26,
         "col": 0,
         "byteIndex": 495
@@ -889,7 +889,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 27,
               "col": 2,
               "byteIndex": 535
@@ -911,7 +911,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 28,
               "col": 2,
               "byteIndex": 570
@@ -930,7 +930,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 29,
               "col": 2,
               "byteIndex": 594
@@ -956,7 +956,7 @@
       "name": "DenoKvEntry",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 35,
         "col": 0,
         "byteIndex": 667
@@ -974,7 +974,7 @@
           {
             "name": "key",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 36,
               "col": 2,
               "byteIndex": 703
@@ -996,7 +996,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 731
@@ -1018,7 +1018,7 @@
           {
             "name": "versionstamp",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 752
@@ -1048,7 +1048,7 @@
       "name": "DenoKvEntries",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 44,
         "col": 0,
         "byteIndex": 843
@@ -1096,7 +1096,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 48,
               "col": 2,
               "byteIndex": 984
@@ -1140,7 +1140,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 53,
               "col": 2,
               "byteIndex": 1086
@@ -1173,7 +1173,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 58,
               "col": 2,
               "byteIndex": 1185
@@ -1217,7 +1217,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 63,
               "col": 2,
               "byteIndex": 1285
@@ -1258,7 +1258,7 @@
       "name": "createDenoKvEntries",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 99,
         "col": 0,
         "byteIndex": 2010
@@ -1328,7 +1328,7 @@
       "name": "DenoKvListResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 110,
         "col": 0,
         "byteIndex": 2232
@@ -1346,7 +1346,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 111,
               "col": 2,
               "byteIndex": 2273
@@ -1368,7 +1368,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 112,
               "col": 2,
               "byteIndex": 2306
@@ -1387,7 +1387,7 @@
           {
             "name": "entries",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 113,
               "col": 2,
               "byteIndex": 2330
@@ -1418,7 +1418,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 114,
               "col": 2,
               "byteIndex": 2368
@@ -1448,7 +1448,7 @@
       "name": "DenoKvAtomicResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 120,
         "col": 0,
         "byteIndex": 2440
@@ -1466,7 +1466,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 121,
               "col": 2,
               "byteIndex": 2480
@@ -1488,7 +1488,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 122,
               "col": 2,
               "byteIndex": 2515
@@ -1507,7 +1507,7 @@
           {
             "name": "versionstamp",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 123,
               "col": 2,
               "byteIndex": 2539
@@ -1526,7 +1526,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
               "line": 124,
               "col": 2,
               "byteIndex": 2573
@@ -1552,7 +1552,7 @@
       "name": "DenoKvResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/results.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/results.ts",
         "line": 131,
         "col": 0,
         "byteIndex": 2726
@@ -1643,7 +1643,7 @@
       "name": "DenoKvAtomicBuilder",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
         "line": 25,
         "col": 0,
         "byteIndex": 660
@@ -1664,7 +1664,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 30,
               "col": 2,
               "byteIndex": 819
@@ -1707,7 +1707,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 35,
               "col": 2,
               "byteIndex": 912
@@ -1753,7 +1753,7 @@
                       {
                         "name": "expireIn",
                         "location": {
-                          "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+                          "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
                           "line": 35,
                           "col": 48,
                           "byteIndex": 958
@@ -1794,7 +1794,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 40,
               "col": 2,
               "byteIndex": 1038
@@ -1829,7 +1829,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1136
@@ -1874,7 +1874,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 50,
               "col": 2,
               "byteIndex": 1252
@@ -1919,7 +1919,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1368
@@ -1964,7 +1964,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 60,
               "col": 2,
               "byteIndex": 1456
@@ -2001,7 +2001,7 @@
       "name": "DenoKvAtomicBuilderImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
         "line": 66,
         "col": 0,
         "byteIndex": 1548
@@ -2034,7 +2034,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 71,
               "col": 2,
               "byteIndex": 1739
@@ -2086,7 +2086,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 75,
               "col": 2,
               "byteIndex": 1805
@@ -2141,7 +2141,7 @@
                         {
                           "name": "expireIn",
                           "location": {
-                            "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+                            "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
                             "line": 87,
                             "col": 48,
                             "byteIndex": 2155
@@ -2178,7 +2178,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 87,
               "col": 2,
               "byteIndex": 2109
@@ -2218,7 +2218,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 101,
               "col": 2,
               "byteIndex": 2569
@@ -2268,7 +2268,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 111,
               "col": 2,
               "byteIndex": 2851
@@ -2318,7 +2318,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 122,
               "col": 2,
               "byteIndex": 3165
@@ -2368,7 +2368,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 133,
               "col": 2,
               "byteIndex": 3479
@@ -2406,7 +2406,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/atomic.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/atomic.ts",
               "line": 144,
               "col": 2,
               "byteIndex": 3793
@@ -2432,7 +2432,7 @@
       "name": "DenoKvClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
         "line": 40,
         "col": 0,
         "byteIndex": 1071
@@ -2462,7 +2462,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 49,
               "col": 2,
               "byteIndex": 1252
@@ -2535,7 +2535,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1380
@@ -2704,7 +2704,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 62,
               "col": 2,
               "byteIndex": 1594
@@ -2781,7 +2781,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 71,
               "col": 2,
               "byteIndex": 1734
@@ -2841,7 +2841,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 76,
               "col": 2,
               "byteIndex": 1859
@@ -2914,7 +2914,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 84,
               "col": 2,
               "byteIndex": 2027
@@ -2938,7 +2938,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 89,
               "col": 2,
               "byteIndex": 2103
@@ -2969,7 +2969,7 @@
               "doc": "Client configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
               "line": 44,
               "col": 2,
               "byteIndex": 1168
@@ -2998,7 +2998,7 @@
       "name": "createDenoKvClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/client.ts",
         "line": 441,
         "col": 0,
         "byteIndex": 11615
@@ -3086,7 +3086,7 @@
       "name": "DenoKvGetResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
         "line": 15,
         "col": 0,
         "byteIndex": 285
@@ -3107,7 +3107,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 377
@@ -3128,7 +3128,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 20,
               "col": 2,
               "byteIndex": 439
@@ -3149,7 +3149,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 23,
               "col": 2,
               "byteIndex": 513
@@ -3170,7 +3170,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 26,
               "col": 2,
               "byteIndex": 594
@@ -3191,7 +3191,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 29,
               "col": 2,
               "byteIndex": 660
@@ -3226,7 +3226,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 32,
               "col": 2,
               "byteIndex": 744
@@ -3270,7 +3270,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 35,
               "col": 2,
               "byteIndex": 838
@@ -3325,7 +3325,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 928
@@ -3346,7 +3346,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 41,
               "col": 2,
               "byteIndex": 1014
@@ -3386,7 +3386,7 @@
       "name": "DenoKvListResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
         "line": 47,
         "col": 0,
         "byteIndex": 1108
@@ -3407,7 +3407,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 49,
               "col": 2,
               "byteIndex": 1201
@@ -3428,7 +3428,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1263
@@ -3449,7 +3449,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1324
@@ -3470,7 +3470,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 58,
               "col": 2,
               "byteIndex": 1396
@@ -3491,7 +3491,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 61,
               "col": 2,
               "byteIndex": 1468
@@ -3523,7 +3523,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1551
@@ -3555,7 +3555,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 67,
               "col": 2,
               "byteIndex": 1635
@@ -3587,7 +3587,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 70,
               "col": 2,
               "byteIndex": 1739
@@ -3607,7 +3607,7 @@
                       {
                         "name": "key",
                         "location": {
-                          "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+                          "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
                           "line": 70,
                           "col": 26,
                           "byteIndex": 1763
@@ -3628,7 +3628,7 @@
                       {
                         "name": "value",
                         "location": {
-                          "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+                          "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
                           "line": 70,
                           "col": 44,
                           "byteIndex": 1781
@@ -3677,7 +3677,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 73,
               "col": 2,
               "byteIndex": 1867
@@ -3741,7 +3741,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 76,
               "col": 2,
               "byteIndex": 1994
@@ -3781,7 +3781,7 @@
       "name": "DenoKvSetResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
         "line": 82,
         "col": 0,
         "byteIndex": 2087
@@ -3802,7 +3802,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 84,
               "col": 2,
               "byteIndex": 2176
@@ -3823,7 +3823,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 87,
               "col": 2,
               "byteIndex": 2238
@@ -3844,7 +3844,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 90,
               "col": 2,
               "byteIndex": 2297
@@ -3865,7 +3865,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 2383
@@ -3901,7 +3901,7 @@
       "name": "DenoKvDeleteResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
         "line": 99,
         "col": 0,
         "byteIndex": 2479
@@ -3922,7 +3922,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 101,
               "col": 2,
               "byteIndex": 2571
@@ -3943,7 +3943,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 104,
               "col": 2,
               "byteIndex": 2633
@@ -3964,7 +3964,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 107,
               "col": 2,
               "byteIndex": 2709
@@ -4000,7 +4000,7 @@
       "name": "DenoKvAtomicResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
         "line": 113,
         "col": 0,
         "byteIndex": 2805
@@ -4021,7 +4021,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 115,
               "col": 2,
               "byteIndex": 2897
@@ -4042,7 +4042,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 118,
               "col": 2,
               "byteIndex": 2959
@@ -4063,7 +4063,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 121,
               "col": 2,
               "byteIndex": 3062
@@ -4084,7 +4084,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
               "line": 124,
               "col": 2,
               "byteIndex": 3148
@@ -4120,7 +4120,7 @@
       "name": "DenoKvExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
         "line": 452,
         "col": 0,
         "byteIndex": 10445
@@ -4343,7 +4343,7 @@
       "name": "expectDenoKvResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-deno-kv/0.1.1/expect.ts",
         "line": 490,
         "col": 0,
         "byteIndex": 12070
@@ -4417,5 +4417,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:28.122Z"
+  "generatedAt": "2025-12-09T00:26:33.548Z"
 }

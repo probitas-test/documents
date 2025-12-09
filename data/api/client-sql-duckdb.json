@@ -1,14 +1,14 @@
 {
   "name": "client-sql-duckdb",
   "specifier": "@probitas/client-sql-duckdb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "moduleDoc": "DuckDB client for [Probitas](https://github.com/jsr-probitas/probitas) scenario testing framework.\n\nThis package provides a DuckDB client designed for integration testing,\nwith analytical query capabilities and Parquet/CSV file support.\n\n## Features\n\n- **Query Execution**: Parameterized queries with type-safe results\n- **Transactions**: Full transaction support\n- **File Formats**: Native support for Parquet, CSV, and JSON files\n- **In-Memory Databases**: Perfect for isolated test scenarios\n- **Analytical Queries**: Optimized for OLAP workloads\n- **Fluent Assertions**: `expectSqlQueryResult()` for testing query results\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-sql-duckdb\n```\n\n## Quick Start\n\n```ts\nimport { createDuckDbClient, expectSqlQueryResult } from \"@probitas/client-sql-duckdb\";\n\n// In-memory database for testing\nconst client = await createDuckDbClient({\n  path: \":memory:\",\n});\n\n// Query from Parquet files\nconst result = await client.query<{ id: number; name: string }>(\n  \"SELECT id, name FROM read_parquet('data/*.parquet') WHERE active = ?\",\n  [true]\n);\n\nexpectSqlQueryResult(result)\n  .hasRowCount(3)\n  .rowsContain({ name: \"Alice\" });\n\n// Analytical queries\nconst stats = await client.query(`\n  SELECT\n    date_trunc('month', created_at) as month,\n    COUNT(*) as count,\n    AVG(amount) as avg_amount\n  FROM transactions\n  GROUP BY 1\n  ORDER BY 1\n`);\n\nawait client.close();\n```\n\n## Transactions\n\n```ts\nawait client.transaction(async (tx) => {\n  await tx.query(\"INSERT INTO accounts (id, balance) VALUES (?, ?)\", [1, 100]);\n  await tx.query(\"INSERT INTO accounts (id, balance) VALUES (?, ?)\", [2, 200]);\n  // Automatically committed if no error, rolled back on exception\n});\n```\n\n## Using with `using` Statement\n\n```ts\nawait using client = await createDuckDbClient({ path: \":memory:\" });\n\nconst result = await client.query(\"SELECT 42 as answer\");\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client-sql`](https://jsr.io/@probitas/client-sql) | Common SQL types and utilities |\n| [`@probitas/client-sql-postgres`](https://jsr.io/@probitas/client-sql-postgres) | PostgreSQL client |\n| [`@probitas/client-sql-mysql`](https://jsr.io/@probitas/client-sql-mysql) | MySQL client |\n| [`@probitas/client-sql-sqlite`](https://jsr.io/@probitas/client-sql-sqlite) | SQLite client |\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas-client)\n- [Probitas Framework](https://github.com/jsr-probitas/probitas)\n- [DuckDB](https://duckdb.org/)\n",
   "exports": [
     {
       "name": "DuckDbClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
         "line": 40,
         "col": 0,
         "byteIndex": 1054
@@ -50,7 +50,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 53,
               "col": 2,
               "byteIndex": 1413
@@ -152,7 +152,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1714
@@ -256,7 +256,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 75,
               "col": 2,
               "byteIndex": 2040
@@ -373,7 +373,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 86,
               "col": 2,
               "byteIndex": 2373
@@ -456,7 +456,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 96,
               "col": 2,
               "byteIndex": 2643
@@ -532,7 +532,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 101,
               "col": 2,
               "byteIndex": 2771
@@ -563,7 +563,7 @@
               "doc": "The client configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 42,
               "col": 2,
               "byteIndex": 1147
@@ -588,7 +588,7 @@
               "doc": "The SQL dialect identifier."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1224
@@ -617,7 +617,7 @@
       "name": "createDuckDbClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/client.ts",
         "line": 161,
         "col": 0,
         "byteIndex": 4380
@@ -705,7 +705,7 @@
       "name": "DuckDbTransactionOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
         "line": 12,
         "col": 0,
         "byteIndex": 289
@@ -738,7 +738,7 @@
       "name": "DuckDbTransactionImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
         "line": 16,
         "col": 0,
         "byteIndex": 435
@@ -768,7 +768,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
               "line": 20,
               "col": 2,
               "byteIndex": 558
@@ -840,7 +840,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
               "line": 27,
               "col": 2,
               "byteIndex": 676
@@ -935,7 +935,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 1193
@@ -1032,7 +1032,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
               "line": 134,
               "col": 2,
               "byteIndex": 4312
@@ -1067,7 +1067,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
               "line": 142,
               "col": 2,
               "byteIndex": 4516
@@ -1102,7 +1102,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/transaction.ts",
               "line": 155,
               "col": 2,
               "byteIndex": 4810
@@ -1128,7 +1128,7 @@
       "name": "DuckDbClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/types.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 118
@@ -1158,7 +1158,7 @@
               "doc": "Database file path.\nUse `:memory:` or omit for an in-memory database."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/types.ts",
               "line": 11,
               "col": 2,
               "byteIndex": 272
@@ -1186,7 +1186,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/types.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 373
@@ -1212,7 +1212,7 @@
       "name": "DuckDbErrorKind",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
         "line": 11,
         "col": 0,
         "byteIndex": 163
@@ -1268,7 +1268,7 @@
       "name": "DuckDbErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
         "line": 16,
         "col": 0,
         "byteIndex": 282
@@ -1298,7 +1298,7 @@
               "doc": "DuckDB error type if available."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 18,
               "col": 2,
               "byteIndex": 387
@@ -1324,7 +1324,7 @@
       "name": "DuckDbError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
         "line": 25,
         "col": 0,
         "byteIndex": 528
@@ -1367,7 +1367,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 29,
               "col": 2,
               "byteIndex": 656
@@ -1389,7 +1389,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 26,
               "col": 2,
               "byteIndex": 574
@@ -1408,7 +1408,7 @@
             "isStatic": false,
             "name": "errorType",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 27,
               "col": 2,
               "byteIndex": 624
@@ -1427,7 +1427,7 @@
       "name": "IoError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
         "line": 41,
         "col": 0,
         "byteIndex": 907
@@ -1470,7 +1470,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1030
@@ -1492,7 +1492,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 42,
               "col": 2,
               "byteIndex": 952
@@ -1514,7 +1514,7 @@
             "isStatic": false,
             "name": "duckdbKind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 990
@@ -1533,7 +1533,7 @@
       "name": "CatalogError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
         "line": 53,
         "col": 0,
         "byteIndex": 1195
@@ -1576,7 +1576,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 57,
               "col": 2,
               "byteIndex": 1333
@@ -1598,7 +1598,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1245
@@ -1620,7 +1620,7 @@
             "isStatic": false,
             "name": "duckdbKind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1288
@@ -1639,7 +1639,7 @@
       "name": "convertDuckDbError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-duckdb/0.1.1/errors.ts",
         "line": 67,
         "col": 0,
         "byteIndex": 1566
@@ -4461,5 +4461,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:29.076Z"
+  "generatedAt": "2025-12-09T00:26:34.507Z"
 }

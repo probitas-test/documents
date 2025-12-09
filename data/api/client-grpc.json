@@ -1,7 +1,7 @@
 {
   "name": "client-grpc",
   "specifier": "@probitas/client-grpc",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "moduleDoc": "gRPC client for [Probitas](https://github.com/jsr-probitas/probitas) scenario testing framework.\n\nThis package provides a gRPC client with Server Reflection support, designed for\nintegration testing of gRPC services. It is a thin wrapper around\n[`@probitas/client-connectrpc`](https://jsr.io/@probitas/client-connectrpc) with\n`protocol: \"grpc\"` pre-configured.\n\n## Features\n\n- **Native gRPC**: Uses gRPC protocol (HTTP/2 with binary protobuf)\n- **Server Reflection**: Auto-discover services and methods at runtime\n- **Fluent Assertions**: Chain assertions like `.ok()`, `.dataContains()`, `.code()`\n- **TLS Support**: Configure secure connections with custom certificates\n- **Duration Tracking**: Built-in timing for performance assertions\n- **Error Handling**: Test error responses without throwing exceptions\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-grpc\n```\n\n## Quick Start\n\n```ts\nimport { createGrpcClient, expectGrpcResponse } from \"@probitas/client-grpc\";\n\n// Create client (uses reflection by default)\nconst client = createGrpcClient({\n  url: \"http://localhost:50051\",\n});\n\n// Call a method with fluent assertions\nconst response = await client.call(\n  \"echo.EchoService\",\n  \"echo\",\n  { message: \"Hello!\" }\n);\n\nexpectGrpcResponse(response)\n  .ok()\n  .dataContains({ message: \"Hello!\" })\n  .durationLessThan(1000);\n\nawait client.close();\n```\n\n## Service Discovery\n\n```ts\n// Discover available services\nconst services = await client.reflection.listServices();\nconsole.log(\"Services:\", services);\n\n// Get method information\nconst info = await client.reflection.getServiceInfo(\"echo.EchoService\");\nconsole.log(\"Methods:\", info.methods);\n```\n\n## Using with `using` Statement\n\n```ts\nawait using client = createGrpcClient({ url: \"http://localhost:50051\" });\n\nconst res = await client.call(\"echo.EchoService\", \"echo\", { message: \"test\" });\nexpectGrpcResponse(res).ok();\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client`](https://jsr.io/@probitas/client) | Core utilities and types |\n| [`@probitas/client-connectrpc`](https://jsr.io/@probitas/client-connectrpc) | ConnectRPC client (supports Connect, gRPC, gRPC-Web) |\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas-client)\n- [Probitas Framework](https://github.com/jsr-probitas/probitas)\n- [gRPC](https://grpc.io/)\n",
   "exports": [
     {
@@ -4144,7 +4144,7 @@
       "name": "GrpcClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-grpc/0.2.0/mod.ts",
+        "filename": "https://jsr.io/@probitas/client-grpc/0.2.1/mod.ts",
         "line": 133,
         "col": 0,
         "byteIndex": 4188
@@ -4194,7 +4194,7 @@
       "name": "createGrpcClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-grpc/0.2.0/mod.ts",
+        "filename": "https://jsr.io/@probitas/client-grpc/0.2.1/mod.ts",
         "line": 204,
         "col": 0,
         "byteIndex": 6010
@@ -4262,5 +4262,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:28.394Z"
+  "generatedAt": "2025-12-09T00:26:33.813Z"
 }

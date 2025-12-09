@@ -1,14 +1,14 @@
 {
   "name": "discover",
   "specifier": "@probitas/discover",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "moduleDoc": "Scenario file discovery utilities for Probitas.\n\nThis package provides utilities for discovering scenario files (`.probitas.ts`)\nfrom file paths and directories. It supports glob patterns for flexible file\nmatching and is used internally by the CLI to find scenarios to execute.\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [@probitas/scenario](https://jsr.io/@probitas/scenario) | Load discovered files with `loadScenarios` |\n| [@probitas/cli](https://jsr.io/@probitas/cli) | CLI that uses this discovery |\n\n## Core Function\n\n- {@linkcode discoverScenarioFiles} - Discover scenario files from paths\n\n## Configuration Type\n\n- {@linkcode DiscoverOptions} - Options for customizing discovery behavior\n\n## Default Behavior\n\nBy default, the discovery function:\n- Searches for files matching `**\\/*.probitas.ts` in directories\n- Returns direct file paths as-is (no pattern matching)\n- Returns absolute paths sorted alphabetically\n\n## Permissions\n\nRequires `--allow-read` permission to read the file system.\n",
   "exports": [
     {
       "name": "DiscoverOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/discover/0.2.4/discover.ts",
+        "filename": "https://jsr.io/@probitas/discover/0.2.6/discover.ts",
         "line": 20,
         "col": 0,
         "byteIndex": 465
@@ -35,7 +35,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/discover/0.2.4/discover.ts",
+              "filename": "https://jsr.io/@probitas/discover/0.2.6/discover.ts",
               "line": 28,
               "col": 2,
               "byteIndex": 692
@@ -73,7 +73,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/discover/0.2.4/discover.ts",
+              "filename": "https://jsr.io/@probitas/discover/0.2.6/discover.ts",
               "line": 35,
               "col": 2,
               "byteIndex": 800
@@ -109,7 +109,7 @@
       "name": "discoverScenarioFiles",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/discover/0.2.4/discover.ts",
+        "filename": "https://jsr.io/@probitas/discover/0.2.6/discover.ts",
         "line": 79,
         "col": 0,
         "byteIndex": 2140
@@ -218,5 +218,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:29.755Z"
+  "generatedAt": "2025-12-09T00:26:35.176Z"
 }

@@ -1,7 +1,7 @@
 {
   "name": "logger",
   "specifier": "@probitas/logger",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "moduleDoc": "Unified logging interface for Probitas packages.\n\nThis package provides a centralized logging system built on LogTape. It offers\nconsistent logging across all Probitas packages with configurable log levels,\npretty formatting, and hierarchical categories.\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n- [LogTape](https://jsr.io/@logtape/logtape) - Underlying logging library\n\n## Related Packages\n\nAll Probitas packages use this logger internally:\n[@probitas/runner](https://jsr.io/@probitas/runner),\n[@probitas/reporter](https://jsr.io/@probitas/reporter),\n[@probitas/discover](https://jsr.io/@probitas/discover),\n[@probitas/cli](https://jsr.io/@probitas/cli)\n\n## Core Functions\n\n- {@linkcode configureLogging} - Initialize the logging system with a log level\n- {@linkcode getLogger} - Get a logger instance for a category\n- {@linkcode resetLogging} - Reset logging configuration (for testing)\n\n## Types\n\n- {@linkcode Logger} - Logger interface from LogTape\n- {@linkcode LogLevel} - Available log levels\n\n## Log Levels\n\nFrom least to most verbose:\n- `\"fatal\"` - Critical errors that stop execution\n- `\"error\"` - Errors that don't stop execution\n- `\"warning\"` - Potential issues (default level)\n- `\"info\"` - Informational messages about execution\n- `\"debug\"` - Detailed debugging information\n\n## Category Hierarchy\n\nLoggers use hierarchical categories following the package structure:\n- `[\"probitas\"]` - Root category for all Probitas logs\n- `[\"probitas\", \"runner\"]` - Runner package logs\n- `[\"probitas\", \"cli\", \"run\"]` - Specific command logs\n",
   "exports": [
     {
@@ -2362,7 +2362,7 @@
       "name": "configureLogging",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/logger/0.2.4/logger.ts",
+        "filename": "https://jsr.io/@probitas/logger/0.2.6/logger.ts",
         "line": 51,
         "col": 0,
         "byteIndex": 1216
@@ -2436,7 +2436,7 @@
       "name": "getLogger",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/logger/0.2.4/logger.ts",
+        "filename": "https://jsr.io/@probitas/logger/0.2.6/logger.ts",
         "line": 115,
         "col": 0,
         "byteIndex": 2917
@@ -2504,7 +2504,7 @@
       "name": "resetLogging",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/logger/0.2.4/logger.ts",
+        "filename": "https://jsr.io/@probitas/logger/0.2.6/logger.ts",
         "line": 138,
         "col": 0,
         "byteIndex": 3499
@@ -2543,5 +2543,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:29.890Z"
+  "generatedAt": "2025-12-09T00:26:35.314Z"
 }

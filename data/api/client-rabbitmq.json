@@ -1,14 +1,14 @@
 {
   "name": "client-rabbitmq",
   "specifier": "@probitas/client-rabbitmq",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "moduleDoc": "RabbitMQ client for [Probitas](https://github.com/jsr-probitas/probitas) scenario testing framework.\n\nThis package provides a RabbitMQ client with fluent assertion APIs, designed for\nintegration testing of message-driven applications.\n\n## Features\n\n- **Queue Operations**: Declare, bind, purge, and delete queues\n- **Exchange Operations**: Declare and delete exchanges (direct, topic, fanout, headers)\n- **Publishing**: Publish messages with routing keys and headers\n- **Consuming**: Consume messages with acknowledgment support\n- **Fluent Assertions**: `expectRabbitMqResult()` for testing message operations\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-rabbitmq\n```\n\n## Quick Start\n\n```ts\nimport { createRabbitMqClient, expectRabbitMqResult } from \"@probitas/client-rabbitmq\";\n\n// Using string URL\nconst client = await createRabbitMqClient({\n  url: \"amqp://localhost:5672\",\n});\n\n// Or using connection config object\nconst client2 = await createRabbitMqClient({\n  url: {\n    host: \"localhost\",\n    port: 5672,\n    username: \"guest\",\n    password: \"guest\",\n    vhost: \"/\",\n  },\n});\n\n// Create a channel\nconst channel = await client.channel();\n\n// Declare a queue\nconst queueResult = await channel.assertQueue(\"test-queue\", { durable: true });\nexpectRabbitMqResult(queueResult).ok();\n\n// Publish a message\nconst content = new TextEncoder().encode(\"Hello, World!\");\nconst publishResult = await channel.sendToQueue(\"test-queue\", content, {\n  contentType: \"text/plain\",\n});\nexpectRabbitMqResult(publishResult).ok();\n\n// Consume messages\nfor await (const msg of channel.consume(\"test-queue\")) {\n  console.log(\"Received:\", new TextDecoder().decode(msg.content));\n  await channel.ack(msg);\n  break;\n}\n\nawait client.close();\n```\n\n## Exchange and Binding\n\n```ts\n// Declare an exchange\nawait channel.assertExchange(\"events\", \"topic\", { durable: true });\n\n// Declare a queue and bind to exchange\nawait channel.assertQueue(\"user-events\");\nawait channel.bindQueue(\"user-events\", \"events\", \"user.*\");\n\n// Publish to exchange with routing key\nconst content = new TextEncoder().encode(JSON.stringify({ id: 1, name: \"Alice\" }));\nawait channel.publish(\"events\", \"user.created\", content, {\n  contentType: \"application/json\",\n});\n```\n\n## Using with `using` Statement\n\n```ts\nawait using client = await createRabbitMqClient({ url: \"amqp://localhost:5672\" });\nconst channel = await client.channel();\n\nawait channel.assertQueue(\"test\");\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client`](https://jsr.io/@probitas/client) | Core utilities and types |\n| [`@probitas/client-sqs`](https://jsr.io/@probitas/client-sqs) | AWS SQS client |\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas-client)\n- [Probitas Framework](https://github.com/jsr-probitas/probitas)\n- [RabbitMQ](https://www.rabbitmq.com/)\n",
   "exports": [
     {
       "name": "RabbitMqMessageProperties",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 127
@@ -26,7 +26,7 @@
           {
             "name": "contentType",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 7,
               "col": 2,
               "byteIndex": 174
@@ -45,7 +45,7 @@
           {
             "name": "contentEncoding",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 8,
               "col": 2,
               "byteIndex": 207
@@ -64,7 +64,7 @@
           {
             "name": "headers",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 9,
               "col": 2,
               "byteIndex": 244
@@ -100,7 +100,7 @@
               "doc": "1: non-persistent, 2: persistent"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 11,
               "col": 2,
               "byteIndex": 332
@@ -136,7 +136,7 @@
           {
             "name": "priority",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 12,
               "col": 2,
               "byteIndex": 365
@@ -155,7 +155,7 @@
           {
             "name": "correlationId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 13,
               "col": 2,
               "byteIndex": 395
@@ -174,7 +174,7 @@
           {
             "name": "replyTo",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 14,
               "col": 2,
               "byteIndex": 430
@@ -193,7 +193,7 @@
           {
             "name": "expiration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 15,
               "col": 2,
               "byteIndex": 459
@@ -212,7 +212,7 @@
           {
             "name": "messageId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 16,
               "col": 2,
               "byteIndex": 491
@@ -231,7 +231,7 @@
           {
             "name": "timestamp",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 522
@@ -250,7 +250,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 18,
               "col": 2,
               "byteIndex": 553
@@ -269,7 +269,7 @@
           {
             "name": "userId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 19,
               "col": 2,
               "byteIndex": 579
@@ -288,7 +288,7 @@
           {
             "name": "appId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 20,
               "col": 2,
               "byteIndex": 607
@@ -314,7 +314,7 @@
       "name": "RabbitMqMessageFields",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 26,
         "col": 0,
         "byteIndex": 671
@@ -332,7 +332,7 @@
           {
             "name": "deliveryTag",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 27,
               "col": 2,
               "byteIndex": 714
@@ -351,7 +351,7 @@
           {
             "name": "redelivered",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 28,
               "col": 2,
               "byteIndex": 746
@@ -370,7 +370,7 @@
           {
             "name": "exchange",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 29,
               "col": 2,
               "byteIndex": 779
@@ -389,7 +389,7 @@
           {
             "name": "routingKey",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 30,
               "col": 2,
               "byteIndex": 808
@@ -415,7 +415,7 @@
       "name": "RabbitMqMessage",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 36,
         "col": 0,
         "byteIndex": 869
@@ -433,7 +433,7 @@
           {
             "name": "content",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 906
@@ -455,7 +455,7 @@
           {
             "name": "properties",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 938
@@ -477,7 +477,7 @@
           {
             "name": "fields",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 39,
               "col": 2,
               "byteIndex": 988
@@ -506,7 +506,7 @@
       "name": "RabbitMqPublishResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 45,
         "col": 0,
         "byteIndex": 1058
@@ -524,7 +524,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 46,
               "col": 2,
               "byteIndex": 1101
@@ -546,7 +546,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 47,
               "col": 2,
               "byteIndex": 1138
@@ -565,7 +565,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 48,
               "col": 2,
               "byteIndex": 1162
@@ -591,7 +591,7 @@
       "name": "RabbitMqConsumeResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 54,
         "col": 0,
         "byteIndex": 1246
@@ -609,7 +609,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1289
@@ -631,7 +631,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 56,
               "col": 2,
               "byteIndex": 1326
@@ -650,7 +650,7 @@
           {
             "name": "message",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 57,
               "col": 2,
               "byteIndex": 1350
@@ -683,7 +683,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 58,
               "col": 2,
               "byteIndex": 1394
@@ -709,7 +709,7 @@
       "name": "RabbitMqAckResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 64,
         "col": 0,
         "byteIndex": 1452
@@ -727,7 +727,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 65,
               "col": 2,
               "byteIndex": 1491
@@ -749,7 +749,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 66,
               "col": 2,
               "byteIndex": 1524
@@ -768,7 +768,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 67,
               "col": 2,
               "byteIndex": 1548
@@ -794,7 +794,7 @@
       "name": "RabbitMqQueueResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 73,
         "col": 0,
         "byteIndex": 1615
@@ -812,7 +812,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 74,
               "col": 2,
               "byteIndex": 1656
@@ -834,7 +834,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 75,
               "col": 2,
               "byteIndex": 1691
@@ -853,7 +853,7 @@
           {
             "name": "queue",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 76,
               "col": 2,
               "byteIndex": 1715
@@ -872,7 +872,7 @@
           {
             "name": "messageCount",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 77,
               "col": 2,
               "byteIndex": 1741
@@ -891,7 +891,7 @@
           {
             "name": "consumerCount",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 78,
               "col": 2,
               "byteIndex": 1774
@@ -910,7 +910,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 79,
               "col": 2,
               "byteIndex": 1808
@@ -936,7 +936,7 @@
       "name": "RabbitMqExchangeResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 85,
         "col": 0,
         "byteIndex": 1878
@@ -954,7 +954,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 86,
               "col": 2,
               "byteIndex": 1922
@@ -976,7 +976,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 87,
               "col": 2,
               "byteIndex": 1960
@@ -995,7 +995,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 88,
               "col": 2,
               "byteIndex": 1984
@@ -1021,7 +1021,7 @@
       "name": "RabbitMqConnectionConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 96,
         "col": 0,
         "byteIndex": 2129
@@ -1057,7 +1057,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 101,
               "col": 2,
               "byteIndex": 2255
@@ -1083,7 +1083,7 @@
       "name": "RabbitMqClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 107,
         "col": 0,
         "byteIndex": 2325
@@ -1119,7 +1119,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 123,
               "col": 2,
               "byteIndex": 2741
@@ -1155,7 +1155,7 @@
               "doc": "Heartbeat interval in seconds"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 125,
               "col": 2,
               "byteIndex": 2831
@@ -1177,7 +1177,7 @@
               "doc": "Default prefetch count for channels"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 127,
               "col": 2,
               "byteIndex": 2907
@@ -1203,7 +1203,7 @@
       "name": "RabbitMqExchangeOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 133,
         "col": 0,
         "byteIndex": 2967
@@ -1230,7 +1230,7 @@
           {
             "name": "durable",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 134,
               "col": 2,
               "byteIndex": 3034
@@ -1249,7 +1249,7 @@
           {
             "name": "autoDelete",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 135,
               "col": 2,
               "byteIndex": 3064
@@ -1268,7 +1268,7 @@
           {
             "name": "internal",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 136,
               "col": 2,
               "byteIndex": 3097
@@ -1287,7 +1287,7 @@
           {
             "name": "arguments",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 137,
               "col": 2,
               "byteIndex": 3128
@@ -1327,7 +1327,7 @@
       "name": "RabbitMqQueueOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 143,
         "col": 0,
         "byteIndex": 3203
@@ -1354,7 +1354,7 @@
           {
             "name": "durable",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 144,
               "col": 2,
               "byteIndex": 3267
@@ -1373,7 +1373,7 @@
           {
             "name": "exclusive",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 145,
               "col": 2,
               "byteIndex": 3297
@@ -1392,7 +1392,7 @@
           {
             "name": "autoDelete",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 146,
               "col": 2,
               "byteIndex": 3329
@@ -1411,7 +1411,7 @@
           {
             "name": "arguments",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 147,
               "col": 2,
               "byteIndex": 3362
@@ -1444,7 +1444,7 @@
           {
             "name": "messageTtl",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 148,
               "col": 2,
               "byteIndex": 3410
@@ -1463,7 +1463,7 @@
           {
             "name": "maxLength",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 149,
               "col": 2,
               "byteIndex": 3442
@@ -1482,7 +1482,7 @@
           {
             "name": "deadLetterExchange",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 150,
               "col": 2,
               "byteIndex": 3473
@@ -1501,7 +1501,7 @@
           {
             "name": "deadLetterRoutingKey",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 151,
               "col": 2,
               "byteIndex": 3513
@@ -1527,7 +1527,7 @@
       "name": "RabbitMqPublishOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 157,
         "col": 0,
         "byteIndex": 3584
@@ -1554,7 +1554,7 @@
           {
             "name": "persistent",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 158,
               "col": 2,
               "byteIndex": 3650
@@ -1573,7 +1573,7 @@
           {
             "name": "contentType",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 159,
               "col": 2,
               "byteIndex": 3683
@@ -1592,7 +1592,7 @@
           {
             "name": "contentEncoding",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 160,
               "col": 2,
               "byteIndex": 3716
@@ -1611,7 +1611,7 @@
           {
             "name": "headers",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 161,
               "col": 2,
               "byteIndex": 3753
@@ -1644,7 +1644,7 @@
           {
             "name": "correlationId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 162,
               "col": 2,
               "byteIndex": 3799
@@ -1663,7 +1663,7 @@
           {
             "name": "replyTo",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 163,
               "col": 2,
               "byteIndex": 3834
@@ -1682,7 +1682,7 @@
           {
             "name": "expiration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 164,
               "col": 2,
               "byteIndex": 3863
@@ -1701,7 +1701,7 @@
           {
             "name": "messageId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 165,
               "col": 2,
               "byteIndex": 3895
@@ -1720,7 +1720,7 @@
           {
             "name": "priority",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 166,
               "col": 2,
               "byteIndex": 3926
@@ -1746,7 +1746,7 @@
       "name": "RabbitMqConsumeOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 172,
         "col": 0,
         "byteIndex": 3985
@@ -1773,7 +1773,7 @@
           {
             "name": "noAck",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 173,
               "col": 2,
               "byteIndex": 4051
@@ -1792,7 +1792,7 @@
           {
             "name": "exclusive",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 174,
               "col": 2,
               "byteIndex": 4079
@@ -1811,7 +1811,7 @@
           {
             "name": "priority",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 175,
               "col": 2,
               "byteIndex": 4111
@@ -1837,7 +1837,7 @@
       "name": "RabbitMqNackOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 181,
         "col": 0,
         "byteIndex": 4167
@@ -1864,7 +1864,7 @@
           {
             "name": "requeue",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 182,
               "col": 2,
               "byteIndex": 4230
@@ -1883,7 +1883,7 @@
           {
             "name": "allUpTo",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 183,
               "col": 2,
               "byteIndex": 4260
@@ -1909,7 +1909,7 @@
       "name": "RabbitMqExchangeType",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 189,
         "col": 0,
         "byteIndex": 4317
@@ -1965,7 +1965,7 @@
       "name": "RabbitMqChannel",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 194,
         "col": 0,
         "byteIndex": 4435
@@ -1992,7 +1992,7 @@
             "name": "assertExchange",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 196,
               "col": 2,
               "byteIndex": 4510
@@ -2059,7 +2059,7 @@
             "name": "deleteExchange",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 201,
               "col": 2,
               "byteIndex": 4655
@@ -2113,7 +2113,7 @@
             "name": "assertQueue",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 207,
               "col": 2,
               "byteIndex": 4770
@@ -2167,7 +2167,7 @@
             "name": "deleteQueue",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 211,
               "col": 2,
               "byteIndex": 4874
@@ -2221,7 +2221,7 @@
             "name": "purgeQueue",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 215,
               "col": 2,
               "byteIndex": 4971
@@ -2275,7 +2275,7 @@
             "name": "bindQueue",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 219,
               "col": 2,
               "byteIndex": 5067
@@ -2349,7 +2349,7 @@
             "name": "unbindQueue",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 225,
               "col": 2,
               "byteIndex": 5212
@@ -2423,7 +2423,7 @@
             "name": "publish",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 233,
               "col": 2,
               "byteIndex": 5373
@@ -2500,7 +2500,7 @@
             "name": "sendToQueue",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 239,
               "col": 2,
               "byteIndex": 5530
@@ -2567,7 +2567,7 @@
             "name": "get",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 246,
               "col": 2,
               "byteIndex": 5678
@@ -2621,7 +2621,7 @@
             "name": "consume",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 247,
               "col": 2,
               "byteIndex": 5757
@@ -2675,7 +2675,7 @@
             "name": "ack",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 253,
               "col": 2,
               "byteIndex": 5872
@@ -2732,7 +2732,7 @@
             "name": "nack",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 257,
               "col": 2,
               "byteIndex": 5971
@@ -2789,7 +2789,7 @@
             "name": "reject",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 261,
               "col": 2,
               "byteIndex": 6077
@@ -2843,7 +2843,7 @@
             "name": "prefetch",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 267,
               "col": 2,
               "byteIndex": 6188
@@ -2881,7 +2881,7 @@
             "name": "close",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 269,
               "col": 2,
               "byteIndex": 6231
@@ -2915,7 +2915,7 @@
       "name": "RabbitMqClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 275,
         "col": 0,
         "byteIndex": 6296
@@ -2942,7 +2942,7 @@
             "name": "channel",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 278,
               "col": 2,
               "byteIndex": 6398
@@ -2972,7 +2972,7 @@
             "name": "close",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 280,
               "col": 2,
               "byteIndex": 6438
@@ -3000,7 +3000,7 @@
           {
             "name": "config",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
               "line": 276,
               "col": 2,
               "byteIndex": 6356
@@ -3029,7 +3029,7 @@
       "name": "RabbitMqResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/types.ts",
         "line": 287,
         "col": 0,
         "byteIndex": 6591
@@ -3093,7 +3093,7 @@
       "name": "RabbitMqErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 96
@@ -3120,7 +3120,7 @@
           {
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 7,
               "col": 2,
               "byteIndex": 159
@@ -3146,7 +3146,7 @@
       "name": "RabbitMqError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 13,
         "col": 0,
         "byteIndex": 242
@@ -3204,7 +3204,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 372
@@ -3226,7 +3226,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 14,
               "col": 2,
               "byteIndex": 293
@@ -3245,7 +3245,7 @@
             "isStatic": false,
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 15,
               "col": 2,
               "byteIndex": 345
@@ -3264,7 +3264,7 @@
       "name": "RabbitMqConnectionError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 30,
         "col": 0,
         "byteIndex": 626
@@ -3307,7 +3307,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 794
@@ -3329,7 +3329,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 31,
               "col": 2,
               "byteIndex": 689
@@ -3352,7 +3352,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 32,
               "col": 2,
               "byteIndex": 743
@@ -3371,7 +3371,7 @@
       "name": "RabbitMqChannelErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 42,
         "col": 0,
         "byteIndex": 955
@@ -3398,7 +3398,7 @@
           {
             "name": "channelId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 1033
@@ -3424,7 +3424,7 @@
       "name": "RabbitMqChannelError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 49,
         "col": 0,
         "byteIndex": 1130
@@ -3467,7 +3467,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1320
@@ -3489,7 +3489,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 50,
               "col": 2,
               "byteIndex": 1190
@@ -3512,7 +3512,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 51,
               "col": 2,
               "byteIndex": 1241
@@ -3531,7 +3531,7 @@
             "isStatic": false,
             "name": "channelId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1288
@@ -3550,7 +3550,7 @@
       "name": "RabbitMqNotFoundErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 63,
         "col": 0,
         "byteIndex": 1528
@@ -3577,7 +3577,7 @@
           {
             "name": "resource",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1607
@@ -3603,7 +3603,7 @@
       "name": "RabbitMqNotFoundError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 70,
         "col": 0,
         "byteIndex": 1720
@@ -3646,7 +3646,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 75,
               "col": 2,
               "byteIndex": 1912
@@ -3668,7 +3668,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 71,
               "col": 2,
               "byteIndex": 1781
@@ -3691,7 +3691,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 72,
               "col": 2,
               "byteIndex": 1833
@@ -3710,7 +3710,7 @@
             "isStatic": false,
             "name": "resource",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 73,
               "col": 2,
               "byteIndex": 1882
@@ -3729,7 +3729,7 @@
       "name": "RabbitMqPreconditionFailedErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 84,
         "col": 0,
         "byteIndex": 2129
@@ -3756,7 +3756,7 @@
           {
             "name": "reason",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 86,
               "col": 2,
               "byteIndex": 2220
@@ -3782,7 +3782,7 @@
       "name": "RabbitMqPreconditionFailedError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
         "line": 92,
         "col": 0,
         "byteIndex": 2314
@@ -3825,7 +3825,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 97,
               "col": 2,
               "byteIndex": 2534
@@ -3847,7 +3847,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 2385
@@ -3870,7 +3870,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 94,
               "col": 2,
               "byteIndex": 2447
@@ -3889,7 +3889,7 @@
             "isStatic": false,
             "name": "reason",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/errors.ts",
               "line": 95,
               "col": 2,
               "byteIndex": 2506
@@ -3908,7 +3908,7 @@
       "name": "createRabbitMqClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/client.ts",
         "line": 311,
         "col": 0,
         "byteIndex": 8367
@@ -3996,7 +3996,7 @@
       "name": "RabbitMqPublishResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
         "line": 15,
         "col": 0,
         "byteIndex": 323
@@ -4017,7 +4017,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 416
@@ -4038,7 +4038,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 20,
               "col": 2,
               "byteIndex": 471
@@ -4059,7 +4059,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 23,
               "col": 2,
               "byteIndex": 547
@@ -4095,7 +4095,7 @@
       "name": "RabbitMqConsumeResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
         "line": 29,
         "col": 0,
         "byteIndex": 648
@@ -4116,7 +4116,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 31,
               "col": 2,
               "byteIndex": 741
@@ -4137,7 +4137,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 796
@@ -4158,7 +4158,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 865
@@ -4179,7 +4179,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 40,
               "col": 2,
               "byteIndex": 928
@@ -4200,7 +4200,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 1004
@@ -4235,7 +4235,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 46,
               "col": 2,
               "byteIndex": 1099
@@ -4290,7 +4290,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 49,
               "col": 2,
               "byteIndex": 1216
@@ -4334,7 +4334,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1337
@@ -4366,7 +4366,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1423
@@ -4398,7 +4398,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 58,
               "col": 2,
               "byteIndex": 1518
@@ -4434,7 +4434,7 @@
       "name": "RabbitMqExchangeResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
         "line": 65,
         "col": 0,
         "byteIndex": 1677
@@ -4460,7 +4460,7 @@
       "name": "RabbitMqAckResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
         "line": 72,
         "col": 0,
         "byteIndex": 1877
@@ -4486,7 +4486,7 @@
       "name": "RabbitMqQueueResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
         "line": 77,
         "col": 0,
         "byteIndex": 2015
@@ -4507,7 +4507,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 79,
               "col": 2,
               "byteIndex": 2106
@@ -4528,7 +4528,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 82,
               "col": 2,
               "byteIndex": 2161
@@ -4549,7 +4549,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 85,
               "col": 2,
               "byteIndex": 2230
@@ -4581,7 +4581,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 88,
               "col": 2,
               "byteIndex": 2319
@@ -4613,7 +4613,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 91,
               "col": 2,
               "byteIndex": 2414
@@ -4645,7 +4645,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
               "line": 94,
               "col": 2,
               "byteIndex": 2511
@@ -4681,7 +4681,7 @@
       "name": "RabbitMqExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
         "line": 321,
         "col": 0,
         "byteIndex": 7940
@@ -4866,7 +4866,7 @@
       "name": "expectRabbitMqResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-rabbitmq/0.1.1/expect.ts",
         "line": 358,
         "col": 0,
         "byteIndex": 9543
@@ -4934,5 +4934,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:28.790Z"
+  "generatedAt": "2025-12-09T00:26:34.213Z"
 }

@@ -1,14 +1,14 @@
 {
   "name": "client-sqs",
   "specifier": "@probitas/client-sqs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "moduleDoc": "AWS SQS client for [Probitas](https://github.com/jsr-probitas/probitas) scenario testing framework.\n\nThis package provides an AWS SQS client with fluent assertion APIs, designed for\nintegration testing of message-driven applications using Amazon Simple Queue Service.\n\n## Features\n\n- **Queue Management**: Create, delete, and purge queues\n- **Message Operations**: Send, receive, and delete messages (single and batch)\n- **Message Attributes**: Support for custom message attributes\n- **Fluent Assertions**: `expectSqsResult()` for testing SQS operations\n- **LocalStack Compatible**: Works with LocalStack for local development\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-sqs\n```\n\n## Quick Start\n\n```ts\nimport { createSqsClient, expectSqsResult } from \"@probitas/client-sqs\";\n\nconst client = await createSqsClient({\n  region: \"us-east-1\",\n  url: \"http://localhost:4566\", // LocalStack\n  credentials: {\n    accessKeyId: \"test\",\n    secretAccessKey: \"test\",\n  },\n});\n\n// Ensure queue exists\nconst queueResult = await client.ensureQueue(\"test-queue\");\nexpectSqsResult(queueResult).ok();\nconst queueUrl = queueResult.queueUrl;\n\n// Send a message\nconst sendResult = await client.send(queueUrl, \"Hello, World!\", {\n  attributes: {\n    type: { dataType: \"String\", stringValue: \"greeting\" },\n  },\n});\nexpectSqsResult(sendResult).ok().hasMessageId();\n\n// Receive messages\nconst receiveResult = await client.receive(queueUrl, {\n  maxMessages: 10,\n  waitTimeSeconds: 5,\n});\nexpectSqsResult(receiveResult).ok().countAtLeast(1);\n\n// Delete message after processing\nfor (const msg of receiveResult.messages) {\n  await client.delete(queueUrl, msg.receiptHandle);\n}\n\nawait client.close();\n```\n\n## Batch Operations\n\n```ts\n// Send batch messages\nconst batchSend = await client.sendBatch(queueUrl, [\n  { body: \"Message 1\", id: \"msg-1\" },\n  { body: \"Message 2\", id: \"msg-2\" },\n  { body: \"Message 3\", id: \"msg-3\" },\n]);\nexpectSqsResult(batchSend).ok();\n\n// Delete batch messages\nconst messages = await client.receive(queueUrl, { maxMessages: 10 });\nconst batchDelete = await client.deleteBatch(\n  queueUrl,\n  messages.messages.map((m, i) => ({ id: `del-${i}`, receiptHandle: m.receiptHandle }))\n);\nexpectSqsResult(batchDelete).ok();\n```\n\n## Using with `using` Statement\n\n```ts\nawait using client = await createSqsClient({\n  region: \"us-east-1\",\n  url: \"http://localhost:4566\",\n});\n\nconst queue = await client.ensureQueue(\"test\");\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client`](https://jsr.io/@probitas/client) | Core utilities and types |\n| [`@probitas/client-rabbitmq`](https://jsr.io/@probitas/client-rabbitmq) | RabbitMQ client |\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas-client)\n- [Probitas Framework](https://github.com/jsr-probitas/probitas)\n- [AWS SQS](https://aws.amazon.com/sqs/)\n- [LocalStack](https://localstack.cloud/)\n",
   "exports": [
     {
       "name": "SqsConnectionConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 8,
         "col": 0,
         "byteIndex": 192
@@ -44,7 +44,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 13,
               "col": 2,
               "byteIndex": 320
@@ -89,7 +89,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 19,
               "col": 2,
               "byteIndex": 445
@@ -111,7 +111,7 @@
               "doc": "AWS region (required for AWS, optional for LocalStack)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 24,
               "col": 2,
               "byteIndex": 545
@@ -137,7 +137,7 @@
       "name": "SqsClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 30,
         "col": 0,
         "byteIndex": 611
@@ -167,7 +167,7 @@
               "doc": "AWS region"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 32,
               "col": 2,
               "byteIndex": 690
@@ -189,7 +189,7 @@
               "doc": "AWS credentials"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 742
@@ -208,7 +208,7 @@
                   {
                     "name": "accessKeyId",
                     "location": {
-                      "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+                      "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
                       "line": 35,
                       "col": 4,
                       "byteIndex": 771
@@ -227,7 +227,7 @@
                   {
                     "name": "secretAccessKey",
                     "location": {
-                      "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+                      "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
                       "line": 36,
                       "col": 4,
                       "byteIndex": 805
@@ -256,7 +256,7 @@
               "doc": "SQS queue URL (optional - can be set later or used with ensureQueue)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 39,
               "col": 2,
               "byteIndex": 924
@@ -278,7 +278,7 @@
               "doc": "SQS endpoint URL (e.g., \"http://localhost:4566\" for LocalStack).\nCan be a string URL or a connection config object.\nOptional for real AWS (uses default endpoint), required for LocalStack."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1169
@@ -318,7 +318,7 @@
       "name": "SqsMessageAttribute",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 51,
         "col": 0,
         "byteIndex": 1252
@@ -336,7 +336,7 @@
           {
             "name": "dataType",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1293
@@ -380,7 +380,7 @@
           {
             "name": "stringValue",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 53,
               "col": 2,
               "byteIndex": 1346
@@ -399,7 +399,7 @@
           {
             "name": "binaryValue",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1379
@@ -428,7 +428,7 @@
       "name": "SqsMessage",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 60,
         "col": 0,
         "byteIndex": 1463
@@ -446,7 +446,7 @@
           {
             "name": "messageId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 61,
               "col": 2,
               "byteIndex": 1495
@@ -465,7 +465,7 @@
           {
             "name": "body",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 62,
               "col": 2,
               "byteIndex": 1525
@@ -484,7 +484,7 @@
           {
             "name": "receiptHandle",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 63,
               "col": 2,
               "byteIndex": 1550
@@ -503,7 +503,7 @@
           {
             "name": "attributes",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1584
@@ -536,7 +536,7 @@
           {
             "name": "messageAttributes",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 65,
               "col": 2,
               "byteIndex": 1631
@@ -572,7 +572,7 @@
           {
             "name": "md5OfBody",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 66,
               "col": 2,
               "byteIndex": 1699
@@ -598,7 +598,7 @@
       "name": "SqsMessages",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 72,
         "col": 0,
         "byteIndex": 1776
@@ -637,7 +637,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 74,
               "col": 2,
               "byteIndex": 1896
@@ -672,7 +672,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 76,
               "col": 2,
               "byteIndex": 1980
@@ -696,7 +696,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 78,
               "col": 2,
               "byteIndex": 2062
@@ -731,7 +731,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 80,
               "col": 2,
               "byteIndex": 2144
@@ -759,7 +759,7 @@
       "name": "SqsSendOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 86,
         "col": 0,
         "byteIndex": 2216
@@ -789,7 +789,7 @@
               "doc": "Delay in seconds before the message becomes visible (0-900)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 88,
               "col": 2,
               "byteIndex": 2343
@@ -811,7 +811,7 @@
               "doc": "Message attributes"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 90,
               "col": 2,
               "byteIndex": 2405
@@ -850,7 +850,7 @@
               "doc": "Message group ID (required for FIFO queues)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 92,
               "col": 2,
               "byteIndex": 2526
@@ -872,7 +872,7 @@
               "doc": "Message deduplication ID (required for FIFO queues without content-based deduplication)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 94,
               "col": 2,
               "byteIndex": 2659
@@ -898,7 +898,7 @@
       "name": "SqsBatchMessage",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 100,
         "col": 0,
         "byteIndex": 2744
@@ -916,7 +916,7 @@
           {
             "name": "id",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 101,
               "col": 2,
               "byteIndex": 2781
@@ -935,7 +935,7 @@
           {
             "name": "body",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 102,
               "col": 2,
               "byteIndex": 2804
@@ -954,7 +954,7 @@
           {
             "name": "delaySeconds",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 103,
               "col": 2,
               "byteIndex": 2829
@@ -973,7 +973,7 @@
           {
             "name": "messageAttributes",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 104,
               "col": 2,
               "byteIndex": 2863
@@ -1016,7 +1016,7 @@
       "name": "SqsReceiveOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 110,
         "col": 0,
         "byteIndex": 2975
@@ -1046,7 +1046,7 @@
               "doc": "Maximum number of messages to receive (1-10, default: 1)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 112,
               "col": 2,
               "byteIndex": 3102
@@ -1068,7 +1068,7 @@
               "doc": "Wait time in seconds for long polling (0-20)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 114,
               "col": 2,
               "byteIndex": 3189
@@ -1090,7 +1090,7 @@
               "doc": "Visibility timeout in seconds (0-43200)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 116,
               "col": 2,
               "byteIndex": 3275
@@ -1112,7 +1112,7 @@
               "doc": "System attribute names to retrieve"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 118,
               "col": 2,
               "byteIndex": 3358
@@ -1145,7 +1145,7 @@
               "doc": "Message attribute names to retrieve"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 120,
               "col": 2,
               "byteIndex": 3450
@@ -1182,7 +1182,7 @@
       "name": "SqsSendResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 126,
         "col": 0,
         "byteIndex": 3545
@@ -1200,7 +1200,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 127,
               "col": 2,
               "byteIndex": 3580
@@ -1222,7 +1222,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 128,
               "col": 2,
               "byteIndex": 3609
@@ -1241,7 +1241,7 @@
           {
             "name": "messageId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 129,
               "col": 2,
               "byteIndex": 3633
@@ -1260,7 +1260,7 @@
           {
             "name": "md5OfBody",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 130,
               "col": 2,
               "byteIndex": 3663
@@ -1279,7 +1279,7 @@
           {
             "name": "sequenceNumber",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 131,
               "col": 2,
               "byteIndex": 3693
@@ -1298,7 +1298,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 132,
               "col": 2,
               "byteIndex": 3729
@@ -1324,7 +1324,7 @@
       "name": "SqsBatchSuccessEntry",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 138,
         "col": 0,
         "byteIndex": 3799
@@ -1342,7 +1342,7 @@
           {
             "name": "messageId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 139,
               "col": 2,
               "byteIndex": 3841
@@ -1361,7 +1361,7 @@
           {
             "name": "id",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 140,
               "col": 2,
               "byteIndex": 3871
@@ -1387,7 +1387,7 @@
       "name": "SqsBatchFailedEntry",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 146,
         "col": 0,
         "byteIndex": 3926
@@ -1405,7 +1405,7 @@
           {
             "name": "id",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 147,
               "col": 2,
               "byteIndex": 3967
@@ -1424,7 +1424,7 @@
           {
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 148,
               "col": 2,
               "byteIndex": 3990
@@ -1443,7 +1443,7 @@
           {
             "name": "message",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 149,
               "col": 2,
               "byteIndex": 4015
@@ -1469,7 +1469,7 @@
       "name": "SqsSendBatchResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 155,
         "col": 0,
         "byteIndex": 4089
@@ -1487,7 +1487,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 156,
               "col": 2,
               "byteIndex": 4129
@@ -1509,7 +1509,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 157,
               "col": 2,
               "byteIndex": 4164
@@ -1528,7 +1528,7 @@
           {
             "name": "successful",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 158,
               "col": 2,
               "byteIndex": 4188
@@ -1561,7 +1561,7 @@
           {
             "name": "failed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 159,
               "col": 2,
               "byteIndex": 4244
@@ -1594,7 +1594,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 160,
               "col": 2,
               "byteIndex": 4295
@@ -1620,7 +1620,7 @@
       "name": "SqsReceiveResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 166,
         "col": 0,
         "byteIndex": 4366
@@ -1638,7 +1638,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 167,
               "col": 2,
               "byteIndex": 4404
@@ -1660,7 +1660,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 168,
               "col": 2,
               "byteIndex": 4436
@@ -1679,7 +1679,7 @@
           {
             "name": "messages",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 169,
               "col": 2,
               "byteIndex": 4460
@@ -1701,7 +1701,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 170,
               "col": 2,
               "byteIndex": 4494
@@ -1727,7 +1727,7 @@
       "name": "SqsDeleteResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 176,
         "col": 0,
         "byteIndex": 4565
@@ -1745,7 +1745,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 177,
               "col": 2,
               "byteIndex": 4602
@@ -1767,7 +1767,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 178,
               "col": 2,
               "byteIndex": 4633
@@ -1786,7 +1786,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 179,
               "col": 2,
               "byteIndex": 4657
@@ -1812,7 +1812,7 @@
       "name": "SqsDeleteBatchResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 185,
         "col": 0,
         "byteIndex": 4733
@@ -1830,7 +1830,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 186,
               "col": 2,
               "byteIndex": 4775
@@ -1852,7 +1852,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 187,
               "col": 2,
               "byteIndex": 4812
@@ -1871,7 +1871,7 @@
           {
             "name": "successful",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 188,
               "col": 2,
               "byteIndex": 4836
@@ -1901,7 +1901,7 @@
           {
             "name": "failed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 189,
               "col": 2,
               "byteIndex": 4878
@@ -1934,7 +1934,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 190,
               "col": 2,
               "byteIndex": 4929
@@ -1960,7 +1960,7 @@
       "name": "SqsEnsureQueueOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 196,
         "col": 0,
         "byteIndex": 5007
@@ -1990,7 +1990,7 @@
               "doc": "Queue attributes (e.g., DelaySeconds, MessageRetentionPeriod)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 198,
               "col": 2,
               "byteIndex": 5143
@@ -2026,7 +2026,7 @@
               "doc": "Queue tags"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 200,
               "col": 2,
               "byteIndex": 5211
@@ -2066,7 +2066,7 @@
       "name": "SqsEnsureQueueResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 206,
         "col": 0,
         "byteIndex": 5300
@@ -2084,7 +2084,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 207,
               "col": 2,
               "byteIndex": 5342
@@ -2106,7 +2106,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 208,
               "col": 2,
               "byteIndex": 5379
@@ -2125,7 +2125,7 @@
           {
             "name": "queueUrl",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 209,
               "col": 2,
               "byteIndex": 5403
@@ -2144,7 +2144,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 210,
               "col": 2,
               "byteIndex": 5432
@@ -2170,7 +2170,7 @@
       "name": "SqsDeleteQueueResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 216,
         "col": 0,
         "byteIndex": 5501
@@ -2188,7 +2188,7 @@
           {
             "name": "type",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 217,
               "col": 2,
               "byteIndex": 5543
@@ -2210,7 +2210,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 218,
               "col": 2,
               "byteIndex": 5580
@@ -2229,7 +2229,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 219,
               "col": 2,
               "byteIndex": 5604
@@ -2255,7 +2255,7 @@
       "name": "SqsResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 226,
         "col": 0,
         "byteIndex": 5753
@@ -2335,7 +2335,7 @@
       "name": "SqsClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
         "line": 238,
         "col": 0,
         "byteIndex": 5969
@@ -2365,7 +2365,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 249,
               "col": 2,
               "byteIndex": 6261
@@ -2397,7 +2397,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 256,
               "col": 2,
               "byteIndex": 6527
@@ -2454,7 +2454,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 264,
               "col": 2,
               "byteIndex": 6679
@@ -2511,7 +2511,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 272,
               "col": 2,
               "byteIndex": 6828
@@ -2568,7 +2568,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 277,
               "col": 2,
               "byteIndex": 6975
@@ -2619,7 +2619,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 282,
               "col": 2,
               "byteIndex": 7097
@@ -2666,7 +2666,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 287,
               "col": 2,
               "byteIndex": 7215
@@ -2723,7 +2723,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 295,
               "col": 2,
               "byteIndex": 7391
@@ -2784,7 +2784,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 303,
               "col": 2,
               "byteIndex": 7554
@@ -2831,7 +2831,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 308,
               "col": 2,
               "byteIndex": 7672
@@ -2859,7 +2859,7 @@
           {
             "name": "config",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 239,
               "col": 2,
               "byteIndex": 6024
@@ -2884,7 +2884,7 @@
               "doc": "The current queue URL. Can be set via config, ensureQueue(), or setQueueUrl()."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/types.ts",
               "line": 244,
               "col": 2,
               "byteIndex": 6157
@@ -2921,7 +2921,7 @@
       "name": "SqsErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 91
@@ -2948,7 +2948,7 @@
           {
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 7,
               "col": 2,
               "byteIndex": 149
@@ -2974,7 +2974,7 @@
       "name": "SqsError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 13,
         "col": 0,
         "byteIndex": 227
@@ -3032,7 +3032,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 347
@@ -3054,7 +3054,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 14,
               "col": 2,
               "byteIndex": 273
@@ -3073,7 +3073,7 @@
             "isStatic": false,
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 15,
               "col": 2,
               "byteIndex": 320
@@ -3092,7 +3092,7 @@
       "name": "SqsConnectionError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 30,
         "col": 0,
         "byteIndex": 587
@@ -3135,7 +3135,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 740
@@ -3157,7 +3157,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 31,
               "col": 2,
               "byteIndex": 640
@@ -3180,7 +3180,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 32,
               "col": 2,
               "byteIndex": 689
@@ -3199,7 +3199,7 @@
       "name": "SqsCommandErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 42,
         "col": 0,
         "byteIndex": 891
@@ -3226,7 +3226,7 @@
           {
             "name": "operation",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 959
@@ -3252,7 +3252,7 @@
       "name": "SqsCommandError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 49,
         "col": 0,
         "byteIndex": 1041
@@ -3295,7 +3295,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1215
@@ -3317,7 +3317,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 50,
               "col": 2,
               "byteIndex": 1091
@@ -3340,7 +3340,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 51,
               "col": 2,
               "byteIndex": 1137
@@ -3359,7 +3359,7 @@
             "isStatic": false,
             "name": "operation",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1184
@@ -3378,7 +3378,7 @@
       "name": "SqsQueueNotFoundError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 63,
         "col": 0,
         "byteIndex": 1417
@@ -3431,7 +3431,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 68,
               "col": 2,
               "byteIndex": 1610
@@ -3453,7 +3453,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1473
@@ -3476,7 +3476,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 65,
               "col": 2,
               "byteIndex": 1525
@@ -3495,7 +3495,7 @@
             "isStatic": false,
             "name": "queueUrl",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 66,
               "col": 2,
               "byteIndex": 1580
@@ -3514,7 +3514,7 @@
       "name": "SqsMessageTooLargeError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 77,
         "col": 0,
         "byteIndex": 1834
@@ -3577,7 +3577,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 83,
               "col": 2,
               "byteIndex": 2057
@@ -3599,7 +3599,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 78,
               "col": 2,
               "byteIndex": 1892
@@ -3622,7 +3622,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 79,
               "col": 2,
               "byteIndex": 1946
@@ -3641,7 +3641,7 @@
             "isStatic": false,
             "name": "size",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 80,
               "col": 2,
               "byteIndex": 2003
@@ -3660,7 +3660,7 @@
             "isStatic": false,
             "name": "maxSize",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 81,
               "col": 2,
               "byteIndex": 2028
@@ -3679,7 +3679,7 @@
       "name": "SqsBatchError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 98,
         "col": 0,
         "byteIndex": 2338
@@ -3732,7 +3732,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 103,
               "col": 2,
               "byteIndex": 2508
@@ -3754,7 +3754,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 99,
               "col": 2,
               "byteIndex": 2386
@@ -3777,7 +3777,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 100,
               "col": 2,
               "byteIndex": 2430
@@ -3796,7 +3796,7 @@
             "isStatic": false,
             "name": "failedCount",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 101,
               "col": 2,
               "byteIndex": 2475
@@ -3815,7 +3815,7 @@
       "name": "SqsMessageNotFoundError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
         "line": 112,
         "col": 0,
         "byteIndex": 2750
@@ -3858,7 +3858,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 116,
               "col": 2,
               "byteIndex": 2920
@@ -3880,7 +3880,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 113,
               "col": 2,
               "byteIndex": 2808
@@ -3903,7 +3903,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/errors.ts",
               "line": 114,
               "col": 2,
               "byteIndex": 2862
@@ -3922,7 +3922,7 @@
       "name": "createSqsClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/client.ts",
         "line": 344,
         "col": 0,
         "byteIndex": 9411
@@ -4010,7 +4010,7 @@
       "name": "createSqsMessages",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/messages.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/messages.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 120
@@ -4058,7 +4058,7 @@
       "name": "SqsSendResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 19,
         "col": 0,
         "byteIndex": 363
@@ -4079,7 +4079,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 21,
               "col": 2,
               "byteIndex": 448
@@ -4100,7 +4100,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 24,
               "col": 2,
               "byteIndex": 503
@@ -4121,7 +4121,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 27,
               "col": 2,
               "byteIndex": 559
@@ -4142,7 +4142,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 30,
               "col": 2,
               "byteIndex": 642
@@ -4178,7 +4178,7 @@
       "name": "SqsSendBatchResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 36,
         "col": 0,
         "byteIndex": 741
@@ -4199,7 +4199,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 831
@@ -4220,7 +4220,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 41,
               "col": 2,
               "byteIndex": 886
@@ -4241,7 +4241,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 44,
               "col": 2,
               "byteIndex": 961
@@ -4262,7 +4262,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 47,
               "col": 2,
               "byteIndex": 1042
@@ -4294,7 +4294,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 50,
               "col": 2,
               "byteIndex": 1134
@@ -4326,7 +4326,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 53,
               "col": 2,
               "byteIndex": 1214
@@ -4347,7 +4347,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 56,
               "col": 2,
               "byteIndex": 1295
@@ -4383,7 +4383,7 @@
       "name": "SqsReceiveResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 62,
         "col": 0,
         "byteIndex": 1391
@@ -4404,7 +4404,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1479
@@ -4425,7 +4425,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 67,
               "col": 2,
               "byteIndex": 1534
@@ -4446,7 +4446,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 70,
               "col": 2,
               "byteIndex": 1597
@@ -4467,7 +4467,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 73,
               "col": 2,
               "byteIndex": 1680
@@ -4488,7 +4488,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 76,
               "col": 2,
               "byteIndex": 1766
@@ -4520,7 +4520,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 79,
               "col": 2,
               "byteIndex": 1862
@@ -4552,7 +4552,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 82,
               "col": 2,
               "byteIndex": 1959
@@ -4584,7 +4584,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 85,
               "col": 2,
               "byteIndex": 2062
@@ -4604,7 +4604,7 @@
                       {
                         "name": "body",
                         "location": {
-                          "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+                          "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
                           "line": 86,
                           "col": 14,
                           "byteIndex": 2090
@@ -4622,7 +4622,7 @@
                       {
                         "name": "attributes",
                         "location": {
-                          "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+                          "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
                           "line": 86,
                           "col": 29,
                           "byteIndex": 2105
@@ -4673,7 +4673,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 90,
               "col": 2,
               "byteIndex": 2213
@@ -4728,7 +4728,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 2333
@@ -4764,7 +4764,7 @@
       "name": "SqsDeleteResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 99,
         "col": 0,
         "byteIndex": 2428
@@ -4785,7 +4785,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 101,
               "col": 2,
               "byteIndex": 2515
@@ -4806,7 +4806,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 104,
               "col": 2,
               "byteIndex": 2570
@@ -4827,7 +4827,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 107,
               "col": 2,
               "byteIndex": 2646
@@ -4863,7 +4863,7 @@
       "name": "SqsMessageExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 113,
         "col": 0,
         "byteIndex": 2735
@@ -4884,7 +4884,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 115,
               "col": 2,
               "byteIndex": 2833
@@ -4916,7 +4916,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 118,
               "col": 2,
               "byteIndex": 2926
@@ -4968,7 +4968,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 122,
               "col": 2,
               "byteIndex": 3080
@@ -5012,7 +5012,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 126,
               "col": 2,
               "byteIndex": 3222
@@ -5065,7 +5065,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 129,
               "col": 2,
               "byteIndex": 3331
@@ -5097,7 +5097,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 132,
               "col": 2,
               "byteIndex": 3433
@@ -5155,7 +5155,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 135,
               "col": 2,
               "byteIndex": 3563
@@ -5191,7 +5191,7 @@
       "name": "expectSqsMessage",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 553,
         "col": 0,
         "byteIndex": 13479
@@ -5235,7 +5235,7 @@
       "name": "SqsEnsureQueueResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 562,
         "col": 0,
         "byteIndex": 13677
@@ -5256,7 +5256,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 564,
               "col": 2,
               "byteIndex": 13769
@@ -5277,7 +5277,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 567,
               "col": 2,
               "byteIndex": 13824
@@ -5298,7 +5298,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 570,
               "col": 2,
               "byteIndex": 13879
@@ -5319,7 +5319,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 573,
               "col": 2,
               "byteIndex": 13950
@@ -5351,7 +5351,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 576,
               "col": 2,
               "byteIndex": 14036
@@ -5383,7 +5383,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 579,
               "col": 2,
               "byteIndex": 14140
@@ -5419,7 +5419,7 @@
       "name": "SqsDeleteQueueResultExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 585,
         "col": 0,
         "byteIndex": 14241
@@ -5440,7 +5440,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 587,
               "col": 2,
               "byteIndex": 14333
@@ -5461,7 +5461,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 590,
               "col": 2,
               "byteIndex": 14388
@@ -5482,7 +5482,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+              "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
               "line": 593,
               "col": 2,
               "byteIndex": 14464
@@ -5518,7 +5518,7 @@
       "name": "SqsExpectation",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 694,
         "col": 0,
         "byteIndex": 16723
@@ -5763,7 +5763,7 @@
       "name": "expectSqsResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sqs/0.1.0/expect.ts",
+        "filename": "https://jsr.io/@probitas/client-sqs/0.1.1/expect.ts",
         "line": 776,
         "col": 0,
         "byteIndex": 19195
@@ -5856,5 +5856,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:29.624Z"
+  "generatedAt": "2025-12-09T00:26:35.043Z"
 }

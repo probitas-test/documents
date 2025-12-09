@@ -1,14 +1,14 @@
 {
   "name": "client-sql-postgres",
   "specifier": "@probitas/client-sql-postgres",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "moduleDoc": "PostgreSQL client for [Probitas](https://github.com/jsr-probitas/probitas) scenario testing framework.\n\nThis package provides a PostgreSQL client designed for integration testing,\nwith transaction support and LISTEN/NOTIFY capabilities.\n\n## Features\n\n- **Query Execution**: Parameterized queries with type-safe results\n- **Transactions**: Full transaction support with isolation levels\n- **LISTEN/NOTIFY**: Real-time notifications for async testing\n- **COPY Protocol**: High-performance bulk data loading\n- **Fluent Assertions**: `expectSqlQueryResult()` for testing query results\n- **Connection Pooling**: Configurable pool with idle timeout\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-sql-postgres\n```\n\n## Quick Start\n\n```ts\nimport { createPostgresClient, expectSqlQueryResult } from \"@probitas/client-sql-postgres\";\n\nconst client = await createPostgresClient({\n  url: \"postgres://user:pass@localhost:5432/mydb\",\n});\n\n// Query with parameters\nconst result = await client.query<{ id: number; name: string }>(\n  \"SELECT id, name FROM users WHERE active = $1\",\n  [true]\n);\n\nexpectSqlQueryResult(result)\n  .hasRowCount(3)\n  .rowsContain({ name: \"Alice\" });\n\n// Get first row\nconst user = await client.queryOne<{ id: number; name: string }>(\n  \"SELECT * FROM users WHERE id = $1\",\n  [1]\n);\n\nawait client.close();\n```\n\n## Transactions\n\n```ts\nawait client.transaction(async (tx) => {\n  await tx.query(\"INSERT INTO accounts (id, balance) VALUES ($1, $2)\", [1, 100]);\n  await tx.query(\"INSERT INTO accounts (id, balance) VALUES ($1, $2)\", [2, 200]);\n  // Automatically committed if no error, rolled back on exception\n}, { isolationLevel: \"serializable\" });\n```\n\n## LISTEN/NOTIFY\n\n```ts\n// Listen for notifications\nconst listener = await client.listen(\"events\");\nfor await (const notification of listener) {\n  console.log(\"Received:\", notification.payload);\n  break;\n}\n\n// Send notification\nawait client.notify(\"events\", JSON.stringify({ type: \"created\", id: 123 }));\n```\n\n## Using with `using` Statement\n\n```ts\nawait using client = await createPostgresClient({\n  url: \"postgres://localhost:5432/testdb\",\n});\n\nconst result = await client.query(\"SELECT 1 as n\");\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client-sql`](https://jsr.io/@probitas/client-sql) | Common SQL types and utilities |\n| [`@probitas/client-sql-mysql`](https://jsr.io/@probitas/client-sql-mysql) | MySQL client |\n| [`@probitas/client-sql-sqlite`](https://jsr.io/@probitas/client-sql-sqlite) | SQLite client |\n| [`@probitas/client-sql-duckdb`](https://jsr.io/@probitas/client-sql-duckdb) | DuckDB client |\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas-client)\n- [Probitas Framework](https://github.com/jsr-probitas/probitas)\n- [PostgreSQL](https://www.postgresql.org/)\n",
   "exports": [
     {
       "name": "PostgresTransaction",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/transaction.ts",
         "line": 14,
         "col": 0,
         "byteIndex": 343
@@ -51,7 +51,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/transaction.ts",
               "line": 24,
               "col": 2,
               "byteIndex": 607
@@ -165,7 +165,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/transaction.ts",
               "line": 47,
               "col": 2,
               "byteIndex": 1148
@@ -277,7 +277,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/transaction.ts",
               "line": 80,
               "col": 2,
               "byteIndex": 2027
@@ -315,7 +315,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/transaction.ts",
               "line": 91,
               "col": 2,
               "byteIndex": 2272
@@ -353,7 +353,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/transaction.ts",
               "line": 106,
               "col": 2,
               "byteIndex": 2606
@@ -2935,7 +2935,7 @@
       "name": "PostgresSslConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
         "line": 39,
         "col": 0,
         "byteIndex": 1091
@@ -2962,7 +2962,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 44,
               "col": 2,
               "byteIndex": 1211
@@ -2984,7 +2984,7 @@
               "doc": "CA certificate(s) for verification."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 49,
               "col": 2,
               "byteIndex": 1306
@@ -3006,7 +3006,7 @@
               "doc": "Client certificate for mutual TLS."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1383
@@ -3028,7 +3028,7 @@
               "doc": "Client private key for mutual TLS."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 59,
               "col": 2,
               "byteIndex": 1462
@@ -3054,7 +3054,7 @@
       "name": "PostgresConnectionConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
         "line": 67,
         "col": 0,
         "byteIndex": 1607
@@ -3084,7 +3084,7 @@
               "doc": "Database name to connect to."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 71,
               "col": 2,
               "byteIndex": 1730
@@ -3106,7 +3106,7 @@
               "doc": "SSL/TLS configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 76,
               "col": 2,
               "byteIndex": 1801
@@ -3146,7 +3146,7 @@
       "name": "PostgresPoolConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
         "line": 82,
         "col": 0,
         "byteIndex": 1894
@@ -3167,7 +3167,7 @@
               "doc": "Maximum number of connections in the pool"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 84,
               "col": 2,
               "byteIndex": 1985
@@ -3189,7 +3189,7 @@
               "doc": "Idle timeout in milliseconds before closing unused connections"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 87,
               "col": 2,
               "byteIndex": 2083
@@ -3211,7 +3211,7 @@
               "doc": "Connection timeout in milliseconds"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 90,
               "col": 2,
               "byteIndex": 2161
@@ -3237,7 +3237,7 @@
       "name": "PostgresClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
         "line": 96,
         "col": 0,
         "byteIndex": 2257
@@ -3277,7 +3277,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 118,
               "col": 2,
               "byteIndex": 2735
@@ -3313,7 +3313,7 @@
               "doc": "Pool configuration"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 121,
               "col": 2,
               "byteIndex": 2815
@@ -3338,7 +3338,7 @@
               "doc": "Application name for PostgreSQL connection"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 124,
               "col": 2,
               "byteIndex": 2906
@@ -3364,7 +3364,7 @@
       "name": "PostgresNotification",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
         "line": 130,
         "col": 0,
         "byteIndex": 2994
@@ -3385,7 +3385,7 @@
               "doc": "Channel name"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 132,
               "col": 2,
               "byteIndex": 3058
@@ -3407,7 +3407,7 @@
               "doc": "Notification payload"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 135,
               "col": 2,
               "byteIndex": 3117
@@ -3429,7 +3429,7 @@
               "doc": "Process ID of the notifying backend"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 138,
               "col": 2,
               "byteIndex": 3191
@@ -3455,7 +3455,7 @@
       "name": "PostgresClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
         "line": 144,
         "col": 0,
         "byteIndex": 3262
@@ -3497,7 +3497,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 158,
               "col": 2,
               "byteIndex": 3626
@@ -3599,7 +3599,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 170,
               "col": 2,
               "byteIndex": 3932
@@ -3703,7 +3703,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 184,
               "col": 2,
               "byteIndex": 4351
@@ -3815,7 +3815,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 196,
               "col": 2,
               "byteIndex": 4684
@@ -3890,7 +3890,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 204,
               "col": 2,
               "byteIndex": 4931
@@ -3946,7 +3946,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 212,
               "col": 2,
               "byteIndex": 5138
@@ -4002,7 +4002,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 220,
               "col": 2,
               "byteIndex": 5346
@@ -4053,7 +4053,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 225,
               "col": 2,
               "byteIndex": 5470
@@ -4084,7 +4084,7 @@
               "doc": "The client configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 146,
               "col": 2,
               "byteIndex": 3357
@@ -4109,7 +4109,7 @@
               "doc": "The database dialect."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
               "line": 149,
               "col": 2,
               "byteIndex": 3430
@@ -4138,7 +4138,7 @@
       "name": "createPostgresClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/client.ts",
         "line": 674,
         "col": 0,
         "byteIndex": 17458
@@ -4222,7 +4222,7 @@
       "name": "PostgresErrorLike",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/errors.ts",
         "line": 36,
         "col": 0,
         "byteIndex": 813
@@ -4240,7 +4240,7 @@
           {
             "name": "message",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/errors.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 852
@@ -4259,7 +4259,7 @@
           {
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/errors.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 880
@@ -4278,7 +4278,7 @@
           {
             "name": "constraint",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/errors.ts",
               "line": 39,
               "col": 2,
               "byteIndex": 906
@@ -4304,7 +4304,7 @@
       "name": "mapPostgresError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-postgres/0.1.1/errors.ts",
         "line": 48,
         "col": 0,
         "byteIndex": 1106
@@ -4356,5 +4356,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:29.345Z"
+  "generatedAt": "2025-12-09T00:26:34.768Z"
 }

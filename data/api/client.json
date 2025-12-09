@@ -1,14 +1,14 @@
 {
   "name": "client",
   "specifier": "@probitas/client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "moduleDoc": "Core utilities and types for Probitas client libraries.\n\nThis package provides shared types, error classes, and utilities used across\nall [`@probitas/*`](https://jsr.io/@probitas) client packages.\n\n## Features\n\n- **Common Options**: Shared configuration types like `CommonOptions` and `RetryOptions`\n- **Error Hierarchy**: Base error classes (`ClientError`, `ConnectionError`, `TimeoutError`, `AbortError`)\n- **Utilities**: Helper functions used internally by client packages\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client\n```\n\n## Usage\n\nThis package is typically used as a dependency by other client packages.\nEnd users rarely need to import from it directly.\n\n```ts\nimport type { CommonOptions, RetryOptions } from \"@probitas/client\";\nimport { ClientError, ConnectionError, TimeoutError } from \"@probitas/client\";\n\n// Use CommonOptions for timeout and abort signal support\nasync function fetchData(options?: CommonOptions) {\n  // Implementation with timeout and signal handling\n}\n\n// Catch and handle errors\ntry {\n  await fetchData({ timeout: 5000 });\n} catch (error) {\n  if (error instanceof TimeoutError) {\n    console.log(`Timed out after ${error.timeoutMs}ms`);\n  } else if (error instanceof ConnectionError) {\n    console.log(\"Failed to connect\");\n  }\n}\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client-http`](https://jsr.io/@probitas/client-http) | HTTP client with fluent assertions |\n| [`@probitas/client-graphql`](https://jsr.io/@probitas/client-graphql) | GraphQL client |\n| [`@probitas/client-grpc`](https://jsr.io/@probitas/client-grpc) | gRPC client |\n| [`@probitas/client-connectrpc`](https://jsr.io/@probitas/client-connectrpc) | ConnectRPC client |\n| [`@probitas/client-sql-postgres`](https://jsr.io/@probitas/client-sql-postgres) | PostgreSQL client |\n| [`@probitas/client-sql-mysql`](https://jsr.io/@probitas/client-sql-mysql) | MySQL client |\n| [`@probitas/client-sql-sqlite`](https://jsr.io/@probitas/client-sql-sqlite) | SQLite client |\n| [`@probitas/client-sql-duckdb`](https://jsr.io/@probitas/client-sql-duckdb) | DuckDB client |\n| [`@probitas/client-deno-kv`](https://jsr.io/@probitas/client-deno-kv) | Deno KV client |\n| [`@probitas/client-redis`](https://jsr.io/@probitas/client-redis) | Redis client |\n| [`@probitas/client-mongodb`](https://jsr.io/@probitas/client-mongodb) | MongoDB client |\n| [`@probitas/client-rabbitmq`](https://jsr.io/@probitas/client-rabbitmq) | RabbitMQ client |\n| [`@probitas/client-sqs`](https://jsr.io/@probitas/client-sqs) | AWS SQS client |\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas-client)\n- [Probitas Framework](https://github.com/jsr-probitas/probitas)\n",
   "exports": [
     {
       "name": "CommonConnectionConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
         "line": 24,
         "col": 0,
         "byteIndex": 581
@@ -41,7 +41,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 29,
               "col": 2,
               "byteIndex": 692
@@ -63,7 +63,7 @@
               "doc": "Port number. Each service has its own default."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 783
@@ -85,7 +85,7 @@
               "doc": "Username for authentication."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 39,
               "col": 2,
               "byteIndex": 856
@@ -107,7 +107,7 @@
               "doc": "Password for authentication."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 44,
               "col": 2,
               "byteIndex": 933
@@ -133,7 +133,7 @@
       "name": "RetryOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
         "line": 50,
         "col": 0,
         "byteIndex": 1004
@@ -160,7 +160,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1114
@@ -188,7 +188,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 61,
               "col": 2,
               "byteIndex": 1211
@@ -233,7 +233,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 67,
               "col": 2,
               "byteIndex": 1326
@@ -261,7 +261,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 73,
               "col": 2,
               "byteIndex": 1429
@@ -283,7 +283,7 @@
               "doc": "Function to determine if the error should trigger a retry."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 78,
               "col": 2,
               "byteIndex": 1536
@@ -332,7 +332,7 @@
       "name": "CommonOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
         "line": 84,
         "col": 0,
         "byteIndex": 1638
@@ -353,7 +353,7 @@
               "doc": "Timeout in milliseconds."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 88,
               "col": 2,
               "byteIndex": 1715
@@ -375,7 +375,7 @@
               "doc": "AbortSignal for cancellation."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 1792
@@ -400,7 +400,7 @@
               "doc": "Retry configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/types.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/types.ts",
               "line": 98,
               "col": 2,
               "byteIndex": 1864
@@ -429,7 +429,7 @@
       "name": "ClientError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
         "line": 8,
         "col": 0,
         "byteIndex": 275
@@ -487,7 +487,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 12,
               "col": 2,
               "byteIndex": 394
@@ -509,7 +509,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 9,
               "col": 2,
               "byteIndex": 318
@@ -528,7 +528,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 10,
               "col": 2,
               "byteIndex": 368
@@ -547,7 +547,7 @@
       "name": "ConnectionError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
         "line": 25,
         "col": 0,
         "byteIndex": 615
@@ -590,7 +590,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 29,
               "col": 2,
               "byteIndex": 765
@@ -612,7 +612,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 26,
               "col": 2,
               "byteIndex": 668
@@ -635,7 +635,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 27,
               "col": 2,
               "byteIndex": 714
@@ -654,7 +654,7 @@
       "name": "TimeoutError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
         "line": 37,
         "col": 0,
         "byteIndex": 923
@@ -707,7 +707,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 42,
               "col": 2,
               "byteIndex": 1094
@@ -729,7 +729,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 973
@@ -752,7 +752,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 39,
               "col": 2,
               "byteIndex": 1016
@@ -771,7 +771,7 @@
             "isStatic": false,
             "name": "timeoutMs",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 40,
               "col": 2,
               "byteIndex": 1063
@@ -790,7 +790,7 @@
       "name": "AbortError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
         "line": 51,
         "col": 0,
         "byteIndex": 1317
@@ -833,7 +833,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1452
@@ -855,7 +855,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1365
@@ -878,7 +878,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client/0.1.0/errors.ts",
+              "filename": "https://jsr.io/@probitas/client/0.1.1/errors.ts",
               "line": 53,
               "col": 2,
               "byteIndex": 1406
@@ -897,7 +897,7 @@
       "name": "containsSubset",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/utils.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/utils.ts",
         "line": 41,
         "col": 0,
         "byteIndex": 1202
@@ -965,7 +965,7 @@
       "name": "containsSubarray",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client/0.1.0/utils.ts",
+        "filename": "https://jsr.io/@probitas/client/0.1.1/utils.ts",
         "line": 93,
         "col": 0,
         "byteIndex": 2680
@@ -1036,5 +1036,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:27.834Z"
+  "generatedAt": "2025-12-09T00:26:33.286Z"
 }

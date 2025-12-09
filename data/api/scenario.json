@@ -1,25 +1,416 @@
 {
   "name": "scenario",
   "specifier": "@probitas/scenario",
-  "version": "0.2.4",
-  "moduleDoc": "Core scenario definition types and utilities.\n\nThis package provides the fundamental type definitions that represent scenario\nstructures, along with utilities for loading scenario files and filtering\nscenarios using selectors. It serves as the foundation layer that other\nProbitas packages build upon.\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [@probitas/builder](https://jsr.io/@probitas/builder) | Uses these types to build scenarios |\n| [@probitas/runner](https://jsr.io/@probitas/runner) | Executes scenario definitions |\n| [@probitas/discover](https://jsr.io/@probitas/discover) | Discovers scenario files to load |\n\n## Type Definitions\n\nThe type system is designed around immutable data structures:\n\n- {@linkcode ScenarioDefinition} - Complete scenario with name, options, and entries\n- {@linkcode StepDefinition} - Individual step with function, options, and location\n- {@linkcode SetupDefinition} - Setup hook with cleanup function support\n- {@linkcode ResourceDefinition} - Named resource with factory function\n- {@linkcode StepContext} - Context object passed to all functions\n- {@linkcode Entry} - Discriminated union of step, setup, or resource\n\n## Options Types\n\n- {@linkcode ScenarioOptions} - Scenario-level configuration (tags, default step options)\n- {@linkcode StepOptions} - Step execution settings (timeout, retry strategy)\n- {@linkcode SourceLocation} - File and line number for error reporting\n\n## Function Types\n\n- {@linkcode StepFunction} - Signature for step execution functions\n- {@linkcode SetupFunction} - Signature for setup hooks (returns cleanup)\n- {@linkcode ResourceFactory} - Signature for resource creation functions\n- {@linkcode SetupCleanup} - Return type of setup functions\n\n## Loader Utilities\n\n- {@linkcode loadScenarios} - Load scenario definitions from file paths\n- {@linkcode LoadScenariosOptions} - Options for the loader\n\n## Selector Utilities\n\nSelectors provide powerful filtering capabilities:\n\n- {@linkcode applySelectors} - Filter scenarios using selector strings\n- {@linkcode parseSelector} - Parse selector string into Selector objects\n- {@linkcode matchesSelector} - Check if a scenario matches a single selector\n- {@linkcode Selector} - Parsed selector object\n- {@linkcode SelectorType} - Type of selector (\"tag\" or \"name\")\n",
+  "version": "0.2.6",
+  "moduleDoc": "Core scenario definition types and utilities.\n\nThis package provides the fundamental type definitions that represent scenario\nstructures, along with utilities for loading scenario files and filtering\nscenarios using selectors. It serves as the foundation layer that other\nProbitas packages build upon.\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [@probitas/builder](https://jsr.io/@probitas/builder) | Uses these types to build scenarios |\n| [@probitas/runner](https://jsr.io/@probitas/runner) | Executes scenario definitions |\n| [@probitas/discover](https://jsr.io/@probitas/discover) | Discovers scenario files to load |\n\n## Type Definitions\n\nThe type system is designed around immutable data structures:\n\n- {@linkcode ScenarioDefinition} - Complete scenario with name, options, and entries\n- {@linkcode StepDefinition} - Individual step with function, options, and source\n- {@linkcode SetupDefinition} - Setup hook with cleanup function support\n- {@linkcode ResourceDefinition} - Named resource with fn function\n- {@linkcode StepContext} - Context object passed to all functions\n- {@linkcode Entry} - Discriminated union of step, setup, or resource\n\n## Options Types\n\n- {@linkcode ScenarioOptions} - Scenario-level configuration (tags, default step options)\n- {@linkcode StepOptions} - Step execution settings (timeout, retry strategy)\n- {@linkcode Source} - File and line number for error reporting\n\n## Function Types\n\n- {@linkcode StepFunction} - Signature for step execution functions\n- {@linkcode SetupFunction} - Signature for setup hooks (returns cleanup)\n- {@linkcode ResourceFunction} - Signature for resource creation functions\n- {@linkcode SetupCleanup} - Return type of setup functions\n\n## Loader Utilities\n\n- {@linkcode loadScenarios} - Load scenario definitions from file paths\n- {@linkcode LoadScenariosOptions} - Options for the loader\n\n## Selector Utilities\n\nSelectors provide powerful filtering capabilities:\n\n- {@linkcode applySelectors} - Filter scenarios using selector strings\n- {@linkcode parseSelector} - Parse selector string into Selector objects\n- {@linkcode matchesSelector} - Check if a scenario matches a single selector\n- {@linkcode Selector} - Parsed selector object\n- {@linkcode SelectorType} - Type of selector (\"tag\" or \"name\")\n",
   "exports": [
     {
-      "name": "SourceLocation",
+      "name": "ScenarioOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 26,
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+        "line": 22,
         "col": 0,
-        "byteIndex": 640
+        "byteIndex": 529
       },
       "declarationKind": "export",
       "jsDoc": {
-        "doc": "Source location in a file for error reporting and debugging.\n\nCaptured automatically when defining scenarios, steps, and setups.\nUsed by reporters to show meaningful stack traces.\n",
+        "doc": "Configuration options for scenario execution.\n\nDefines metadata and default behavior for an entire scenario.\n",
         "tags": [
           {
             "kind": "example",
-            "doc": "```ts\n// Example location object\nconst location: SourceLocation = {\n  file: \"/project/tests/auth.probitas.ts\",\n  line: 42\n};\n```"
+            "doc": "```ts\nconst options: ScenarioOptions = {\n  tags: [\"api\", \"integration\", \"slow\"],\n  stepOptions: {\n    timeout: 60000,\n    retry: { maxAttempts: 2, backoff: \"linear\" }\n  }\n};\n```\n"
+          },
+          {
+            "kind": "see",
+            "doc": "{@linkcode StepOptions} for step-level configuration"
+          }
+        ]
+      },
+      "kind": "interface",
+      "interfaceDef": {
+        "extends": [],
+        "constructors": [],
+        "methods": [],
+        "properties": [
+          {
+            "name": "tags",
+            "jsDoc": {
+              "doc": "Tags for filtering and organizing scenarios.\n\nTags can be used with the CLI to run specific subsets:\n```bash\nprobitas run -s \"tag:api\"           # Run scenarios tagged \"api\"\nprobitas run -s \"tag:api,tag:fast\"  # Run scenarios with both tags\nprobitas run -s \"!tag:slow\"         # Exclude slow scenarios\n```"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 33,
+              "col": 2,
+              "byteIndex": 923
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "",
+              "kind": "typeOperator",
+              "typeOperator": {
+                "operator": "readonly",
+                "tsType": {
+                  "repr": "",
+                  "kind": "array",
+                  "array": {
+                    "repr": "string",
+                    "kind": "keyword",
+                    "keyword": "string"
+                  }
+                }
+              }
+            },
+            "typeParams": []
+          },
+          {
+            "name": "stepOptions",
+            "jsDoc": {
+              "doc": "Default options applied to all steps in this scenario.\n\nIndividual steps can override these defaults by specifying\ntheir own options in the `.step()` call."
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 41,
+              "col": 2,
+              "byteIndex": 1148
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "StepOptions",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": null,
+                "typeName": "StepOptions"
+              }
+            },
+            "typeParams": []
+          }
+        ],
+        "callSignatures": [],
+        "indexSignatures": [],
+        "typeParams": []
+      }
+    },
+    {
+      "name": "ScenarioDefinition",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+        "line": 75,
+        "col": 0,
+        "byteIndex": 2320
+      },
+      "declarationKind": "export",
+      "jsDoc": {
+        "doc": "Complete, immutable definition of a scenario.\n\nThis is the core type produced by the builder and consumed by the runner.\nIt contains everything needed to execute a scenario: its name, options,\nand ordered sequence of entries (steps, resources, setups).\n",
+        "tags": [
+          {
+            "kind": "unsupported",
+            "value": "@remarks\nScenario definitions are:\n- **Immutable**: The entries array is frozen after creation\n- **Self-contained**: All options have defaults applied\n- **Portable**: Can be serialized (minus functions) for tooling\n"
+          },
+          {
+            "kind": "example",
+            "doc": "Typical scenario structure\n```ts\n// Created by: scenario(\"Login Flow\").step(...).build()\nconst definition: ScenarioDefinition = {\n  name: \"Login Flow\",\n  options: {\n    tags: [\"auth\", \"smoke\"],\n    stepOptions: { timeout: 30000, retry: { maxAttempts: 1, backoff: \"linear\" } }\n  },\n  entries: [\n    { kind: \"resource\", value: { name: \"api\", fn: ... } },\n    { kind: \"step\", value: { name: \"Login\", fn: ..., options: ... } },\n    { kind: \"step\", value: { name: \"Verify\", fn: ..., options: ... } }\n  ],\n  source: { file: \"/tests/auth.probitas.ts\", line: 5 }\n};\n```"
+          }
+        ]
+      },
+      "kind": "interface",
+      "interfaceDef": {
+        "extends": [],
+        "constructors": [],
+        "methods": [],
+        "properties": [
+          {
+            "name": "name",
+            "jsDoc": {
+              "doc": "Human-readable scenario name (displayed in reports and CLI)"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 77,
+              "col": 2,
+              "byteIndex": 2429
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "string",
+              "kind": "keyword",
+              "keyword": "string"
+            },
+            "typeParams": []
+          },
+          {
+            "name": "tags",
+            "jsDoc": {
+              "doc": "Tags for filtering and organizing scenarios.\n\nTags can be used with the CLI to run specific subsets:\n```bash\nprobitas run -s \"tag:api\"           # Run scenarios tagged \"api\"\nprobitas run -s \"tag:api,tag:fast\"  # Run scenarios with both tags\nprobitas run -s \"!tag:slow\"         # Exclude slow scenarios\n```"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 89,
+              "col": 2,
+              "byteIndex": 2812
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "",
+              "kind": "typeOperator",
+              "typeOperator": {
+                "operator": "readonly",
+                "tsType": {
+                  "repr": "",
+                  "kind": "array",
+                  "array": {
+                    "repr": "string",
+                    "kind": "keyword",
+                    "keyword": "string"
+                  }
+                }
+              }
+            },
+            "typeParams": []
+          },
+          {
+            "name": "steps",
+            "jsDoc": {
+              "doc": "Ordered sequence of entries (resources → setups → steps)"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 92,
+              "col": 2,
+              "byteIndex": 2919
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "",
+              "kind": "typeOperator",
+              "typeOperator": {
+                "operator": "readonly",
+                "tsType": {
+                  "repr": "",
+                  "kind": "array",
+                  "array": {
+                    "repr": "StepDefinition",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "StepDefinition"
+                    }
+                  }
+                }
+              }
+            },
+            "typeParams": []
+          },
+          {
+            "name": "source",
+            "jsDoc": {
+              "doc": "Source source where the scenario was defined"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 95,
+              "col": 2,
+              "byteIndex": 3019
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "Source",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": null,
+                "typeName": "Source"
+              }
+            },
+            "typeParams": []
+          }
+        ],
+        "callSignatures": [],
+        "indexSignatures": [],
+        "typeParams": []
+      }
+    },
+    {
+      "name": "ScenarioMetadata",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+        "line": 116,
+        "col": 0,
+        "byteIndex": 3575
+      },
+      "declarationKind": "export",
+      "jsDoc": {
+        "doc": "Serializable scenario metadata (without executable functions).\n\nUsed by the JSON reporter and tooling to output scenario information\nwithout including non-serializable function references.\n",
+        "tags": [
+          {
+            "kind": "example",
+            "doc": "JSON reporter output\n```json\n{\n  \"name\": \"Login Flow\",\n  \"options\": { \"tags\": [\"auth\"], \"stepOptions\": { ... } },\n  \"entries\": [\n    { \"kind\": \"step\", \"value\": { \"name\": \"Login\", \"options\": { ... } } }\n  ],\n  \"source\": { \"file\": \"/tests/auth.probitas.ts\", \"line\": 5 }\n}\n```"
+          }
+        ]
+      },
+      "kind": "interface",
+      "interfaceDef": {
+        "extends": [],
+        "constructors": [],
+        "methods": [],
+        "properties": [
+          {
+            "name": "name",
+            "jsDoc": {
+              "doc": "Scenario name"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 118,
+              "col": 2,
+              "byteIndex": 3636
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "string",
+              "kind": "keyword",
+              "keyword": "string"
+            },
+            "typeParams": []
+          },
+          {
+            "name": "tags",
+            "jsDoc": {
+              "doc": "Tags for filtering and organizing scenarios.\n\nTags can be used with the CLI to run specific subsets:\n```bash\nprobitas run -s \"tag:api\"           # Run scenarios tagged \"api\"\nprobitas run -s \"tag:api,tag:fast\"  # Run scenarios with both tags\nprobitas run -s \"!tag:slow\"         # Exclude slow scenarios\n```"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 130,
+              "col": 2,
+              "byteIndex": 4019
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "",
+              "kind": "typeOperator",
+              "typeOperator": {
+                "operator": "readonly",
+                "tsType": {
+                  "repr": "",
+                  "kind": "array",
+                  "array": {
+                    "repr": "string",
+                    "kind": "keyword",
+                    "keyword": "string"
+                  }
+                }
+              }
+            },
+            "typeParams": []
+          },
+          {
+            "name": "steps",
+            "jsDoc": {
+              "doc": "Entry metadata (functions omitted for serialization)"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 133,
+              "col": 2,
+              "byteIndex": 4118
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "",
+              "kind": "typeOperator",
+              "typeOperator": {
+                "operator": "readonly",
+                "tsType": {
+                  "repr": "",
+                  "kind": "array",
+                  "array": {
+                    "repr": "StepMetadata",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "StepMetadata"
+                    }
+                  }
+                }
+              }
+            },
+            "typeParams": []
+          },
+          {
+            "name": "source",
+            "jsDoc": {
+              "doc": "Source source where the scenario was defined"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/scenario.ts",
+              "line": 136,
+              "col": 2,
+              "byteIndex": 4216
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "Source",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": null,
+                "typeName": "Source"
+              }
+            },
+            "typeParams": []
+          }
+        ],
+        "callSignatures": [],
+        "indexSignatures": [],
+        "typeParams": []
+      }
+    },
+    {
+      "name": "Source",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/source.ts",
+        "line": 16,
+        "col": 0,
+        "byteIndex": 350
+      },
+      "declarationKind": "export",
+      "jsDoc": {
+        "doc": "Source source in a file for error reporting and debugging.\n\nCaptured automatically when defining scenarios, steps, and setups.\nUsed by reporters to show meaningful stack traces.\n",
+        "tags": [
+          {
+            "kind": "example",
+            "doc": "```ts\n// Example source object\nconst source: Source = {\n  file: \"/project/tests/auth.probitas.ts\",\n  line: 42\n};\n```"
           }
         ]
       },
@@ -35,10 +426,10 @@
               "doc": "Absolute file path where the element was defined"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 28,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/source.ts",
+              "line": 18,
               "col": 2,
-              "byteIndex": 734
+              "byteIndex": 436
             },
             "params": [],
             "readonly": true,
@@ -57,15 +448,37 @@
               "doc": "Line number in the file (1-indexed)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 31,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/source.ts",
+              "line": 21,
               "col": 2,
-              "byteIndex": 805
+              "byteIndex": 507
             },
             "params": [],
             "readonly": true,
             "computed": false,
-            "optional": false,
+            "optional": true,
+            "tsType": {
+              "repr": "number",
+              "kind": "keyword",
+              "keyword": "number"
+            },
+            "typeParams": []
+          },
+          {
+            "name": "column",
+            "jsDoc": {
+              "doc": "Column number in the file (1-indexed)"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/source.ts",
+              "line": 24,
+              "col": 2,
+              "byteIndex": 581
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": true,
             "tsType": {
               "repr": "number",
               "kind": "keyword",
@@ -83,10 +496,10 @@
       "name": "StepOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 53,
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+        "line": 22,
         "col": 0,
-        "byteIndex": 1333
+        "byteIndex": 546
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -110,15 +523,15 @@
               "doc": "Maximum execution time in milliseconds.\n\nIf the step takes longer, a {@linkcode TimeoutError} is thrown.\nDefault: 30000 (30 seconds)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 60,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 29,
               "col": 2,
-              "byteIndex": 1530
+              "byteIndex": 743
             },
             "params": [],
             "readonly": true,
             "computed": false,
-            "optional": false,
+            "optional": true,
             "tsType": {
               "repr": "number",
               "kind": "keyword",
@@ -132,15 +545,15 @@
               "doc": "Retry configuration for handling transient failures"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 63,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 32,
               "col": 2,
-              "byteIndex": 1620
+              "byteIndex": 834
             },
             "params": [],
             "readonly": true,
             "computed": false,
-            "optional": false,
+            "optional": true,
             "tsType": {
               "repr": "",
               "kind": "typeLiteral",
@@ -154,15 +567,15 @@
                       "doc": "Maximum number of execution attempts.\n\n- `1` = No retry (fail immediately on error)\n- `2` = One retry (2 total attempts)\n- `n` = n-1 retries (n total attempts)\n\nDefault: 1 (no retry)"
                     },
                     "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 73,
+                      "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+                      "line": 42,
                       "col": 4,
-                      "byteIndex": 1888
+                      "byteIndex": 1103
                     },
                     "params": [],
                     "readonly": true,
                     "computed": false,
-                    "optional": false,
+                    "optional": true,
                     "tsType": {
                       "repr": "number",
                       "kind": "keyword",
@@ -176,15 +589,15 @@
                       "doc": "Backoff strategy for delay between retry attempts.\n\n- `\"linear\"`: Fixed 1 second delay between attempts\n- `\"exponential\"`: Doubles delay each attempt (1s, 2s, 4s, 8s...)\n\nDefault: \"linear\""
                     },
                     "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 83,
+                      "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+                      "line": 52,
                       "col": 4,
-                      "byteIndex": 2168
+                      "byteIndex": 1384
                     },
                     "params": [],
                     "readonly": true,
                     "computed": false,
-                    "optional": false,
+                    "optional": true,
                     "tsType": {
                       "repr": "",
                       "kind": "union",
@@ -223,106 +636,13 @@
       }
     },
     {
-      "name": "ScenarioOptions",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 105,
-        "col": 0,
-        "byteIndex": 2629
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Configuration options for scenario execution.\n\nDefines metadata and default behavior for an entire scenario.\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "```ts\nconst options: ScenarioOptions = {\n  tags: [\"api\", \"integration\", \"slow\"],\n  stepOptions: {\n    timeout: 60000,\n    retry: { maxAttempts: 2, backoff: \"linear\" }\n  }\n};\n```\n"
-          },
-          {
-            "kind": "see",
-            "doc": "{@linkcode StepOptions} for step-level configuration"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "tags",
-            "jsDoc": {
-              "doc": "Tags for filtering and organizing scenarios.\n\nTags can be used with the CLI to run specific subsets:\n```bash\nprobitas run -s \"tag:api\"           # Run scenarios tagged \"api\"\nprobitas run -s \"tag:api,tag:fast\"  # Run scenarios with both tags\nprobitas run -s \"!tag:slow\"         # Exclude slow scenarios\n```"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 116,
-              "col": 2,
-              "byteIndex": 3023
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  }
-                }
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "stepOptions",
-            "jsDoc": {
-              "doc": "Default options applied to all steps in this scenario.\n\nIndividual steps can override these defaults by specifying\ntheir own options in the `.step()` call."
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 124,
-              "col": 2,
-              "byteIndex": 3247
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "StepOptions",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "StepOptions"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
       "name": "SetupCleanup",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 160,
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+        "line": 89,
         "col": 0,
-        "byteIndex": 4256
+        "byteIndex": 2408
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -412,30 +732,15 @@
       "name": "StepContext",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 203,
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+        "line": 128,
         "col": 0,
-        "byteIndex": 5537
+        "byteIndex": 3462
       },
       "declarationKind": "export",
       "jsDoc": {
         "doc": "Execution context provided to steps, resources, and setup hooks.\n\nThe context provides access to:\n- Previous step results with full type inference\n- All accumulated results as a typed tuple\n- Named resources registered with `.resource()`\n- Shared storage for cross-step communication\n- Abort signal for timeout and cancellation handling\n",
         "tags": [
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's return value"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of all accumulated results from previous steps"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Record type mapping resource names to their types\n"
-          },
           {
             "kind": "example",
             "doc": "Accessing previous result\n```ts\nscenario(\"Chained Steps\")\n  .step(\"First\", () => ({ id: 123 }))\n  .step(\"Second\", (ctx) => {\n    console.log(ctx.previous.id);  // 123 (typed as number)\n  })\n  .build();\n```\n"
@@ -458,10 +763,10 @@
               "doc": "Current step index (0-based).\n\nUseful for conditional logic based on position in the scenario."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 213,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 134,
               "col": 2,
-              "byteIndex": 5846
+              "byteIndex": 3616
             },
             "params": [],
             "readonly": true,
@@ -480,22 +785,19 @@
               "doc": "Result from the previous step.\n\nFully typed based on what the previous step returned.\nFor the first step, this is `unknown`."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 221,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 142,
               "col": 2,
-              "byteIndex": 6029
+              "byteIndex": 3799
             },
             "params": [],
             "readonly": true,
             "computed": false,
             "optional": false,
             "tsType": {
-              "repr": "Previous",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "Previous"
-              }
+              "repr": "unknown",
+              "kind": "keyword",
+              "keyword": "unknown"
             },
             "typeParams": []
           },
@@ -505,21 +807,29 @@
               "doc": "All accumulated results as a typed tuple.\n\nAllows accessing any previous result by index:\n```ts\nctx.results[0]  // First step's result\nctx.results[1]  // Second step's result\n```"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 232,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 153,
               "col": 2,
-              "byteIndex": 6286
+              "byteIndex": 4055
             },
             "params": [],
             "readonly": true,
             "computed": false,
             "optional": false,
             "tsType": {
-              "repr": "Results",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "Results"
+              "repr": "",
+              "kind": "typeOperator",
+              "typeOperator": {
+                "operator": "readonly",
+                "tsType": {
+                  "repr": "",
+                  "kind": "array",
+                  "array": {
+                    "repr": "unknown",
+                    "kind": "keyword",
+                    "keyword": "unknown"
+                  }
+                }
               }
             },
             "typeParams": []
@@ -530,10 +840,10 @@
               "doc": "Shared key-value storage for cross-step communication.\n\nUse this for data that doesn't fit the step result pattern,\nsuch as metadata or configuration set during setup."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 240,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 161,
               "col": 2,
-              "byteIndex": 6515
+              "byteIndex": 4295
             },
             "params": [],
             "readonly": true,
@@ -561,20 +871,56 @@
             "typeParams": []
           },
           {
-            "name": "signal",
+            "name": "resources",
             "jsDoc": {
-              "doc": "Abort signal that fires on timeout or manual cancellation.\n\nPass this to fetch() or other APIs that support AbortSignal\nfor proper timeout handling."
+              "doc": "Named resources registered with `.resource()`.\n\nResources are typed based on their registration:\n```ts\n.resource(\"db\", () => createDbConnection())\n.step((ctx) => ctx.resources.db.query(...))\n```"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 248,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 172,
               "col": 2,
-              "byteIndex": 6736
+              "byteIndex": 4577
             },
             "params": [],
             "readonly": true,
             "computed": false,
             "optional": false,
+            "tsType": {
+              "repr": "Record",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": [
+                  {
+                    "repr": "string",
+                    "kind": "keyword",
+                    "keyword": "string"
+                  },
+                  {
+                    "repr": "unknown",
+                    "kind": "keyword",
+                    "keyword": "unknown"
+                  }
+                ],
+                "typeName": "Record"
+              }
+            },
+            "typeParams": []
+          },
+          {
+            "name": "signal",
+            "jsDoc": {
+              "doc": "Abort signal that fires on timeout or manual cancellation.\n\nPass this to fetch() or other APIs that support AbortSignal\nfor proper timeout handling."
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 180,
+              "col": 2,
+              "byteIndex": 4805
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": true,
             "tsType": {
               "repr": "AbortSignal",
               "kind": "typeRef",
@@ -584,131 +930,21 @@
               }
             },
             "typeParams": []
-          },
-          {
-            "name": "resources",
-            "jsDoc": {
-              "doc": "Named resources registered with `.resource()`.\n\nResources are typed based on their registration:\n```ts\n.resource(\"db\", () => createDbConnection())\n.step((ctx) => ctx.resources.db.query(...))\n```"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 259,
-              "col": 2,
-              "byteIndex": 7010
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "Resources",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "Resources"
-              }
-            },
-            "typeParams": []
           }
         ],
         "callSignatures": [],
         "indexSignatures": [],
-        "typeParams": [
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
+        "typeParams": []
       }
     },
     {
       "name": "StepFunction",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 288,
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+        "line": 206,
         "col": 0,
-        "byteIndex": 7852
+        "byteIndex": 5447
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -717,22 +953,7 @@
           {
             "kind": "template",
             "name": "T",
-            "doc": "- Type of this step's return value"
-          },
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result (from `ctx.previous`)"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of all accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Record of available resources\n"
+            "doc": "- Type of this step's return value\n"
           },
           {
             "kind": "example",
@@ -791,463 +1012,7 @@
                   "repr": "StepContext",
                   "kind": "typeRef",
                   "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "Previous",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Previous"
-                        }
-                      },
-                      {
-                        "repr": "Results",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Results"
-                        }
-                      },
-                      {
-                        "repr": "Resources",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Resources"
-                        }
-                      }
-                    ],
-                    "typeName": "StepContext"
-                  }
-                }
-              }
-            ],
-            "typeParams": []
-          }
-        },
-        "typeParams": [
-          {
-            "name": "T",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "SetupFunction",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 325,
-        "col": 0,
-        "byteIndex": 9056
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Function signature for setup hooks.\n\nSetup functions run before steps and can return a cleanup handler\nthat executes after the scenario completes (success or failure).\n",
-        "tags": [
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Record of available resources\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Setup with cleanup function\n```ts\nconst setup: SetupFunction = (ctx) => {\n  const server = startTestServer();\n  ctx.store.set(\"serverUrl\", server.url);\n  return () => server.close();  // Cleanup after scenario\n};\n```\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Async setup returning Disposable\n```ts\nconst setup: SetupFunction = async (ctx) => {\n  const db = await Database.connect();\n  await db.migrate();\n  return db;  // db[Symbol.asyncDispose]() called on cleanup\n};\n```\n"
-          },
-          {
-            "kind": "see",
-            "doc": "{@linkcode SetupCleanup} for supported cleanup return types"
-          }
-        ]
-      },
-      "kind": "typeAlias",
-      "typeAliasDef": {
-        "tsType": {
-          "repr": "",
-          "kind": "fnOrConstructor",
-          "fnOrConstructor": {
-            "constructor": false,
-            "tsType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "SetupCleanup",
-                  "kind": "typeRef",
-                  "typeRef": {
                     "typeParams": null,
-                    "typeName": "SetupCleanup"
-                  }
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "SetupCleanup",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "SetupCleanup"
-                        }
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "ctx",
-                "optional": false,
-                "tsType": {
-                  "repr": "StepContext",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "Previous",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Previous"
-                        }
-                      },
-                      {
-                        "repr": "Results",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Results"
-                        }
-                      },
-                      {
-                        "repr": "Resources",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Resources"
-                        }
-                      }
-                    ],
-                    "typeName": "StepContext"
-                  }
-                }
-              }
-            ],
-            "typeParams": []
-          }
-        },
-        "typeParams": [
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "ResourceFactory",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 361,
-        "col": 0,
-        "byteIndex": 10391
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Function signature for resource factory functions.\n\nResource factories create named dependencies that are:\n- Initialized before any steps run\n- Available to all steps via `ctx.resources[name]`\n- Automatically disposed after the scenario (if Disposable)\n",
-        "tags": [
-          {
-            "kind": "template",
-            "name": "T",
-            "doc": "- Type of resource to create"
-          },
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Previously registered resources available to this factory\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Database connection resource\n```ts\nconst dbFactory: ResourceFactory<Database> = async (ctx) => {\n  const conn = await Database.connect(process.env.DATABASE_URL);\n  return conn;  // Disposed automatically if implements AsyncDisposable\n};\n```\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Resource depending on another resource\n```ts\n// Second resource can access the first\nconst apiFactory: ResourceFactory<ApiClient, unknown, [], { config: Config }> =\n  (ctx) => new ApiClient(ctx.resources.config.apiUrl);\n```"
-          }
-        ]
-      },
-      "kind": "typeAlias",
-      "typeAliasDef": {
-        "tsType": {
-          "repr": "",
-          "kind": "fnOrConstructor",
-          "fnOrConstructor": {
-            "constructor": false,
-            "tsType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "T",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "T"
-                  }
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "T",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "T"
-                        }
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "ctx",
-                "optional": false,
-                "tsType": {
-                  "repr": "StepContext",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "Previous",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Previous"
-                        }
-                      },
-                      {
-                        "repr": "Results",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Results"
-                        }
-                      },
-                      {
-                        "repr": "Resources",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "Resources"
-                        }
-                      }
-                    ],
                     "typeName": "StepContext"
                   }
                 }
@@ -1263,90 +1028,6 @@
               "repr": "unknown",
               "kind": "keyword",
               "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
             }
           }
         ]
@@ -1356,10 +1037,10 @@
       "name": "StepDefinition",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 383,
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+        "line": 220,
         "col": 0,
-        "byteIndex": 11218
+        "byteIndex": 5910
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -1368,22 +1049,7 @@
           {
             "kind": "template",
             "name": "T",
-            "doc": "- Type of this step's return value"
-          },
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Record of available resources\n"
+            "doc": "- Type of this step's return value\n"
           },
           {
             "kind": "unsupported",
@@ -1398,15 +1064,59 @@
         "methods": [],
         "properties": [
           {
+            "name": "kind",
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 221,
+              "col": 2,
+              "byteIndex": 5959
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "",
+              "kind": "union",
+              "union": [
+                {
+                  "repr": "step",
+                  "kind": "literal",
+                  "literal": {
+                    "kind": "string",
+                    "string": "step"
+                  }
+                },
+                {
+                  "repr": "resource",
+                  "kind": "literal",
+                  "literal": {
+                    "kind": "string",
+                    "string": "resource"
+                  }
+                },
+                {
+                  "repr": "setup",
+                  "kind": "literal",
+                  "literal": {
+                    "kind": "string",
+                    "string": "setup"
+                  }
+                }
+              ]
+            },
+            "typeParams": []
+          },
+          {
             "name": "name",
             "jsDoc": {
               "doc": "Human-readable step name (displayed in reports)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 390,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 224,
               "col": 2,
-              "byteIndex": 11481
+              "byteIndex": 6065
             },
             "params": [],
             "readonly": true,
@@ -1425,10 +1135,10 @@
               "doc": "Step function to execute"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 393,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 227,
               "col": 2,
-              "byteIndex": 11541
+              "byteIndex": 6125
             },
             "params": [],
             "readonly": true,
@@ -1446,30 +1156,6 @@
                       "typeParams": null,
                       "typeName": "T"
                     }
-                  },
-                  {
-                    "repr": "Previous",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Previous"
-                    }
-                  },
-                  {
-                    "repr": "Results",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Results"
-                    }
-                  },
-                  {
-                    "repr": "Resources",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Resources"
-                    }
                   }
                 ],
                 "typeName": "StepFunction"
@@ -1478,51 +1164,138 @@
             "typeParams": []
           },
           {
-            "name": "options",
+            "name": "timeout",
             "jsDoc": {
-              "doc": "Step execution options (timeout, retry) with defaults applied"
+              "doc": "Maximum execution time in milliseconds.\n\nIf the step takes longer, a {@linkcode TimeoutError} is thrown.\nDefault: 30000 (30 seconds)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 396,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 235,
               "col": 2,
-              "byteIndex": 11675
+              "byteIndex": 6322
             },
             "params": [],
             "readonly": true,
             "computed": false,
             "optional": false,
             "tsType": {
-              "repr": "StepOptions",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "StepOptions"
+              "repr": "number",
+              "kind": "keyword",
+              "keyword": "number"
+            },
+            "typeParams": []
+          },
+          {
+            "name": "retry",
+            "jsDoc": {
+              "doc": "Retry configuration for handling transient failures"
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 238,
+              "col": 2,
+              "byteIndex": 6412
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": false,
+            "tsType": {
+              "repr": "",
+              "kind": "typeLiteral",
+              "typeLiteral": {
+                "constructors": [],
+                "methods": [],
+                "properties": [
+                  {
+                    "name": "maxAttempts",
+                    "jsDoc": {
+                      "doc": "Maximum number of execution attempts.\n\n- `1` = No retry (fail immediately on error)\n- `2` = One retry (2 total attempts)\n- `n` = n-1 retries (n total attempts)\n\nDefault: 1 (no retry)"
+                    },
+                    "location": {
+                      "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+                      "line": 248,
+                      "col": 4,
+                      "byteIndex": 6680
+                    },
+                    "params": [],
+                    "readonly": true,
+                    "computed": false,
+                    "optional": false,
+                    "tsType": {
+                      "repr": "number",
+                      "kind": "keyword",
+                      "keyword": "number"
+                    },
+                    "typeParams": []
+                  },
+                  {
+                    "name": "backoff",
+                    "jsDoc": {
+                      "doc": "Backoff strategy for delay between retry attempts.\n\n- `\"linear\"`: Fixed 1 second delay between attempts\n- `\"exponential\"`: Doubles delay each attempt (1s, 2s, 4s, 8s...)\n\nDefault: \"linear\""
+                    },
+                    "location": {
+                      "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+                      "line": 258,
+                      "col": 4,
+                      "byteIndex": 6960
+                    },
+                    "params": [],
+                    "readonly": true,
+                    "computed": false,
+                    "optional": false,
+                    "tsType": {
+                      "repr": "",
+                      "kind": "union",
+                      "union": [
+                        {
+                          "repr": "linear",
+                          "kind": "literal",
+                          "literal": {
+                            "kind": "string",
+                            "string": "linear"
+                          }
+                        },
+                        {
+                          "repr": "exponential",
+                          "kind": "literal",
+                          "literal": {
+                            "kind": "string",
+                            "string": "exponential"
+                          }
+                        }
+                      ]
+                    },
+                    "typeParams": []
+                  }
+                ],
+                "callSignatures": [],
+                "indexSignatures": []
               }
             },
             "typeParams": []
           },
           {
-            "name": "location",
+            "name": "source",
             "jsDoc": {
-              "doc": "Source location where the step was defined (for error messages)"
+              "doc": "Source source where the step was defined (for error messages)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 399,
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+              "line": 262,
               "col": 2,
-              "byteIndex": 11782
+              "byteIndex": 7083
             },
             "params": [],
             "readonly": true,
             "computed": false,
             "optional": true,
             "tsType": {
-              "repr": "SourceLocation",
+              "repr": "Source",
               "kind": "typeRef",
               "typeRef": {
                 "typeParams": null,
-                "typeName": "SourceLocation"
+                "typeName": "Source"
               }
             },
             "typeParams": []
@@ -1538,890 +1311,18 @@
               "kind": "keyword",
               "keyword": "unknown"
             }
-          },
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
           }
         ]
-      }
-    },
-    {
-      "name": "SetupDefinition",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 412,
-        "col": 0,
-        "byteIndex": 12189
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Immutable definition of a setup hook.\n\nSetup definitions contain the setup function and its source location.\nUnlike steps, setups don't have names or configurable options.\n",
-        "tags": [
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Record of available resources"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "fn",
-            "jsDoc": {
-              "doc": "Setup function to execute (may return cleanup handler)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 418,
-              "col": 2,
-              "byteIndex": 12445
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "SetupFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "Previous",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Previous"
-                    }
-                  },
-                  {
-                    "repr": "Results",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Results"
-                    }
-                  },
-                  {
-                    "repr": "Resources",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Resources"
-                    }
-                  }
-                ],
-                "typeName": "SetupFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the setup was defined"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 421,
-              "col": 2,
-              "byteIndex": 12559
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": [
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "ResourceDefinition",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 435,
-        "col": 0,
-        "byteIndex": 13041
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Immutable definition of a named resource.\n\nResource definitions contain everything needed to create and identify\na resource: its name, factory function, and source location.\n",
-        "tags": [
-          {
-            "kind": "template",
-            "name": "T",
-            "doc": "- Type of the resource value"
-          },
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Previously registered resources available to this factory"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "name",
-            "jsDoc": {
-              "doc": "Unique resource name (used as key in `ctx.resources`)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 442,
-              "col": 2,
-              "byteIndex": 13314
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "factory",
-            "jsDoc": {
-              "doc": "Factory function that creates the resource"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 445,
-              "col": 2,
-              "byteIndex": 13392
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ResourceFactory",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "T",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "T"
-                    }
-                  },
-                  {
-                    "repr": "Previous",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Previous"
-                    }
-                  },
-                  {
-                    "repr": "Results",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Results"
-                    }
-                  },
-                  {
-                    "repr": "Resources",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Resources"
-                    }
-                  }
-                ],
-                "typeName": "ResourceFactory"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the resource was defined"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 448,
-              "col": 2,
-              "byteIndex": 13519
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": [
-          {
-            "name": "T",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Entry",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 475,
-        "col": 0,
-        "byteIndex": 14203
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Discriminated union representing an entry in a scenario.\n\nA scenario consists of an ordered sequence of entries, where each entry\nis either a step, resource, or setup. The `kind` field serves as the\ndiscriminant for type narrowing.\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "Type narrowing with kind\n```ts\nfunction processEntry(entry: Entry) {\n  switch (entry.kind) {\n    case \"step\":\n      console.log(`Step: ${entry.value.name}`);\n      break;\n    case \"resource\":\n      console.log(`Resource: ${entry.value.name}`);\n      break;\n    case \"setup\":\n      console.log(\"Setup hook\");\n      break;\n  }\n}\n```"
-          }
-        ]
-      },
-      "kind": "typeAlias",
-      "typeAliasDef": {
-        "tsType": {
-          "repr": "",
-          "kind": "union",
-          "union": [
-            {
-              "repr": "",
-              "kind": "typeLiteral",
-              "typeLiteral": {
-                "constructors": [],
-                "methods": [],
-                "properties": [
-                  {
-                    "name": "kind",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 476,
-                      "col": 6,
-                      "byteIndex": 14229
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "step",
-                      "kind": "literal",
-                      "literal": {
-                        "kind": "string",
-                        "string": "step"
-                      }
-                    },
-                    "typeParams": []
-                  },
-                  {
-                    "name": "value",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 476,
-                      "col": 29,
-                      "byteIndex": 14252
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "StepDefinition",
-                      "kind": "typeRef",
-                      "typeRef": {
-                        "typeParams": null,
-                        "typeName": "StepDefinition"
-                      }
-                    },
-                    "typeParams": []
-                  }
-                ],
-                "callSignatures": [],
-                "indexSignatures": []
-              }
-            },
-            {
-              "repr": "",
-              "kind": "typeLiteral",
-              "typeLiteral": {
-                "constructors": [],
-                "methods": [],
-                "properties": [
-                  {
-                    "name": "kind",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 477,
-                      "col": 6,
-                      "byteIndex": 14291
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "resource",
-                      "kind": "literal",
-                      "literal": {
-                        "kind": "string",
-                        "string": "resource"
-                      }
-                    },
-                    "typeParams": []
-                  },
-                  {
-                    "name": "value",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 477,
-                      "col": 33,
-                      "byteIndex": 14318
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "ResourceDefinition",
-                      "kind": "typeRef",
-                      "typeRef": {
-                        "typeParams": null,
-                        "typeName": "ResourceDefinition"
-                      }
-                    },
-                    "typeParams": []
-                  }
-                ],
-                "callSignatures": [],
-                "indexSignatures": []
-              }
-            },
-            {
-              "repr": "",
-              "kind": "typeLiteral",
-              "typeLiteral": {
-                "constructors": [],
-                "methods": [],
-                "properties": [
-                  {
-                    "name": "kind",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 478,
-                      "col": 6,
-                      "byteIndex": 14361
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "setup",
-                      "kind": "literal",
-                      "literal": {
-                        "kind": "string",
-                        "string": "setup"
-                      }
-                    },
-                    "typeParams": []
-                  },
-                  {
-                    "name": "value",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 478,
-                      "col": 30,
-                      "byteIndex": 14385
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "SetupDefinition",
-                      "kind": "typeRef",
-                      "typeRef": {
-                        "typeParams": null,
-                        "typeName": "SetupDefinition"
-                      }
-                    },
-                    "typeParams": []
-                  }
-                ],
-                "callSignatures": [],
-                "indexSignatures": []
-              }
-            }
-          ]
-        },
-        "typeParams": []
-      }
-    },
-    {
-      "name": "ScenarioDefinition",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 511,
-        "col": 0,
-        "byteIndex": 15561
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Complete, immutable definition of a scenario.\n\nThis is the core type produced by the builder and consumed by the runner.\nIt contains everything needed to execute a scenario: its name, options,\nand ordered sequence of entries (steps, resources, setups).\n",
-        "tags": [
-          {
-            "kind": "unsupported",
-            "value": "@remarks\nScenario definitions are:\n- **Immutable**: The entries array is frozen after creation\n- **Self-contained**: All options have defaults applied\n- **Portable**: Can be serialized (minus functions) for tooling\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Typical scenario structure\n```ts\n// Created by: scenario(\"Login Flow\").step(...).build()\nconst definition: ScenarioDefinition = {\n  name: \"Login Flow\",\n  options: {\n    tags: [\"auth\", \"smoke\"],\n    stepOptions: { timeout: 30000, retry: { maxAttempts: 1, backoff: \"linear\" } }\n  },\n  entries: [\n    { kind: \"resource\", value: { name: \"api\", factory: ... } },\n    { kind: \"step\", value: { name: \"Login\", fn: ..., options: ... } },\n    { kind: \"step\", value: { name: \"Verify\", fn: ..., options: ... } }\n  ],\n  location: { file: \"/tests/auth.probitas.ts\", line: 5 }\n};\n```"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "name",
-            "jsDoc": {
-              "doc": "Human-readable scenario name (displayed in reports and CLI)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 513,
-              "col": 2,
-              "byteIndex": 15670
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "options",
-            "jsDoc": {
-              "doc": "Scenario configuration with all defaults applied"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 516,
-              "col": 2,
-              "byteIndex": 15754
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ScenarioOptions",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ScenarioOptions"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "entries",
-            "jsDoc": {
-              "doc": "Ordered sequence of entries (resources → setups → steps)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 519,
-              "col": 2,
-              "byteIndex": 15862
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "Entry",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Entry"
-                    }
-                  }
-                }
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the scenario was defined"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 522,
-              "col": 2,
-              "byteIndex": 15957
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
       }
     },
     {
       "name": "StepMetadata",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 530,
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/types/step.ts",
+        "line": 270,
         "col": 0,
-        "byteIndex": 16134
+        "byteIndex": 7250
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -2458,427 +1359,10 @@
       }
     },
     {
-      "name": "SetupMetadata",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 537,
-        "col": 0,
-        "byteIndex": 16331
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Serializable setup metadata (without the function).\n\nContains only the source location since setups have no name or options."
-      },
-      "kind": "typeAlias",
-      "typeAliasDef": {
-        "tsType": {
-          "repr": "Omit",
-          "kind": "typeRef",
-          "typeRef": {
-            "typeParams": [
-              {
-                "repr": "SetupDefinition",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": null,
-                  "typeName": "SetupDefinition"
-                }
-              },
-              {
-                "repr": "fn",
-                "kind": "literal",
-                "literal": {
-                  "kind": "string",
-                  "string": "fn"
-                }
-              }
-            ],
-            "typeName": "Omit"
-          }
-        },
-        "typeParams": []
-      }
-    },
-    {
-      "name": "ResourceMetadata",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 544,
-        "col": 0,
-        "byteIndex": 16517
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Serializable resource metadata (without the factory function).\n\nContains the resource name and source location."
-      },
-      "kind": "typeAlias",
-      "typeAliasDef": {
-        "tsType": {
-          "repr": "Omit",
-          "kind": "typeRef",
-          "typeRef": {
-            "typeParams": [
-              {
-                "repr": "ResourceDefinition",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": null,
-                  "typeName": "ResourceDefinition"
-                }
-              },
-              {
-                "repr": "factory",
-                "kind": "literal",
-                "literal": {
-                  "kind": "string",
-                  "string": "factory"
-                }
-              }
-            ],
-            "typeName": "Omit"
-          }
-        },
-        "typeParams": []
-      }
-    },
-    {
-      "name": "EntryMetadata",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 552,
-        "col": 0,
-        "byteIndex": 16766
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Serializable entry metadata for JSON output and tooling.\n\nSame discriminated union structure as {@linkcode Entry}, but with\nfunctions omitted for serialization."
-      },
-      "kind": "typeAlias",
-      "typeAliasDef": {
-        "tsType": {
-          "repr": "",
-          "kind": "union",
-          "union": [
-            {
-              "repr": "",
-              "kind": "typeLiteral",
-              "typeLiteral": {
-                "constructors": [],
-                "methods": [],
-                "properties": [
-                  {
-                    "name": "kind",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 553,
-                      "col": 6,
-                      "byteIndex": 16800
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "step",
-                      "kind": "literal",
-                      "literal": {
-                        "kind": "string",
-                        "string": "step"
-                      }
-                    },
-                    "typeParams": []
-                  },
-                  {
-                    "name": "value",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 553,
-                      "col": 29,
-                      "byteIndex": 16823
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "StepMetadata",
-                      "kind": "typeRef",
-                      "typeRef": {
-                        "typeParams": null,
-                        "typeName": "StepMetadata"
-                      }
-                    },
-                    "typeParams": []
-                  }
-                ],
-                "callSignatures": [],
-                "indexSignatures": []
-              }
-            },
-            {
-              "repr": "",
-              "kind": "typeLiteral",
-              "typeLiteral": {
-                "constructors": [],
-                "methods": [],
-                "properties": [
-                  {
-                    "name": "kind",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 554,
-                      "col": 6,
-                      "byteIndex": 16860
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "resource",
-                      "kind": "literal",
-                      "literal": {
-                        "kind": "string",
-                        "string": "resource"
-                      }
-                    },
-                    "typeParams": []
-                  },
-                  {
-                    "name": "value",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 554,
-                      "col": 33,
-                      "byteIndex": 16887
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "ResourceMetadata",
-                      "kind": "typeRef",
-                      "typeRef": {
-                        "typeParams": null,
-                        "typeName": "ResourceMetadata"
-                      }
-                    },
-                    "typeParams": []
-                  }
-                ],
-                "callSignatures": [],
-                "indexSignatures": []
-              }
-            },
-            {
-              "repr": "",
-              "kind": "typeLiteral",
-              "typeLiteral": {
-                "constructors": [],
-                "methods": [],
-                "properties": [
-                  {
-                    "name": "kind",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 555,
-                      "col": 6,
-                      "byteIndex": 16928
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "setup",
-                      "kind": "literal",
-                      "literal": {
-                        "kind": "string",
-                        "string": "setup"
-                      }
-                    },
-                    "typeParams": []
-                  },
-                  {
-                    "name": "value",
-                    "location": {
-                      "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-                      "line": 555,
-                      "col": 30,
-                      "byteIndex": 16952
-                    },
-                    "params": [],
-                    "readonly": true,
-                    "computed": false,
-                    "optional": false,
-                    "tsType": {
-                      "repr": "SetupMetadata",
-                      "kind": "typeRef",
-                      "typeRef": {
-                        "typeParams": null,
-                        "typeName": "SetupMetadata"
-                      }
-                    },
-                    "typeParams": []
-                  }
-                ],
-                "callSignatures": [],
-                "indexSignatures": []
-              }
-            }
-          ]
-        },
-        "typeParams": []
-      }
-    },
-    {
-      "name": "ScenarioMetadata",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 575,
-        "col": 0,
-        "byteIndex": 17515
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Serializable scenario metadata (without executable functions).\n\nUsed by the JSON reporter and tooling to output scenario information\nwithout including non-serializable function references.\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "JSON reporter output\n```json\n{\n  \"name\": \"Login Flow\",\n  \"options\": { \"tags\": [\"auth\"], \"stepOptions\": { ... } },\n  \"entries\": [\n    { \"kind\": \"step\", \"value\": { \"name\": \"Login\", \"options\": { ... } } }\n  ],\n  \"location\": { \"file\": \"/tests/auth.probitas.ts\", \"line\": 5 }\n}\n```"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "name",
-            "jsDoc": {
-              "doc": "Scenario name"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 577,
-              "col": 2,
-              "byteIndex": 17576
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "options",
-            "jsDoc": {
-              "doc": "Scenario configuration options"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 580,
-              "col": 2,
-              "byteIndex": 17642
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ScenarioOptions",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ScenarioOptions"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "entries",
-            "jsDoc": {
-              "doc": "Entry metadata (functions omitted for serialization)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 583,
-              "col": 2,
-              "byteIndex": 17742
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "EntryMetadata",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "EntryMetadata"
-                    }
-                  }
-                }
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the scenario was defined"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 586,
-              "col": 2,
-              "byteIndex": 17845
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
       "name": "LoadScenariosOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/loader.ts",
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/loader.ts",
         "line": 25,
         "col": 0,
         "byteIndex": 522
@@ -2917,7 +1401,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/loader.ts",
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/loader.ts",
               "line": 36,
               "col": 2,
               "byteIndex": 969
@@ -2986,7 +1470,7 @@
       "name": "loadScenarios",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/loader.ts",
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/loader.ts",
         "line": 73,
         "col": 0,
         "byteIndex": 2127
@@ -3110,7 +1594,7 @@
       "name": "SelectorType",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
         "line": 18,
         "col": 0,
         "byteIndex": 385
@@ -3150,7 +1634,7 @@
       "name": "Selector",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
         "line": 36,
         "col": 0,
         "byteIndex": 784
@@ -3177,7 +1661,7 @@
               "doc": "Type of match: \"tag\" for tags, \"name\" for scenario name"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 879
@@ -3202,7 +1686,7 @@
               "doc": "Regular expression pattern for matching (case-insensitive)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
               "line": 41,
               "col": 2,
               "byteIndex": 979
@@ -3227,7 +1711,7 @@
               "doc": "If true, selector matches scenarios that do NOT match the pattern"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+              "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
               "line": 44,
               "col": 2,
               "byteIndex": 1081
@@ -3253,7 +1737,7 @@
       "name": "parseSelector",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
         "line": 85,
         "col": 0,
         "byteIndex": 2326
@@ -3326,7 +1810,7 @@
       "name": "matchesSelector",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
         "line": 151,
         "col": 0,
         "byteIndex": 4165
@@ -3400,10 +1884,10 @@
       "name": "applySelectors",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/selector.ts",
+        "filename": "https://jsr.io/@probitas/scenario/0.2.6/selector.ts",
         "line": 208,
         "col": 0,
-        "byteIndex": 5800
+        "byteIndex": 5792
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -3506,5 +1990,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:30.700Z"
+  "generatedAt": "2025-12-09T00:26:36.106Z"
 }

@@ -1,445 +1,54 @@
 {
   "name": "reporter",
   "specifier": "@probitas/reporter",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "moduleDoc": "Test result reporting and formatting for Probitas.\n\nThis package provides multiple reporter implementations for formatting and\ndisplaying test execution results. All reporters implement the {@linkcode Reporter}\ninterface from `@probitas/runner` and can be passed to `ScenarioRunner.run()`.\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [@probitas/runner](https://jsr.io/@probitas/runner) | Uses reporters for output |\n| [@probitas/cli](https://jsr.io/@probitas/cli) | CLI that uses these reporters |\n| [@probitas/logger](https://jsr.io/@probitas/logger) | Logging used during execution |\n\n## Available Reporters\n\n- {@linkcode ListReporter} - Detailed hierarchical output showing scenario and step names\n- {@linkcode DotReporter} - Compact single-character output (`.` for pass, `F` for fail)\n- {@linkcode TapReporter} - TAP (Test Anything Protocol) format for CI integration\n- {@linkcode JsonReporter} - JSON output for machine-readable results\n\n## Base Class\n\n- {@linkcode BaseReporter} - Abstract base class with common functionality:\n  - Output stream management (defaults to stderr)\n  - Serialized write operations for concurrent scenarios\n  - Customizable color themes (use `noColor` option to disable)\n\n## Theming\n\n- {@linkcode Theme} - Interface defining semantic color functions\n- {@linkcode defaultTheme} - Default colored theme\n- {@linkcode noColorTheme} - Theme without ANSI color codes\n\n## Configuration Types\n\n- {@linkcode ReporterOptions} - Options for reporter initialization\n- {@linkcode ThemeFunction} - Type for theme color functions\n",
   "exports": [
     {
-      "name": "BaseReporter",
+      "name": "TAPReporterOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-        "line": 52,
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/tap_reporter.ts",
+        "line": 15,
         "col": 0,
-        "byteIndex": 1469
+        "byteIndex": 457
       },
       "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Abstract base class for all reporter implementations.\n\nProvides common functionality that all reporters need:\n- Output stream management with serialized writes\n- Theme selection (colored or plain)\n- Stack trace sanitization for portable output\n\nSubclasses should override the reporter hook methods they need\n(e.g., `onStepEnd`, `onScenarioEnd`, `onRunEnd`).\n",
-        "tags": [
+      "kind": "interface",
+      "interfaceDef": {
+        "extends": [
           {
-            "kind": "example",
-            "doc": "Creating a custom reporter\n```ts\nclass MyReporter extends BaseReporter {\n  async onScenarioEnd(scenario, result) {\n    const icon = result.status === \"passed\" ? \"✓\" : \"✗\";\n    await this.write(`${icon} ${scenario.name}\\n`);\n  }\n\n  async onRunEnd(summary) {\n    await this.write(`\\n${summary.passed}/${summary.total} passed\\n`);\n  }\n}\n```\n"
-          },
-          {
-            "kind": "see",
-            "doc": "{@linkcode ListReporter} for a detailed hierarchical reporter"
-          },
-          {
-            "kind": "see",
-            "doc": "{@linkcode DotReporter} for a compact progress reporter"
-          }
-        ]
-      },
-      "kind": "class",
-      "classDef": {
-        "isAbstract": true,
-        "constructors": [
-          {
-            "jsDoc": {
-              "doc": "Initialize the reporter with the given options.\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "options",
-                  "doc": "- Configuration options for output and styling"
-                }
-              ]
-            },
-            "accessibility": null,
-            "hasBody": true,
-            "name": "constructor",
-            "params": [
-              {
-                "kind": "assign",
-                "left": {
-                  "kind": "identifier",
-                  "name": "options",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ReporterOptions",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ReporterOptions"
-                    }
-                  }
-                },
-                "right": "[UNSUPPORTED]",
-                "tsType": null
-              }
-            ],
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 69,
-              "col": 2,
-              "byteIndex": 1941
-            }
-          }
-        ],
-        "properties": [
-          {
-            "jsDoc": {
-              "doc": "Output stream for writing results"
-            },
-            "tsType": {
-              "repr": "WritableStream",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "WritableStream"
-              }
-            },
-            "readonly": false,
-            "accessibility": "protected",
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "output",
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 54,
-              "col": 2,
-              "byteIndex": 1571
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Theme for styling output text"
-            },
-            "tsType": {
-              "repr": "Theme",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "Theme"
-              }
-            },
-            "readonly": false,
-            "accessibility": "protected",
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "theme",
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 57,
-              "col": 2,
-              "byteIndex": 1647
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Reporter configuration options"
-            },
-            "tsType": {
-              "repr": "ReporterOptions",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ReporterOptions"
-              }
-            },
-            "readonly": false,
-            "accessibility": "protected",
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "options",
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 60,
-              "col": 2,
-              "byteIndex": 1714
-            }
-          }
-        ],
-        "indexSignatures": [],
-        "methods": [
-          {
-            "jsDoc": {
-              "doc": "Write text to the output stream.\n\nSerializes all write operations to prevent \"stream is already locked\" errors\nwhen multiple scenarios run concurrently. Each write is queued and executed\nin order.\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "text",
-                  "doc": "- Text to write (will be UTF-8 encoded)\n"
-                },
-                {
-                  "kind": "example",
-                  "doc": "```ts\nawait this.write(\"✓ Test passed\\n\");\nawait this.write(this.theme.success(\"PASSED\") + \"\\n\");\n```"
-                }
-              ]
-            },
-            "accessibility": "protected",
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "write",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "text",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 103,
-              "col": 2,
-              "byteIndex": 2863
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Sanitize file paths in error stack traces to make them environment-independent\n\nReplaces absolute file:// URLs with relative paths to ensure snapshots\nare portable across different machines and CI environments.\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "stack",
-                  "doc": "The error stack trace string"
-                },
-                {
-                  "kind": "return",
-                  "doc": "Sanitized stack trace with normalized paths"
-                }
-              ]
-            },
-            "accessibility": "protected",
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "sanitizeStack",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "stack",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "string",
-                "kind": "keyword",
-                "keyword": "string"
-              },
-              "hasBody": true,
-              "isAsync": false,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 134,
-              "col": 2,
-              "byteIndex": 3956
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when test run starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "_scenarios",
-                  "doc": "All scenarios to be run"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onRunStart",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "_scenarios",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "",
-                    "kind": "typeOperator",
-                    "typeOperator": {
-                      "operator": "readonly",
-                      "tsType": {
-                        "repr": "",
-                        "kind": "array",
-                        "array": {
-                          "repr": "ScenarioDefinition",
-                          "kind": "typeRef",
-                          "typeRef": {
-                            "typeParams": null,
-                            "typeName": "ScenarioDefinition"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": false,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 149,
-              "col": 2,
-              "byteIndex": 4414
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when test run completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "_summary",
-                  "doc": "Summary of test execution"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onRunEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "_summary",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "RunSummary",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "RunSummary"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": false,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/base_reporter.ts",
-              "line": 162,
-              "col": 2,
-              "byteIndex": 4766
-            }
-          }
-        ],
-        "extends": null,
-        "implements": [
-          {
-            "repr": "Reporter",
+            "repr": "WriterOptions",
             "kind": "typeRef",
             "typeRef": {
               "typeParams": null,
-              "typeName": "Reporter"
+              "typeName": "WriterOptions"
             }
           }
         ],
-        "typeParams": [],
-        "superTypeParams": []
+        "constructors": [],
+        "methods": [],
+        "properties": [],
+        "callSignatures": [],
+        "indexSignatures": [],
+        "typeParams": []
       }
     },
     {
       "name": "TAPReporter",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/tap_reporter.ts",
-        "line": 22,
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/tap_reporter.ts",
+        "line": 18,
         "col": 0,
-        "byteIndex": 424
+        "byteIndex": 520
       },
       "declarationKind": "export",
-      "jsDoc": {
-        "doc": "TAP Reporter - outputs Test Anything Protocol version 14 format"
-      },
       "kind": "class",
       "classDef": {
         "isAbstract": false,
         "constructors": [
           {
-            "jsDoc": {
-              "doc": "Initialize TAP reporter\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "options",
-                  "doc": "Configuration options"
-                }
-              ]
-            },
             "accessibility": null,
             "hasBody": true,
             "name": "constructor",
@@ -451,11 +60,11 @@
                   "name": "options",
                   "optional": false,
                   "tsType": {
-                    "repr": "ReporterOptions",
+                    "repr": "TAPReporterOptions",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ReporterOptions"
+                      "typeName": "TAPReporterOptions"
                     }
                   }
                 },
@@ -464,10 +73,10 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/tap_reporter.ts",
-              "line": 32,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/tap_reporter.ts",
+              "line": 24,
               "col": 2,
-              "byteIndex": 659
+              "byteIndex": 685
             }
           }
         ],
@@ -475,21 +84,10 @@
         "indexSignatures": [],
         "methods": [
           {
-            "jsDoc": {
-              "doc": "Called when test run starts - outputs TAP header and test count\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenarios",
-                  "doc": "All scenarios to be run"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
             "isStatic": false,
-            "isOverride": true,
             "name": "onRunStart",
             "kind": "method",
             "functionDef": {
@@ -539,10 +137,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/tap_reporter.ts",
-              "line": 41,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/tap_reporter.ts",
+              "line": 33,
               "col": 2,
-              "byteIndex": 863
+              "byteIndex": 911
             }
           },
           {
@@ -576,6 +174,19 @@
               "params": [
                 {
                   "kind": "identifier",
+                  "name": "scenario",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "ScenarioDefinition",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "ScenarioDefinition"
+                    }
+                  }
+                },
+                {
+                  "kind": "identifier",
                   "name": "_step",
                   "optional": false,
                   "tsType": {
@@ -599,19 +210,6 @@
                       "typeName": "StepResult"
                     }
                   }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
                 }
               ],
               "returnType": {
@@ -634,191 +232,168 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/tap_reporter.ts",
-              "line": 71,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/tap_reporter.ts",
+              "line": 59,
               "col": 2,
-              "byteIndex": 1733
+              "byteIndex": 1715
             }
           },
           {
-            "jsDoc": {
-              "doc": "Called when scenario is skipped - output SKIP directive for all steps\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario that was skipped"
-                },
-                {
-                  "kind": "param",
-                  "name": "reason",
-                  "doc": "Optional skip reason"
-                },
-                {
-                  "kind": "param",
-                  "name": "_duration",
-                  "doc": "Scenario execution duration (not used in TAP format)"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
             "isStatic": false,
-            "name": "onScenarioSkip",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "reason",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "",
-                    "kind": "union",
-                    "union": [
-                      {
-                        "repr": "string",
-                        "kind": "keyword",
-                        "keyword": "string"
-                      },
-                      {
-                        "repr": "undefined",
-                        "kind": "keyword",
-                        "keyword": "undefined"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "_duration",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "number",
-                    "kind": "keyword",
-                    "keyword": "number"
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/tap_reporter.ts",
-              "line": 115,
-              "col": 2,
-              "byteIndex": 3095
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when test run completes - reset state\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "summary",
-                  "doc": "The execution summary"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "isOverride": true,
             "name": "onRunEnd",
             "kind": "method",
             "functionDef": {
               "params": [
                 {
                   "kind": "identifier",
-                  "name": "summary",
+                  "name": "_scenarios",
                   "optional": false,
                   "tsType": {
-                    "repr": "RunSummary",
+                    "repr": "",
+                    "kind": "typeOperator",
+                    "typeOperator": {
+                      "operator": "readonly",
+                      "tsType": {
+                        "repr": "",
+                        "kind": "array",
+                        "array": {
+                          "repr": "ScenarioDefinition",
+                          "kind": "typeRef",
+                          "typeRef": {
+                            "typeParams": null,
+                            "typeName": "ScenarioDefinition"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "identifier",
+                  "name": "_result",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "RunResult",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "RunSummary"
+                      "typeName": "RunResult"
                     }
                   }
                 }
               ],
               "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
+                "repr": "void",
+                "kind": "keyword",
+                "keyword": "void"
               },
               "hasBody": true,
-              "isAsync": true,
+              "isAsync": false,
               "isGenerator": false,
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/tap_reporter.ts",
-              "line": 137,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/tap_reporter.ts",
+              "line": 103,
               "col": 2,
-              "byteIndex": 3704
+              "byteIndex": 3036
             }
           }
         ],
-        "extends": "BaseReporter",
-        "implements": [],
+        "extends": null,
+        "implements": [
+          {
+            "repr": "Reporter",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "Reporter"
+            }
+          }
+        ],
         "typeParams": [],
         "superTypeParams": []
+      }
+    },
+    {
+      "name": "ListReporterOptions",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/list_reporter.ts",
+        "line": 36,
+        "col": 0,
+        "byteIndex": 970
+      },
+      "declarationKind": "export",
+      "jsDoc": {
+        "doc": "Options for ListReporter initialization."
+      },
+      "kind": "interface",
+      "interfaceDef": {
+        "extends": [
+          {
+            "repr": "WriterOptions",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "WriterOptions"
+            }
+          }
+        ],
+        "constructors": [],
+        "methods": [],
+        "properties": [
+          {
+            "name": "theme",
+            "jsDoc": {
+              "doc": "Custom theme for styling output.\nIf not provided, uses defaultTheme (or noColorTheme if Deno.noColor is set)."
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/list_reporter.ts",
+              "line": 41,
+              "col": 2,
+              "byteIndex": 1165
+            },
+            "params": [],
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "Theme",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": null,
+                "typeName": "Theme"
+              }
+            },
+            "typeParams": []
+          }
+        ],
+        "callSignatures": [],
+        "indexSignatures": [],
+        "typeParams": []
       }
     },
     {
       "name": "ListReporter",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/list_reporter.ts",
-        "line": 22,
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/list_reporter.ts",
+        "line": 75,
         "col": 0,
-        "byteIndex": 370
+        "byteIndex": 2120
       },
       "declarationKind": "export",
       "jsDoc": {
-        "doc": "List Reporter - outputs results in flat list format"
+        "doc": "Reporter that outputs test results in a flat list format.\n\nFeatures:\n- Real-time per-step output as tests execute\n- Status indicators (✓ passed, ✗ failed, ⊘ skipped)\n- Source location information\n- Execution timing for each step\n- Skip reasons for conditional skips\n- Error messages and stack traces for failures\n- Summary statistics\n- Semantic coloring via Theme\n",
+        "tags": [
+          {
+            "kind": "example",
+            "doc": "```ts\nconst reporter = new ListReporter();\nconst runner = new Runner(reporter);\nconst result = await runner.run(scenarios);\n\n// Output:\n// ✓ Login scenario > Step that passes  (test.ts:15) [10.000ms]\n// ✓ Login scenario > Another step  (test.ts:20) [5.000ms]\n// ✗ Payment scenario > Process payment  (test.ts:50) [25.000ms]\n//   Error: Insufficient funds\n//   at checkout (test.ts:52)\n//\n// Summary\n//   ✓ 1 scenarios passed\n//   ✗ 1 scenarios failed\n```"
+          }
+        ]
       },
       "kind": "class",
       "classDef": {
@@ -826,12 +401,12 @@
         "constructors": [
           {
             "jsDoc": {
-              "doc": "Initialize List reporter\n",
+              "doc": "Create a new ListReporter.\n",
               "tags": [
                 {
                   "kind": "param",
                   "name": "options",
-                  "doc": "Configuration options"
+                  "doc": "- Configuration (output stream, theme)"
                 }
               ]
             },
@@ -846,11 +421,11 @@
                   "name": "options",
                   "optional": false,
                   "tsType": {
-                    "repr": "ReporterOptions",
+                    "repr": "ListReporterOptions",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ReporterOptions"
+                      "typeName": "ListReporterOptions"
                     }
                   }
                 },
@@ -859,10 +434,10 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/list_reporter.ts",
-              "line": 28,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/list_reporter.ts",
+              "line": 84,
               "col": 2,
-              "byteIndex": 510
+              "byteIndex": 2315
             }
           }
         ],
@@ -870,26 +445,6 @@
         "indexSignatures": [],
         "methods": [
           {
-            "jsDoc": {
-              "doc": "Called when step completes - output result line\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "_step",
-                  "doc": "The step definition"
-                },
-                {
-                  "kind": "param",
-                  "name": "result",
-                  "doc": "The step execution result"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
@@ -898,6 +453,19 @@
             "kind": "method",
             "functionDef": {
               "params": [
+                {
+                  "kind": "identifier",
+                  "name": "scenario",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "ScenarioDefinition",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "ScenarioDefinition"
+                    }
+                  }
+                },
                 {
                   "kind": "identifier",
                   "name": "_step",
@@ -923,19 +491,6 @@
                       "typeName": "StepResult"
                     }
                   }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
                 }
               ],
               "returnType": {
@@ -958,220 +513,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/list_reporter.ts",
-              "line": 39,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/list_reporter.ts",
+              "line": 105,
               "col": 2,
-              "byteIndex": 784
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when step fails - output error details\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "step",
-                  "doc": "The step definition"
-                },
-                {
-                  "kind": "param",
-                  "name": "error",
-                  "doc": "The error that occurred"
-                },
-                {
-                  "kind": "param",
-                  "name": "duration",
-                  "doc": "Step execution duration in milliseconds"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onStepError",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "step",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "StepDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "StepDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "error",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "Error",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Error"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "duration",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "number",
-                    "kind": "keyword",
-                    "keyword": "number"
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/list_reporter.ts",
-              "line": 68,
-              "col": 2,
-              "byteIndex": 1631
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when scenario is skipped\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario that was skipped"
-                },
-                {
-                  "kind": "param",
-                  "name": "reason",
-                  "doc": "Optional skip reason"
-                },
-                {
-                  "kind": "param",
-                  "name": "duration",
-                  "doc": "Scenario execution duration in milliseconds"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onScenarioSkip",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "reason",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "",
-                    "kind": "union",
-                    "union": [
-                      {
-                        "repr": "string",
-                        "kind": "keyword",
-                        "keyword": "string"
-                      },
-                      {
-                        "repr": "undefined",
-                        "kind": "keyword",
-                        "keyword": "undefined"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "duration",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "number",
-                    "kind": "keyword",
-                    "keyword": "number"
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/list_reporter.ts",
-              "line": 103,
-              "col": 2,
-              "byteIndex": 2735
+              "byteIndex": 2847
             }
           },
           {
@@ -1189,21 +534,44 @@
             "optional": false,
             "isAbstract": false,
             "isStatic": false,
-            "isOverride": true,
             "name": "onRunEnd",
             "kind": "method",
             "functionDef": {
               "params": [
                 {
                   "kind": "identifier",
-                  "name": "summary",
+                  "name": "_scenarios",
                   "optional": false,
                   "tsType": {
-                    "repr": "RunSummary",
+                    "repr": "",
+                    "kind": "typeOperator",
+                    "typeOperator": {
+                      "operator": "readonly",
+                      "tsType": {
+                        "repr": "",
+                        "kind": "array",
+                        "array": {
+                          "repr": "ScenarioDefinition",
+                          "kind": "typeRef",
+                          "typeRef": {
+                            "typeParams": null,
+                            "typeName": "ScenarioDefinition"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "identifier",
+                  "name": "result",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "RunResult",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "RunSummary"
+                      "typeName": "RunResult"
                     }
                   }
                 }
@@ -1228,47 +596,73 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/list_reporter.ts",
-              "line": 129,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/list_reporter.ts",
+              "line": 136,
               "col": 2,
-              "byteIndex": 3408
+              "byteIndex": 3664
             }
           }
         ],
-        "extends": "BaseReporter",
-        "implements": [],
+        "extends": null,
+        "implements": [
+          {
+            "repr": "Reporter",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "Reporter"
+            }
+          }
+        ],
         "typeParams": [],
         "superTypeParams": []
+      }
+    },
+    {
+      "name": "JSONReporterOptions",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+        "line": 19,
+        "col": 0,
+        "byteIndex": 427
+      },
+      "declarationKind": "export",
+      "kind": "interface",
+      "interfaceDef": {
+        "extends": [
+          {
+            "repr": "WriterOptions",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "WriterOptions"
+            }
+          }
+        ],
+        "constructors": [],
+        "methods": [],
+        "properties": [],
+        "callSignatures": [],
+        "indexSignatures": [],
+        "typeParams": []
       }
     },
     {
       "name": "JSONReporter",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-        "line": 25,
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+        "line": 21,
         "col": 0,
-        "byteIndex": 465
+        "byteIndex": 490
       },
       "declarationKind": "export",
-      "jsDoc": {
-        "doc": "JSON Reporter - outputs results in JSONLine format"
-      },
       "kind": "class",
       "classDef": {
         "isAbstract": false,
         "constructors": [
           {
-            "jsDoc": {
-              "doc": "Initialize JSON reporter\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "options",
-                  "doc": "Configuration options"
-                }
-              ]
-            },
             "accessibility": null,
             "hasBody": true,
             "name": "constructor",
@@ -1280,11 +674,11 @@
                   "name": "options",
                   "optional": false,
                   "tsType": {
-                    "repr": "ReporterOptions",
+                    "repr": "JSONReporterOptions",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ReporterOptions"
+                      "typeName": "JSONReporterOptions"
                     }
                   }
                 },
@@ -1293,10 +687,10 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 31,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+              "line": 24,
               "col": 2,
-              "byteIndex": 605
+              "byteIndex": 560
             }
           }
         ],
@@ -1304,21 +698,10 @@
         "indexSignatures": [],
         "methods": [
           {
-            "jsDoc": {
-              "doc": "Called when test run starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenarios",
-                  "doc": "All scenarios to be run"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
             "isStatic": false,
-            "isOverride": true,
             "name": "onRunStart",
             "kind": "method",
             "functionDef": {
@@ -1368,23 +751,86 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 40,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+              "line": 32,
               "col": 2,
-              "byteIndex": 773
+              "byteIndex": 758
             }
           },
           {
-            "jsDoc": {
-              "doc": "Called when scenario starts\n",
-              "tags": [
+            "accessibility": null,
+            "optional": false,
+            "isAbstract": false,
+            "isStatic": false,
+            "name": "onRunEnd",
+            "kind": "method",
+            "functionDef": {
+              "params": [
                 {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
+                  "kind": "identifier",
+                  "name": "scenarios",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "",
+                    "kind": "typeOperator",
+                    "typeOperator": {
+                      "operator": "readonly",
+                      "tsType": {
+                        "repr": "",
+                        "kind": "array",
+                        "array": {
+                          "repr": "ScenarioDefinition",
+                          "kind": "typeRef",
+                          "typeRef": {
+                            "typeParams": null,
+                            "typeName": "ScenarioDefinition"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "identifier",
+                  "name": "result",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "RunResult",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "RunResult"
+                    }
+                  }
                 }
-              ]
+              ],
+              "returnType": {
+                "repr": "Promise",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": [
+                    {
+                      "repr": "void",
+                      "kind": "keyword",
+                      "keyword": "void"
+                    }
+                  ],
+                  "typeName": "Promise"
+                }
+              },
+              "hasBody": true,
+              "isAsync": true,
+              "isGenerator": false,
+              "typeParams": []
             },
+            "location": {
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+              "line": 41,
+              "col": 2,
+              "byteIndex": 921
+            }
+          },
+          {
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
@@ -1427,49 +873,21 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 57,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+              "line": 52,
               "col": 2,
-              "byteIndex": 1126
+              "byteIndex": 1117
             }
           },
           {
-            "jsDoc": {
-              "doc": "Called when resource initialization starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "resource",
-                  "doc": "The resource being initialized"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
             "isStatic": false,
-            "name": "onResourceStart",
+            "name": "onScenarioEnd",
             "kind": "method",
             "functionDef": {
               "params": [
-                {
-                  "kind": "identifier",
-                  "name": "resource",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ResourceDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ResourceDefinition"
-                    }
-                  }
-                },
                 {
                   "kind": "identifier",
                   "name": "scenario",
@@ -1480,6 +898,19 @@
                     "typeRef": {
                       "typeParams": null,
                       "typeName": "ScenarioDefinition"
+                    }
+                  }
+                },
+                {
+                  "kind": "identifier",
+                  "name": "result",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "ScenarioResult",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "ScenarioResult"
                     }
                   }
                 }
@@ -1504,449 +935,13 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 72,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+              "line": 59,
               "col": 2,
-              "byteIndex": 1486
+              "byteIndex": 1268
             }
           },
           {
-            "jsDoc": {
-              "doc": "Called when resource initialization completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "resource",
-                  "doc": "The resource that completed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onResourceEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "resource",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ResourceDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ResourceDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 91,
-              "col": 2,
-              "byteIndex": 1907
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when resource initialization fails\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "resource",
-                  "doc": "The resource that failed"
-                },
-                {
-                  "kind": "param",
-                  "name": "error",
-                  "doc": "The error that occurred"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onResourceError",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "resource",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ResourceDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ResourceDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "error",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "Error",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Error"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 111,
-              "col": 2,
-              "byteIndex": 2359
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when setup starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "setup",
-                  "doc": "The setup being executed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onSetupStart",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "setup",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "SetupDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "SetupDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 135,
-              "col": 2,
-              "byteIndex": 2909
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when setup completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "setup",
-                  "doc": "The setup that completed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onSetupEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "setup",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "SetupDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "SetupDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 154,
-              "col": 2,
-              "byteIndex": 3291
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when setup fails\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "setup",
-                  "doc": "The setup that failed"
-                },
-                {
-                  "kind": "param",
-                  "name": "error",
-                  "doc": "The error that occurred"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onSetupError",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "setup",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "SetupDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "SetupDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "error",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "Error",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Error"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 174,
-              "col": 2,
-              "byteIndex": 3704
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when step starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "step",
-                  "doc": "The step being executed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
@@ -1955,6 +950,19 @@
             "kind": "method",
             "functionDef": {
               "params": [
+                {
+                  "kind": "identifier",
+                  "name": "scenario",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "ScenarioDefinition",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "ScenarioDefinition"
+                    }
+                  }
+                },
                 {
                   "kind": "identifier",
                   "name": "step",
@@ -1967,19 +975,6 @@
                       "typeName": "StepDefinition"
                     }
                   }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
                 }
               ],
               "returnType": {
@@ -2002,33 +997,13 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 198,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+              "line": 70,
               "col": 2,
-              "byteIndex": 4236
+              "byteIndex": 1466
             }
           },
           {
-            "jsDoc": {
-              "doc": "Called when step completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "_step",
-                  "doc": "The step definition"
-                },
-                {
-                  "kind": "param",
-                  "name": "result",
-                  "doc": "The step execution result"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
@@ -2037,6 +1012,19 @@
             "kind": "method",
             "functionDef": {
               "params": [
+                {
+                  "kind": "identifier",
+                  "name": "scenario",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "ScenarioDefinition",
+                    "kind": "typeRef",
+                    "typeRef": {
+                      "typeParams": null,
+                      "typeName": "ScenarioDefinition"
+                    }
+                  }
+                },
                 {
                   "kind": "identifier",
                   "name": "step",
@@ -2062,19 +1050,6 @@
                       "typeName": "StepResult"
                     }
                   }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
                 }
               ],
               "returnType": {
@@ -2097,394 +1072,95 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 218,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/json_reporter.ts",
+              "line": 81,
               "col": 2,
-              "byteIndex": 4652
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when step fails\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "step",
-                  "doc": "The step definition"
-                },
-                {
-                  "kind": "param",
-                  "name": "error",
-                  "doc": "The error that occurred"
-                },
-                {
-                  "kind": "param",
-                  "name": "duration",
-                  "doc": "Step execution duration in milliseconds"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onStepError",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "step",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "StepDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "StepDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "error",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "Error",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Error"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "duration",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "number",
-                    "kind": "keyword",
-                    "keyword": "number"
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 241,
-              "col": 2,
-              "byteIndex": 5157
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when scenario is skipped\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario that was skipped"
-                },
-                {
-                  "kind": "param",
-                  "name": "reason",
-                  "doc": "Optional skip reason"
-                },
-                {
-                  "kind": "param",
-                  "name": "duration",
-                  "doc": "Scenario execution duration in milliseconds"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onScenarioSkip",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "reason",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "",
-                    "kind": "union",
-                    "union": [
-                      {
-                        "repr": "string",
-                        "kind": "keyword",
-                        "keyword": "string"
-                      },
-                      {
-                        "repr": "undefined",
-                        "kind": "keyword",
-                        "keyword": "undefined"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "duration",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "number",
-                    "kind": "keyword",
-                    "keyword": "number"
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 268,
-              "col": 2,
-              "byteIndex": 5798
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when scenario completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario definition"
-                },
-                {
-                  "kind": "param",
-                  "name": "result",
-                  "doc": "The scenario execution result"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onScenarioEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "result",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioResult",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioResult"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 289,
-              "col": 2,
-              "byteIndex": 6234
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when test run completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "summary",
-                  "doc": "The execution summary"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "isOverride": true,
-            "name": "onRunEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "summary",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "RunSummary",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "RunSummary"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/json_reporter.ts",
-              "line": 307,
-              "col": 2,
-              "byteIndex": 6572
+              "byteIndex": 1656
             }
           }
         ],
-        "extends": "BaseReporter",
-        "implements": [],
+        "extends": null,
+        "implements": [
+          {
+            "repr": "Reporter",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "Reporter"
+            }
+          }
+        ],
         "typeParams": [],
         "superTypeParams": []
+      }
+    },
+    {
+      "name": "DotReporterOptions",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/dot_reporter.ts",
+        "line": 16,
+        "col": 0,
+        "byteIndex": 469
+      },
+      "declarationKind": "export",
+      "kind": "interface",
+      "interfaceDef": {
+        "extends": [
+          {
+            "repr": "WriterOptions",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "WriterOptions"
+            }
+          }
+        ],
+        "constructors": [],
+        "methods": [],
+        "properties": [
+          {
+            "name": "theme",
+            "location": {
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/dot_reporter.ts",
+              "line": 17,
+              "col": 2,
+              "byteIndex": 531
+            },
+            "params": [],
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "Theme",
+              "kind": "typeRef",
+              "typeRef": {
+                "typeParams": null,
+                "typeName": "Theme"
+              }
+            },
+            "typeParams": []
+          }
+        ],
+        "callSignatures": [],
+        "indexSignatures": [],
+        "typeParams": []
       }
     },
     {
       "name": "DotReporter",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/dot_reporter.ts",
-        "line": 21,
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/dot_reporter.ts",
+        "line": 20,
         "col": 0,
-        "byteIndex": 365
+        "byteIndex": 549
       },
       "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Dot Reporter - outputs simple dot format progress"
-      },
       "kind": "class",
       "classDef": {
         "isAbstract": false,
         "constructors": [
           {
-            "jsDoc": {
-              "doc": "Initialize Dot reporter\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "options",
-                  "doc": "Configuration options"
-                }
-              ]
-            },
             "accessibility": null,
             "hasBody": true,
             "name": "constructor",
@@ -2496,11 +1172,11 @@
                   "name": "options",
                   "optional": false,
                   "tsType": {
-                    "repr": "ReporterOptions",
+                    "repr": "DotReporterOptions",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ReporterOptions"
+                      "typeName": "DotReporterOptions"
                     }
                   }
                 },
@@ -2509,10 +1185,10 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/dot_reporter.ts",
-              "line": 27,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/dot_reporter.ts",
+              "line": 24,
               "col": 2,
-              "byteIndex": 503
+              "byteIndex": 635
             }
           }
         ],
@@ -2520,21 +1196,6 @@
         "indexSignatures": [],
         "methods": [
           {
-            "jsDoc": {
-              "doc": "Called when scenario completes - output dot\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "_scenario",
-                  "doc": "The scenario definition"
-                },
-                {
-                  "kind": "param",
-                  "name": "result",
-                  "doc": "The scenario execution result"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
@@ -2590,42 +1251,55 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/dot_reporter.ts",
-              "line": 37,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/dot_reporter.ts",
+              "line": 39,
               "col": 2,
-              "byteIndex": 736
+              "byteIndex": 1032
             }
           },
           {
-            "jsDoc": {
-              "doc": "Called when test run completes - output summary\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "summary",
-                  "doc": "The execution summary"
-                }
-              ]
-            },
             "accessibility": null,
             "optional": false,
             "isAbstract": false,
             "isStatic": false,
-            "isOverride": true,
             "name": "onRunEnd",
             "kind": "method",
             "functionDef": {
               "params": [
                 {
                   "kind": "identifier",
-                  "name": "summary",
+                  "name": "_scenarios",
                   "optional": false,
                   "tsType": {
-                    "repr": "RunSummary",
+                    "repr": "",
+                    "kind": "typeOperator",
+                    "typeOperator": {
+                      "operator": "readonly",
+                      "tsType": {
+                        "repr": "",
+                        "kind": "array",
+                        "array": {
+                          "repr": "ScenarioDefinition",
+                          "kind": "typeRef",
+                          "typeRef": {
+                            "typeParams": null,
+                            "typeName": "ScenarioDefinition"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "kind": "identifier",
+                  "name": "result",
+                  "optional": false,
+                  "tsType": {
+                    "repr": "RunResult",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "RunSummary"
+                      "typeName": "RunResult"
                     }
                   }
                 }
@@ -2650,79 +1324,36 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/dot_reporter.ts",
-              "line": 55,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/dot_reporter.ts",
+              "line": 52,
               "col": 2,
-              "byteIndex": 1239
+              "byteIndex": 1429
             }
           }
         ],
-        "extends": "BaseReporter",
-        "implements": [],
+        "extends": null,
+        "implements": [
+          {
+            "repr": "Reporter",
+            "kind": "typeRef",
+            "typeRef": {
+              "typeParams": null,
+              "typeName": "Reporter"
+            }
+          }
+        ],
         "typeParams": [],
         "superTypeParams": []
-      }
-    },
-    {
-      "name": "defaultTheme",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/theme.ts",
-        "line": 15,
-        "col": 13,
-        "byteIndex": 278
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Default theme with colors"
-      },
-      "kind": "variable",
-      "variableDef": {
-        "tsType": {
-          "repr": "Theme",
-          "kind": "typeRef",
-          "typeRef": {
-            "typeParams": null,
-            "typeName": "Theme"
-          }
-        },
-        "kind": "const"
-      }
-    },
-    {
-      "name": "noColorTheme",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/theme.ts",
-        "line": 28,
-        "col": 13,
-        "byteIndex": 478
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "No-color theme (NO_COLOR compatible)"
-      },
-      "kind": "variable",
-      "variableDef": {
-        "tsType": {
-          "repr": "Theme",
-          "kind": "typeRef",
-          "typeRef": {
-            "typeParams": null,
-            "typeName": "Theme"
-          }
-        },
-        "kind": "const"
       }
     },
     {
       "name": "ThemeFunction",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
         "line": 22,
         "col": 0,
-        "byteIndex": 503
+        "byteIndex": 497
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -2768,10 +1399,10 @@
       "name": "Theme",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
         "line": 47,
         "col": 0,
-        "byteIndex": 1275
+        "byteIndex": 1267
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -2783,7 +1414,7 @@
           },
           {
             "kind": "see",
-            "doc": "{@linkcode defaultTheme} for the built-in colored theme"
+            "doc": "{@linkcode colorTheme} for the built-in colored theme"
           },
           {
             "kind": "see",
@@ -2803,10 +1434,10 @@
               "doc": "Style for successful/passing states"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
               "line": 49,
               "col": 2,
-              "byteIndex": 1347
+              "byteIndex": 1339
             },
             "params": [],
             "readonly": true,
@@ -2828,10 +1459,10 @@
               "doc": "Style for failed/error states"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
               "line": 52,
               "col": 2,
-              "byteIndex": 1422
+              "byteIndex": 1414
             },
             "params": [],
             "readonly": true,
@@ -2853,10 +1484,10 @@
               "doc": "Style for skipped states"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
               "line": 55,
               "col": 2,
-              "byteIndex": 1492
+              "byteIndex": 1484
             },
             "params": [],
             "readonly": true,
@@ -2878,10 +1509,10 @@
               "doc": "Style for secondary/muted information"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
               "line": 58,
               "col": 2,
-              "byteIndex": 1572
+              "byteIndex": 1564
             },
             "params": [],
             "readonly": true,
@@ -2903,10 +1534,10 @@
               "doc": "Style for titles and headers"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
               "line": 61,
               "col": 2,
-              "byteIndex": 1642
+              "byteIndex": 1634
             },
             "params": [],
             "readonly": true,
@@ -2928,10 +1559,10 @@
               "doc": "Style for informational messages"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
               "line": 64,
               "col": 2,
-              "byteIndex": 1718
+              "byteIndex": 1710
             },
             "params": [],
             "readonly": true,
@@ -2953,10 +1584,10 @@
               "doc": "Style for warnings"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
               "line": 67,
               "col": 2,
-              "byteIndex": 1779
+              "byteIndex": 1771
             },
             "params": [],
             "readonly": true,
@@ -2979,25 +1610,93 @@
       }
     },
     {
-      "name": "ReporterOptions",
+      "name": "colorTheme",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
-        "line": 92,
-        "col": 0,
-        "byteIndex": 2321
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
+        "line": 73,
+        "col": 13,
+        "byteIndex": 1857
       },
       "declarationKind": "export",
       "jsDoc": {
-        "doc": "Configuration options for reporter initialization.\n\nControls output destination, coloring, and styling for test reporters.\n",
+        "doc": "Default theme with colors"
+      },
+      "kind": "variable",
+      "variableDef": {
+        "tsType": {
+          "repr": "Theme",
+          "kind": "typeRef",
+          "typeRef": {
+            "typeParams": null,
+            "typeName": "Theme"
+          }
+        },
+        "kind": "const"
+      }
+    },
+    {
+      "name": "noColorTheme",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
+        "line": 86,
+        "col": 13,
+        "byteIndex": 2055
+      },
+      "declarationKind": "export",
+      "jsDoc": {
+        "doc": "No-color theme (NO_COLOR compatible)"
+      },
+      "kind": "variable",
+      "variableDef": {
+        "tsType": {
+          "repr": "Theme",
+          "kind": "typeRef",
+          "typeRef": {
+            "typeParams": null,
+            "typeName": "Theme"
+          }
+        },
+        "kind": "const"
+      }
+    },
+    {
+      "name": "defaultTheme",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/theme.ts",
+        "line": 96,
+        "col": 13,
+        "byteIndex": 2273
+      },
+      "declarationKind": "export",
+      "kind": "variable",
+      "variableDef": {
+        "tsType": null,
+        "kind": "const"
+      }
+    },
+    {
+      "name": "ReporterOptions",
+      "isDefault": false,
+      "location": {
+        "filename": "https://jsr.io/@probitas/reporter/0.2.6/types.ts",
+        "line": 21,
+        "col": 0,
+        "byteIndex": 417
+      },
+      "declarationKind": "export",
+      "jsDoc": {
+        "doc": "Configuration options for reporter initialization.\n",
         "tags": [
           {
             "kind": "example",
-            "doc": "Basic usage\n```ts\nconst reporter = new ListReporter({\n  noColor: true,  // Disable colors for CI\n  logLevel: \"info\"\n});\n```\n"
+            "doc": "Basic usage\n```ts\nconst reporter = new ListReporter({\n  output: Deno.stdout.writable\n});\n```\n"
           },
           {
             "kind": "example",
-            "doc": "Custom output stream\n```ts\nconst file = await Deno.open(\"results.txt\", { write: true });\nconst reporter = new ListReporter({\n  output: file.writable,\n  noColor: true\n});\n```"
+            "doc": "Custom output stream\n```ts\nconst file = await Deno.open(\"results.txt\", { write: true });\nconst reporter = new ListReporter({\n  output: file.writable\n});\n```"
           }
         ]
       },
@@ -3019,10 +1718,10 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
-              "line": 98,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/types.ts",
+              "line": 27,
               "col": 2,
-              "byteIndex": 2450
+              "byteIndex": 546
             },
             "params": [],
             "readonly": true,
@@ -3039,78 +1738,15 @@
             "typeParams": []
           },
           {
-            "name": "logLevel",
-            "jsDoc": {
-              "doc": "Minimum log level for output.\n\n- `\"fatal\"`: Only critical failures\n- `\"warning\"`: Warnings and errors (default)\n- `\"info\"`: Informational messages and above\n- `\"debug\"`: All messages including debug\n",
-              "tags": [
-                {
-                  "kind": "unsupported",
-                  "value": "@default \"warning\""
-                }
-              ]
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
-              "line": 110,
-              "col": 2,
-              "byteIndex": 2756
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "LogLevel",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "LogLevel"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "noColor",
-            "jsDoc": {
-              "doc": "Disable colored output.\n\nWhen `true`, uses plain text without ANSI color codes.\nUseful for CI environments or piping to files.\n",
-              "tags": [
-                {
-                  "kind": "unsupported",
-                  "value": "@remarks\nThe reporter itself does not check the `NO_COLOR` environment variable.\nThe CLI handles `NO_COLOR` via `Deno.noColor` and passes it as this option.\nIf using reporters directly, you can check `Deno.noColor` yourself.\n"
-                },
-                {
-                  "kind": "unsupported",
-                  "value": "@default false"
-                }
-              ]
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
-              "line": 125,
-              "col": 2,
-              "byteIndex": 3222
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "boolean",
-              "kind": "keyword",
-              "keyword": "boolean"
-            },
-            "typeParams": []
-          },
-          {
             "name": "theme",
             "jsDoc": {
-              "doc": "Custom theme for styling output.\n\nIf not provided, uses {@linkcode defaultTheme} (or {@linkcode noColorTheme}\nif `noColor` is true)."
+              "doc": "Custom theme for styling output.\n\nIf not provided, uses {@linkcode defaultTheme} (or {@linkcode noColorTheme}\nif `Deno.noColor` is true)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.2.4/types.ts",
-              "line": 133,
+              "filename": "https://jsr.io/@probitas/reporter/0.2.6/types.ts",
+              "line": 35,
               "col": 2,
-              "byteIndex": 3417
+              "byteIndex": 752
             },
             "params": [],
             "readonly": true,
@@ -3131,2627 +1767,7 @@
         "indexSignatures": [],
         "typeParams": []
       }
-    },
-    {
-      "name": "Reporter",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-        "line": 253,
-        "col": 0,
-        "byteIndex": 6743
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Reporter interface for observing and reporting test execution.\n\nImplement this interface to create custom reporters. All methods are\noptional - implement only the hooks you need. Methods can be sync or async.\n\nBuilt-in reporters:\n- {@linkcode ListReporter} - Detailed hierarchical output\n- {@linkcode DotReporter} - Compact dot notation\n- {@linkcode TAPReporter} - TAP format for CI integration\n- {@linkcode JSONReporter} - Machine-readable JSON\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "Custom reporter\n```ts\nclass MyReporter implements Reporter {\n  onRunStart(scenarios) {\n    console.log(`Running ${scenarios.length} scenarios...`);\n  }\n\n  onScenarioEnd(scenario, result) {\n    const icon = result.status === \"passed\" ? \"✓\" : \"✗\";\n    console.log(`${icon} ${scenario.name}`);\n  }\n\n  onRunEnd(summary) {\n    console.log(`\\n${summary.passed}/${summary.total} passed`);\n  }\n}\n```"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [
-          {
-            "name": "onRunStart",
-            "jsDoc": {
-              "doc": "Called when the test run starts, before any scenarios execute.\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenarios",
-                  "doc": "- All scenarios that will be executed"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 259,
-              "col": 2,
-              "byteIndex": 6918
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "scenarios",
-                "optional": false,
-                "tsType": {
-                  "repr": "",
-                  "kind": "typeOperator",
-                  "typeOperator": {
-                    "operator": "readonly",
-                    "tsType": {
-                      "repr": "",
-                      "kind": "array",
-                      "array": {
-                        "repr": "ScenarioDefinition",
-                        "kind": "typeRef",
-                        "typeRef": {
-                          "typeParams": null,
-                          "typeName": "ScenarioDefinition"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onScenarioStart",
-            "jsDoc": {
-              "doc": "Called when a scenario begins execution.\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario definition about to run"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 266,
-              "col": 2,
-              "byteIndex": 7121
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onResourceStart",
-            "jsDoc": {
-              "doc": "Called when resource initialization starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "resource",
-                  "doc": "- The resource definition being initialized"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the resource"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 274,
-              "col": 2,
-              "byteIndex": 7384
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "resource",
-                "optional": false,
-                "tsType": {
-                  "repr": "ResourceDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ResourceDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onResourceEnd",
-            "jsDoc": {
-              "doc": "Called when resource initialization completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "resource",
-                  "doc": "- The resource definition that completed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the resource"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 285,
-              "col": 2,
-              "byteIndex": 7690
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "resource",
-                "optional": false,
-                "tsType": {
-                  "repr": "ResourceDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ResourceDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onResourceError",
-            "jsDoc": {
-              "doc": "Called when resource initialization fails\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "resource",
-                  "doc": "- The resource definition that failed"
-                },
-                {
-                  "kind": "param",
-                  "name": "error",
-                  "doc": "- The error that occurred"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the resource"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 297,
-              "col": 2,
-              "byteIndex": 8031
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "resource",
-                "optional": false,
-                "tsType": {
-                  "repr": "ResourceDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ResourceDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "error",
-                "optional": false,
-                "tsType": {
-                  "repr": "Error",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "Error"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onSetupStart",
-            "jsDoc": {
-              "doc": "Called when setup starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "setup",
-                  "doc": "- The setup definition being executed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the setup"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 309,
-              "col": 2,
-              "byteIndex": 8325
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "setup",
-                "optional": false,
-                "tsType": {
-                  "repr": "SetupDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "SetupDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onSetupEnd",
-            "jsDoc": {
-              "doc": "Called when setup completes\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "setup",
-                  "doc": "- The setup definition that completed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the setup"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 320,
-              "col": 2,
-              "byteIndex": 8595
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "setup",
-                "optional": false,
-                "tsType": {
-                  "repr": "SetupDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "SetupDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onSetupError",
-            "jsDoc": {
-              "doc": "Called when setup fails\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "setup",
-                  "doc": "- The setup definition that failed"
-                },
-                {
-                  "kind": "param",
-                  "name": "error",
-                  "doc": "- The error that occurred"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the setup"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 332,
-              "col": 2,
-              "byteIndex": 8900
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "setup",
-                "optional": false,
-                "tsType": {
-                  "repr": "SetupDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "SetupDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "error",
-                "optional": false,
-                "tsType": {
-                  "repr": "Error",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "Error"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onStepStart",
-            "jsDoc": {
-              "doc": "Called when step starts\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "step",
-                  "doc": "- The step definition being executed"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the step (for parallel-safe reporting)"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 344,
-              "col": 2,
-              "byteIndex": 9211
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "step",
-                "optional": false,
-                "tsType": {
-                  "repr": "StepDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "StepDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onStepEnd",
-            "jsDoc": {
-              "doc": "Called when step completes successfully\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "step",
-                  "doc": "- The step definition that completed"
-                },
-                {
-                  "kind": "param",
-                  "name": "result",
-                  "doc": "- The step execution result"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the step (for parallel-safe reporting)"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 356,
-              "col": 2,
-              "byteIndex": 9564
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "step",
-                "optional": false,
-                "tsType": {
-                  "repr": "StepDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "StepDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "result",
-                "optional": false,
-                "tsType": {
-                  "repr": "StepResult",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "StepResult"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onStepError",
-            "jsDoc": {
-              "doc": "Called when step fails\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "step",
-                  "doc": "- The step definition that failed"
-                },
-                {
-                  "kind": "param",
-                  "name": "error",
-                  "doc": "- The error that occurred"
-                },
-                {
-                  "kind": "param",
-                  "name": "duration",
-                  "doc": "- Step execution duration in milliseconds"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario containing the step (for parallel-safe reporting)"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 370,
-              "col": 2,
-              "byteIndex": 9979
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "step",
-                "optional": false,
-                "tsType": {
-                  "repr": "StepDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "StepDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "error",
-                "optional": false,
-                "tsType": {
-                  "repr": "Error",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "Error"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "duration",
-                "optional": false,
-                "tsType": {
-                  "repr": "number",
-                  "kind": "keyword",
-                  "keyword": "number"
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onScenarioSkip",
-            "jsDoc": {
-              "doc": "Called when scenario is skipped\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "- The scenario that was skipped"
-                },
-                {
-                  "kind": "param",
-                  "name": "reason",
-                  "doc": "- Optional skip reason"
-                },
-                {
-                  "kind": "param",
-                  "name": "duration",
-                  "doc": "- Scenario execution duration in milliseconds"
-                }
-              ]
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 384,
-              "col": 2,
-              "byteIndex": 10339
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "reason",
-                "optional": false,
-                "tsType": {
-                  "repr": "",
-                  "kind": "union",
-                  "union": [
-                    {
-                      "repr": "string",
-                      "kind": "keyword",
-                      "keyword": "string"
-                    },
-                    {
-                      "repr": "undefined",
-                      "kind": "keyword",
-                      "keyword": "undefined"
-                    }
-                  ]
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "duration",
-                "optional": false,
-                "tsType": {
-                  "repr": "number",
-                  "kind": "keyword",
-                  "keyword": "number"
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onScenarioEnd",
-            "jsDoc": {
-              "doc": "Called when scenario completes"
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 393,
-              "col": 2,
-              "byteIndex": 10522
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "scenario",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioDefinition",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioDefinition"
-                  }
-                }
-              },
-              {
-                "kind": "identifier",
-                "name": "result",
-                "optional": false,
-                "tsType": {
-                  "repr": "ScenarioResult",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "ScenarioResult"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "onRunEnd",
-            "jsDoc": {
-              "doc": "Called when test run completes"
-            },
-            "kind": "method",
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 401,
-              "col": 2,
-              "byteIndex": 10678
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "summary",
-                "optional": false,
-                "tsType": {
-                  "repr": "RunSummary",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": null,
-                    "typeName": "RunSummary"
-                  }
-                }
-              }
-            ],
-            "optional": true,
-            "returnType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "void",
-                  "kind": "keyword",
-                  "keyword": "void"
-                },
-                {
-                  "repr": "Promise",
-                  "kind": "typeRef",
-                  "typeRef": {
-                    "typeParams": [
-                      {
-                        "repr": "void",
-                        "kind": "keyword",
-                        "keyword": "void"
-                      }
-                    ],
-                    "typeName": "Promise"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          }
-        ],
-        "properties": [],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
-      "name": "ResourceDefinition",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 435,
-        "col": 0,
-        "byteIndex": 13041
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Immutable definition of a named resource.\n\nResource definitions contain everything needed to create and identify\na resource: its name, factory function, and source location.\n",
-        "tags": [
-          {
-            "kind": "template",
-            "name": "T",
-            "doc": "- Type of the resource value"
-          },
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Previously registered resources available to this factory"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "name",
-            "jsDoc": {
-              "doc": "Unique resource name (used as key in `ctx.resources`)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 442,
-              "col": 2,
-              "byteIndex": 13314
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "factory",
-            "jsDoc": {
-              "doc": "Factory function that creates the resource"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 445,
-              "col": 2,
-              "byteIndex": 13392
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ResourceFactory",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "T",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "T"
-                    }
-                  },
-                  {
-                    "repr": "Previous",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Previous"
-                    }
-                  },
-                  {
-                    "repr": "Results",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Results"
-                    }
-                  },
-                  {
-                    "repr": "Resources",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Resources"
-                    }
-                  }
-                ],
-                "typeName": "ResourceFactory"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the resource was defined"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 448,
-              "col": 2,
-              "byteIndex": 13519
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": [
-          {
-            "name": "T",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "RunSummary",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-        "line": 175,
-        "col": 0,
-        "byteIndex": 4628
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Summary of all scenario executions in a test run.\n\nProvides aggregate statistics and detailed results for the entire run.\nPassed to {@linkcode Reporter.onRunEnd} after all scenarios complete.\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "```ts\nconst summary: RunSummary = {\n  total: 10,\n  passed: 8,\n  failed: 1,\n  skipped: 1,\n  duration: 5432,\n  scenarios: [...]\n};\n\nconsole.log(`${summary.passed}/${summary.total} passed`);\n// → \"8/10 passed\"\n```"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "total",
-            "jsDoc": {
-              "doc": "Total number of scenarios in the run"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 177,
-              "col": 2,
-              "byteIndex": 4706
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "number",
-              "kind": "keyword",
-              "keyword": "number"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "passed",
-            "jsDoc": {
-              "doc": "Number of scenarios that passed"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 180,
-              "col": 2,
-              "byteIndex": 4774
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "number",
-              "kind": "keyword",
-              "keyword": "number"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "failed",
-            "jsDoc": {
-              "doc": "Number of scenarios that failed"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 183,
-              "col": 2,
-              "byteIndex": 4843
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "number",
-              "kind": "keyword",
-              "keyword": "number"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "skipped",
-            "jsDoc": {
-              "doc": "Number of scenarios that were skipped"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 186,
-              "col": 2,
-              "byteIndex": 4918
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "number",
-              "kind": "keyword",
-              "keyword": "number"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "duration",
-            "jsDoc": {
-              "doc": "Total execution time in milliseconds"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 189,
-              "col": 2,
-              "byteIndex": 4993
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "number",
-              "kind": "keyword",
-              "keyword": "number"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "scenarios",
-            "jsDoc": {
-              "doc": "Detailed result for each scenario"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 192,
-              "col": 2,
-              "byteIndex": 5066
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "ScenarioResult",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioResult"
-                    }
-                  }
-                }
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
-      "name": "ScenarioDefinition",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 511,
-        "col": 0,
-        "byteIndex": 15561
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Complete, immutable definition of a scenario.\n\nThis is the core type produced by the builder and consumed by the runner.\nIt contains everything needed to execute a scenario: its name, options,\nand ordered sequence of entries (steps, resources, setups).\n",
-        "tags": [
-          {
-            "kind": "unsupported",
-            "value": "@remarks\nScenario definitions are:\n- **Immutable**: The entries array is frozen after creation\n- **Self-contained**: All options have defaults applied\n- **Portable**: Can be serialized (minus functions) for tooling\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Typical scenario structure\n```ts\n// Created by: scenario(\"Login Flow\").step(...).build()\nconst definition: ScenarioDefinition = {\n  name: \"Login Flow\",\n  options: {\n    tags: [\"auth\", \"smoke\"],\n    stepOptions: { timeout: 30000, retry: { maxAttempts: 1, backoff: \"linear\" } }\n  },\n  entries: [\n    { kind: \"resource\", value: { name: \"api\", factory: ... } },\n    { kind: \"step\", value: { name: \"Login\", fn: ..., options: ... } },\n    { kind: \"step\", value: { name: \"Verify\", fn: ..., options: ... } }\n  ],\n  location: { file: \"/tests/auth.probitas.ts\", line: 5 }\n};\n```"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "name",
-            "jsDoc": {
-              "doc": "Human-readable scenario name (displayed in reports and CLI)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 513,
-              "col": 2,
-              "byteIndex": 15670
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "options",
-            "jsDoc": {
-              "doc": "Scenario configuration with all defaults applied"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 516,
-              "col": 2,
-              "byteIndex": 15754
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ScenarioOptions",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ScenarioOptions"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "entries",
-            "jsDoc": {
-              "doc": "Ordered sequence of entries (resources → setups → steps)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 519,
-              "col": 2,
-              "byteIndex": 15862
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "Entry",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Entry"
-                    }
-                  }
-                }
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the scenario was defined"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 522,
-              "col": 2,
-              "byteIndex": 15957
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
-      "name": "ScenarioResult",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-        "line": 134,
-        "col": 0,
-        "byteIndex": 3547
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Result from executing a complete scenario.\n\nContains the overall scenario status, timing, all step results,\nand any error or skip reason. Passed to reporters and included\nin the final {@linkcode RunSummary}.\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "Passed scenario\n```ts\nconst result: ScenarioResult = {\n  metadata: { name: \"Login Flow\", options: { ... }, entries: [...] },\n  status: \"passed\",\n  duration: 1250,\n  steps: [{ status: \"passed\", ... }, { status: \"passed\", ... }]\n};\n```\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Skipped scenario\n```ts\nconst result: ScenarioResult = {\n  metadata: { name: \"Premium Feature\", ... },\n  status: \"skipped\",\n  duration: 5,\n  steps: [],\n  skipReason: \"Feature flag not enabled\"\n};\n```"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "metadata",
-            "jsDoc": {
-              "doc": "Scenario metadata (serializable, without functions)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 136,
-              "col": 2,
-              "byteIndex": 3644
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ScenarioMetadata",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ScenarioMetadata"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "status",
-            "jsDoc": {
-              "doc": "Overall execution outcome"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 139,
-              "col": 2,
-              "byteIndex": 3719
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "passed",
-                  "kind": "literal",
-                  "literal": {
-                    "kind": "string",
-                    "string": "passed"
-                  }
-                },
-                {
-                  "repr": "failed",
-                  "kind": "literal",
-                  "literal": {
-                    "kind": "string",
-                    "string": "failed"
-                  }
-                },
-                {
-                  "repr": "skipped",
-                  "kind": "literal",
-                  "literal": {
-                    "kind": "string",
-                    "string": "skipped"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "duration",
-            "jsDoc": {
-              "doc": "Total execution time in milliseconds (including setup/teardown)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 142,
-              "col": 2,
-              "byteIndex": 3845
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "number",
-              "kind": "keyword",
-              "keyword": "number"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "steps",
-            "jsDoc": {
-              "doc": "Results from each executed step"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 145,
-              "col": 2,
-              "byteIndex": 3916
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "StepResult",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "StepResult"
-                    }
-                  }
-                }
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "error",
-            "jsDoc": {
-              "doc": "Error if failed during resource/setup/teardown (not step errors)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 148,
-              "col": 2,
-              "byteIndex": 4032
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "Error",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "Error"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "skipReason",
-            "jsDoc": {
-              "doc": "Reason for skipping (only if status is \"skipped\")"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 151,
-              "col": 2,
-              "byteIndex": 4118
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
-      "name": "SetupDefinition",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 412,
-        "col": 0,
-        "byteIndex": 12189
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Immutable definition of a setup hook.\n\nSetup definitions contain the setup function and its source location.\nUnlike steps, setups don't have names or configurable options.\n",
-        "tags": [
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Record of available resources"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "fn",
-            "jsDoc": {
-              "doc": "Setup function to execute (may return cleanup handler)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 418,
-              "col": 2,
-              "byteIndex": 12445
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "SetupFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "Previous",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Previous"
-                    }
-                  },
-                  {
-                    "repr": "Results",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Results"
-                    }
-                  },
-                  {
-                    "repr": "Resources",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Resources"
-                    }
-                  }
-                ],
-                "typeName": "SetupFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the setup was defined"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 421,
-              "col": 2,
-              "byteIndex": 12559
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": [
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "StepDefinition",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-        "line": 383,
-        "col": 0,
-        "byteIndex": 11218
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Immutable definition of a scenario step.\n\nContains all information needed to execute a single step:\nthe step function, its options, and debugging metadata.\n",
-        "tags": [
-          {
-            "kind": "template",
-            "name": "T",
-            "doc": "- Type of this step's return value"
-          },
-          {
-            "kind": "template",
-            "name": "Previous",
-            "doc": "- Type of the previous step's result"
-          },
-          {
-            "kind": "template",
-            "name": "Results",
-            "doc": "- Tuple type of accumulated results"
-          },
-          {
-            "kind": "template",
-            "name": "Resources",
-            "doc": "- Record of available resources\n"
-          },
-          {
-            "kind": "unsupported",
-            "value": "@remarks\nStep definitions are created by the builder and consumed by the runner.\nThey are immutable and should not be modified after creation."
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "name",
-            "jsDoc": {
-              "doc": "Human-readable step name (displayed in reports)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 390,
-              "col": 2,
-              "byteIndex": 11481
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "fn",
-            "jsDoc": {
-              "doc": "Step function to execute"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 393,
-              "col": 2,
-              "byteIndex": 11541
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "StepFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "T",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "T"
-                    }
-                  },
-                  {
-                    "repr": "Previous",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Previous"
-                    }
-                  },
-                  {
-                    "repr": "Results",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Results"
-                    }
-                  },
-                  {
-                    "repr": "Resources",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "Resources"
-                    }
-                  }
-                ],
-                "typeName": "StepFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "options",
-            "jsDoc": {
-              "doc": "Step execution options (timeout, retry) with defaults applied"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 396,
-              "col": 2,
-              "byteIndex": 11675
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "StepOptions",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "StepOptions"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "location",
-            "jsDoc": {
-              "doc": "Source location where the step was defined (for error messages)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/scenario/0.2.4/types.ts",
-              "line": 399,
-              "col": 2,
-              "byteIndex": 11782
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "SourceLocation",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "SourceLocation"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": [
-          {
-            "name": "T",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Previous",
-            "default": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            }
-          },
-          {
-            "name": "Results",
-            "constraint": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            },
-            "default": {
-              "repr": "",
-              "kind": "typeOperator",
-              "typeOperator": {
-                "operator": "readonly",
-                "tsType": {
-                  "repr": "",
-                  "kind": "array",
-                  "array": {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Resources",
-            "constraint": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            },
-            "default": {
-              "repr": "Record",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": [
-                  {
-                    "repr": "string",
-                    "kind": "keyword",
-                    "keyword": "string"
-                  },
-                  {
-                    "repr": "unknown",
-                    "kind": "keyword",
-                    "keyword": "unknown"
-                  }
-                ],
-                "typeName": "Record"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "StepResult",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-        "line": 89,
-        "col": 0,
-        "byteIndex": 2329
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Result from executing a single step.\n\nContains the step's execution status, timing, and either the return\nvalue (on success) or error (on failure). Used by reporters to display\nstep-level results.\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "Passed step result\n```ts\nconst result: StepResult = {\n  metadata: { name: \"Create user\", options: { ... } },\n  status: \"passed\",\n  duration: 150,\n  value: { userId: \"123\" }\n};\n```\n"
-          },
-          {
-            "kind": "example",
-            "doc": "Failed step result\n```ts\nconst result: StepResult = {\n  metadata: { name: \"Validate input\", options: { ... } },\n  status: \"failed\",\n  duration: 50,\n  error: new Error(\"Invalid email format\")\n};\n```"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "metadata",
-            "jsDoc": {
-              "doc": "Step metadata (serializable, without function)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 91,
-              "col": 2,
-              "byteIndex": 2417
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "StepMetadata",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "StepMetadata"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "status",
-            "jsDoc": {
-              "doc": "Execution outcome: \"passed\" or \"failed\""
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 94,
-              "col": 2,
-              "byteIndex": 2502
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "",
-              "kind": "union",
-              "union": [
-                {
-                  "repr": "passed",
-                  "kind": "literal",
-                  "literal": {
-                    "kind": "string",
-                    "string": "passed"
-                  }
-                },
-                {
-                  "repr": "failed",
-                  "kind": "literal",
-                  "literal": {
-                    "kind": "string",
-                    "string": "failed"
-                  }
-                }
-              ]
-            },
-            "typeParams": []
-          },
-          {
-            "name": "duration",
-            "jsDoc": {
-              "doc": "Execution time in milliseconds"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 97,
-              "col": 2,
-              "byteIndex": 2583
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "number",
-              "kind": "keyword",
-              "keyword": "number"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "value",
-            "jsDoc": {
-              "doc": "Return value from step function (only if status is \"passed\")"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 100,
-              "col": 2,
-              "byteIndex": 2683
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "unknown",
-              "kind": "keyword",
-              "keyword": "unknown"
-            },
-            "typeParams": []
-          },
-          {
-            "name": "error",
-            "jsDoc": {
-              "doc": "Error that caused failure (only if status is \"failed\")"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/runner/0.2.4/types.ts",
-              "line": 103,
-              "col": 2,
-              "byteIndex": 2776
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "Error",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "Error"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
     }
   ],
-  "generatedAt": "2025-12-07T13:39:30.409Z"
+  "generatedAt": "2025-12-09T00:26:35.819Z"
 }
