@@ -69,10 +69,10 @@ body {
   background-attachment: fixed;
   color: var(--text-primary);
   margin: 0;
-  min-width: 580px;
   min-height: 100vh;
   line-height: 1.6;
   transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
 }
 
 a {

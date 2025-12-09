@@ -284,7 +284,7 @@ function getLinkableTypes(
       if (targetPackage !== currentPackage) {
         result.push({
           name,
-          href: `/api/${targetPackage}#${name}`,
+          href: `${basePath}/api/${targetPackage}/#${name}`,
           isCrossPackage: true,
         });
       }
@@ -1191,7 +1191,7 @@ export function PackageSidebar(
         <i class="ti ti-package" />
         <select
           class="api-package-select"
-          onchange="location.href = '/api/' + this.value"
+          onchange={`location.href = '${basePath}/api/' + this.value + '/'`}
           aria-label="Select package"
         >
           <option value="" disabled selected={!currentPackage}>
