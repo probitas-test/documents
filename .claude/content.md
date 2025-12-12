@@ -86,7 +86,7 @@ export default scenario("Example")
   .resource("http", client.http.createHttpClient())
   .step("make request", async ({ http }) => {
     const res = await http.get("/api/users");
-    expect(res).toBeSuccessful().toHaveStatus(200);
+    expect(res).toBeOk().toHaveStatus(200);
   })
   .build();
 ```

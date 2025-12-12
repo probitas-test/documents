@@ -37,11 +37,11 @@ export default scenario("Probitas docs site health", {
     });
 
     expect(res)
-      .toBeSuccessful()
+      .toBeOk()
       .toHaveStatus(200)
-      .toHaveHeader("content-type", /text\/markdown/)
-      .toHaveText(/This is a Markdown page for LLMs\./)
-      .toHaveText(/# Probitas/);
+      .toHaveHeadersProperty("content-type", /text\/markdown/)
+      .toHaveTextContaining(/This is a Markdown page for LLMs\./)
+      .toHaveTextContaining(/# Probitas/);
   })
   .step("serves human homepage HTML", async ({ resources }) => {
     const res = await resources.http.get("/", {
@@ -50,24 +50,26 @@ export default scenario("Probitas docs site health", {
     });
 
     expect(res)
-      .toBeSuccessful()
+      .toBeOk()
       .toHaveStatus(200)
-      .toHaveHeader("content-type", /text\/html/)
-      .toHaveText(/Probitas - Scenario-based Testing Framework/)
-      .toHaveText(
+      .toHaveHeadersProperty("content-type", /text\/html/)
+      .toHaveTextContaining(/Probitas - Scenario-based Testing Framework/)
+      .toHaveTextContaining(
         /Scenario-based testing framework designed for API, database, and message queue testing/,
       )
-      .toHaveText(/AI-Friendly Documentation/);
+      .toHaveTextContaining(/AI-Friendly Documentation/);
   })
   .step("exposes raw markdown for docs pages", async ({ resources }) => {
     for (const doc of docPages) {
       const res = await resources.http.get(`${doc.path}.md`);
       const heading = docHeadings[doc.path] ?? "# ";
       expect(res)
-        .toBeSuccessful()
+        .toBeOk()
         .toHaveStatus(200)
-        .toHaveHeader("content-type", /text\/markdown/)
-        .toHaveText(new RegExp(heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+        .toHaveHeadersProperty("content-type", /text\/markdown/)
+        .toHaveTextContaining(
+          new RegExp(heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
+        );
     }
   })
   .step("renders docs HTML pages", async ({ resources }) => {
@@ -76,10 +78,10 @@ export default scenario("Probitas docs site health", {
         headers: { accept: "text/html" },
       });
       expect(res)
-        .toBeSuccessful()
+        .toBeOk()
         .toHaveStatus(200)
-        .toHaveHeader("content-type", /text\/html/)
-        .toHaveText(
+        .toHaveHeadersProperty("content-type", /text\/html/)
+        .toHaveTextContaining(
           new RegExp(doc.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
         );
     }
@@ -87,17 +89,17 @@ export default scenario("Probitas docs site health", {
   .step("provides LLM endpoints", async ({ resources }) => {
     const indexRes = await resources.http.get("/llms.txt");
     expect(indexRes)
-      .toBeSuccessful()
+      .toBeOk()
       .toHaveStatus(200)
-      .toHaveHeader("content-type", /text\/markdown/)
-      .toHaveText(/## Documentation/)
-      .toHaveText(/## API Reference/);
+      .toHaveHeadersProperty("content-type", /text\/markdown/)
+      .toHaveTextContaining(/## Documentation/)
+      .toHaveTextContaining(/## API Reference/);
   })
   .step("renders API index and package JSON", async ({ resources }) => {
     const indexRes = await resources.http.get("/api", {
       headers: { accept: "text/html" },
     });
-    expect(indexRes).toBeSuccessful().toHaveStatus(200).toHaveText(
+    expect(indexRes).toBeOk().toHaveStatus(200).toHaveTextContaining(
       /API Reference/,
     );
 
@@ -105,10 +107,10 @@ export default scenario("Probitas docs site health", {
     for (const pkg of packages) {
       const res = await resources.http.get(`/api/${pkg.name}.json`);
       expect(res)
-        .toBeSuccessful()
+        .toBeOk()
         .toHaveStatus(200)
-        .toHaveHeader("content-type", /application\/json/)
-        .toHaveContentContaining({ name: pkg.name, specifier: pkg.specifier });
+        .toHaveHeadersProperty("content-type", /application\/json/)
+        .toHaveDataMatching({ name: pkg.name, specifier: pkg.specifier });
     }
   })
   .step("renders API markdown endpoints", async ({ resources }) => {
@@ -116,17 +118,17 @@ export default scenario("Probitas docs site health", {
     for (const pkg of packages) {
       const res = await resources.http.get(`/api/${pkg.name}.md`);
       expect(res)
-        .toBeSuccessful()
+        .toBeOk()
         .toHaveStatus(200)
-        .toHaveHeader("content-type", /text\/markdown/)
-        .toHaveText(
+        .toHaveHeadersProperty("content-type", /text\/markdown/)
+        .toHaveTextContaining(
           new RegExp(pkg.specifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
         );
     }
   })
   .step("serves static assets", async ({ resources }) => {
     const res = await resources.http.get("/static/style.css");
-    expect(res).toBeSuccessful().toHaveStatus(200).toHaveHeader(
+    expect(res).toBeOk().toHaveStatus(200).toHaveHeadersProperty(
       "content-type",
       /text\/css/,
     );

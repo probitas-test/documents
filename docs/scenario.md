@@ -410,7 +410,7 @@ options.
 ```typescript
 .step("Flaky operation", async (ctx) => {
   const res = await http.get("/sometimes-fails");
-  expect(res).toBeSuccessful();
+  expect(res).toBeOk();
   return res.json();
 }, {
   retry: { maxAttempts: 3, backoff: "exponential" }
@@ -437,7 +437,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
       name: "Alice",
       email: "alice@example.com",
     });
-    expect(res).toBeSuccessful().toHaveStatus(201).toHaveContentContaining({
+    expect(res).toBeOk().toHaveStatus(201).toHaveDataMatching({
       name: "Alice",
     });
     return res.json<{ id: number }>();
@@ -446,7 +446,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
     const { http } = ctx.resources;
     const { id } = ctx.previous;
     const res = await http.get(`/users/${id}`);
-    expect(res).toBeSuccessful().toHaveStatus(200).toHaveContentContaining({
+    expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
       id,
       name: "Alice",
     });
@@ -456,7 +456,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
     const { http } = ctx.resources;
     const { id } = ctx.previous;
     const res = await http.patch(`/users/${id}`, { name: "Bob" });
-    expect(res).toBeSuccessful().toHaveStatus(200).toHaveContentContaining({
+    expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
       name: "Bob",
     });
     return { id };
@@ -465,7 +465,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
     const { http } = ctx.resources;
     const { id } = ctx.previous;
     const res = await http.delete(`/users/${id}`);
-    expect(res).toBeSuccessful().toHaveStatus(204);
+    expect(res).toBeOk().toHaveStatus(204);
   })
   .build();
 ```
@@ -519,7 +519,7 @@ export default scenario("Database Transaction", { tags: ["db", "postgres"] })
       "SELECT name FROM users WHERE id = $1",
       [id],
     );
-    expect(result).toBeSuccessful().toHaveRowCount(1).toHaveContentContaining({
+    expect(result).toBeOk().toHaveRowsCount(1).toHaveRowsMatching({
       name: "Alice",
     });
   })
@@ -543,7 +543,7 @@ export default scenario("gRPC Echo Service", { tags: ["grpc"] })
     const res = await grpc.call("echo.EchoService", "Echo", {
       message: "Hello",
     });
-    expect(res).toBeSuccessful().toHaveContentContaining({ message: "Hello" });
+    expect(res).toBeOk().toHaveDataMatching({ message: "Hello" });
     return res.data();
   })
   .step("Server streaming", async (ctx) => {
@@ -554,7 +554,7 @@ export default scenario("gRPC Echo Service", { tags: ["grpc"] })
         count: 3,
       })
     ) {
-      expect(res).toBeSuccessful();
+      expect(res).toBeOk();
       messages.push(res.data());
     }
     return messages;
@@ -607,7 +607,7 @@ export default scenario("Full Stack Test", {
   .step("Create via API", async (ctx) => {
     const { http } = ctx.resources;
     const res = await http.post("/items", { name: "Test Item" });
-    expect(res).toBeSuccessful().toHaveStatus(201);
+    expect(res).toBeOk().toHaveStatus(201);
     return res.json<{ id: number }>();
   })
   .step("Verify in database", async (ctx) => {
@@ -617,7 +617,7 @@ export default scenario("Full Stack Test", {
       "SELECT * FROM items WHERE id = $1",
       [id],
     );
-    expect(result).toBeSuccessful().toHaveRowCount(1).toHaveContentContaining({
+    expect(result).toBeOk().toHaveRowsCount(1).toHaveRowsMatching({
       name: "Test Item",
     });
   })

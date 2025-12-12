@@ -26,7 +26,7 @@ export default scenario("API Test")
   .step("Make request", async (ctx) => {
     const { http } = ctx.resources;
     const res = await http.get("/health");
-    expect(res).toBeSuccessful();
+    expect(res).toBeOk();
   })
   .build();
 ```
@@ -118,16 +118,17 @@ Validate responses with chainable assertions:
 
 ```typescript
 expect(res)
-  .toBeSuccessful() // Status 2xx
+  .toBeOk() // Status 2xx
   .toHaveStatus(200) // Exact status code
-  .toHaveHeader("content-type", /application\/json/) // Content-Type pattern
-  .toHaveContentContaining({ name: "Alice" }) // Partial JSON match
+  .toHaveHeadersProperty("content-type", /application\/json/) // Content-Type pattern
+  .toHaveDataMatching({ name: "Alice" }) // Partial JSON match
   .toHaveDurationLessThan(1000); // Response time limit
 
 // Additional assertions
-expect(res).not.toBeSuccessful(); // Status not 2xx
-expect(res).toHaveHeader("X-Request-Id");
-expect(res).toHaveText(/success/);
+expect(res).not.toBeOk(); // Status not 2xx
+expect(res).toHaveHeadersProperty("X-Request-Id");
+expect(res).toHaveTextContaining(/success/);
+expect(res).toHaveDataPresent(); // Check if response has data
 ```
 
 ## SQL Clients
@@ -201,15 +202,20 @@ Validate query results:
 
 ```typescript
 expect(result)
-  .toBeSuccessful()
-  .toHaveRowCount(1)
-  .toHaveContentContaining({ name: "Alice" });
+  .toBeOk()
+  .toHaveRowsCount(1)
+  .toHaveRowsMatching({ name: "Alice" });
 
 // Match multiple rows
-expect(result).toHaveContent([
+expect(result).toHaveRowsMatching([
   { id: 1, name: "Alice" },
   { id: 2, name: "Bob" },
 ]);
+
+// Additional row assertions
+expect(result).toHaveRowsPresent(); // Check if query returned any rows
+expect(result).toHaveRowCountGreaterThan(0); // More than 0 rows
+expect(result).toHaveRowCountLessThanOrEqual(10); // At most 10 rows
 ```
 
 ## gRPC Client
@@ -235,7 +241,7 @@ const res = await grpc.call("echo.EchoService", "Echo", {
   message: "Hello",
 });
 
-expect(res).toBeSuccessful().toHaveContentContaining({ message: "Hello" });
+expect(res).toBeOk().toHaveDataMatching({ message: "Hello" });
 const data = res.data();
 ```
 
@@ -250,7 +256,7 @@ for await (
     count: 3,
   })
 ) {
-  expect(res).toBeSuccessful();
+  expect(res).toBeOk();
   messages.push(res.data());
 }
 ```
@@ -269,7 +275,7 @@ const res = await grpc.clientStream(
     yield { message: "Third" };
   },
 );
-expect(res).toBeSuccessful();
+expect(res).toBeOk();
 ```
 
 ### Bidirectional Streaming
@@ -287,7 +293,7 @@ for await (
     },
   )
 ) {
-  expect(res).toBeSuccessful();
+  expect(res).toBeOk();
   console.log("Received:", res.data());
 }
 ```
@@ -310,7 +316,7 @@ const res = await connect.call("echo.EchoService", "Echo", {
   message: "Hello",
 });
 
-expect(res).toBeSuccessful().toHaveContentContaining({ message: "Hello" });
+expect(res).toBeOk().toHaveDataMatching({ message: "Hello" });
 ```
 
 ### Server Streaming
@@ -321,7 +327,7 @@ for await (
     count: 3,
   })
 ) {
-  expect(res).toBeSuccessful();
+  expect(res).toBeOk();
   console.log("Received:", res.data());
 }
 ```
@@ -360,7 +366,7 @@ const res = await graphql.query(
   { id: "1" },
 );
 
-expect(res).toBeSuccessful().toHaveContentContaining({
+expect(res).toBeOk().toHaveDataMatching({
   user: { name: "Alice" },
 });
 const user = res.data().user;
@@ -383,7 +389,7 @@ const res = await graphql.mutate(
   { input: { name: "Alice", email: "alice@example.com" } },
 );
 
-expect(res).toBeSuccessful();
+expect(res).toBeOk();
 const newUser = res.data().createUser;
 ```
 
@@ -402,9 +408,24 @@ const subscription = graphql.subscribe(outdent`
 `);
 
 for await (const res of subscription) {
-  expect(res).toBeSuccessful();
+  expect(res).toBeOk();
   console.log("New user:", res.data().userCreated);
 }
+```
+
+### Error and Extension Assertions
+
+Check for GraphQL errors and extensions:
+
+```typescript
+// Check for errors
+expect(res).toHaveErrorsPresent(); // Has GraphQL errors
+expect(res).toHaveErrorCount(2); // Exactly 2 errors
+expect(res).toHaveErrorCountGreaterThan(0); // Has at least 1 error
+
+// Check for extensions
+expect(res).toHaveExtensionsProperty("tracing"); // Has tracing extension
+expect(res).toHaveExtensionsPropertyContaining("tracing", { version: 1 }); // Extension with value
 ```
 
 ## Redis Client
@@ -428,7 +449,7 @@ Common Redis operations:
 await redis.set("key", "value");
 await redis.set("key", "value", { ex: 3600 }); // With TTL
 const result = await redis.get("key");
-expect(result).toBeSuccessful().toHaveContent("value");
+expect(result).toBeOk().toHaveValueMatching("value");
 
 // Hashes
 await redis.hset("user:1", { name: "Alice", age: "30" });
@@ -444,6 +465,12 @@ const tags = await redis.smembers("tags");
 
 // Delete
 await redis.del("key");
+
+// Value assertions
+expect(result).toHaveValuePresent(); // Check if value exists
+expect(result).toHaveValueMatching("expected"); // Match exact value
+expect(result).toHaveValueContaining("substring"); // Value contains substring
+expect(result).toHaveValueCount(5); // String length or collection size
 ```
 
 ## MongoDB Client
@@ -471,11 +498,11 @@ const result = await users.insertOne({
   name: "Alice",
   email: "alice@example.com",
 });
-expect(result).toBeSuccessful();
+expect(result).toBeOk();
 
 // Find
 const user = await users.findOne({ _id: result.insertedId });
-expect(user).toBeSuccessful().toHaveContentContaining({ name: "Alice" });
+expect(user).toBeOk().toHaveDocMatching({ name: "Alice" });
 
 // Find many
 const allUsers = await users.find({ age: { $gte: 18 } }).toArray();
@@ -488,6 +515,14 @@ await users.updateOne(
 
 // Delete
 await users.deleteOne({ _id: result.insertedId });
+
+// Document assertions
+expect(result).toHaveDocsPresent(); // Check if documents were returned
+expect(result).toHaveDocsCount(5); // Exactly 5 documents
+expect(result).toHaveDocsMatching([...]); // Match multiple documents
+expect(result).toHaveInsertedCount(1); // 1 document inserted
+expect(result).toHaveModifiedCount(1); // 1 document modified
+expect(result).toHaveDeletedCount(1); // 1 document deleted
 ```
 
 ## Deno KV Client
@@ -506,7 +541,7 @@ By default, an in-memory database is used for testing.
 // Set and get
 await kv.set(["users", "1"], { name: "Alice" });
 const result = await kv.get(["users", "1"]);
-expect(result).toBeSuccessful().toHaveContent({ name: "Alice" });
+expect(result).toBeOk().toHaveValueMatching({ name: "Alice" });
 
 // List by prefix
 const users = await kv.list({ prefix: ["users"] });
@@ -551,7 +586,7 @@ await channel.sendToQueue("my-queue", content);
 
 // Receive message
 const result = await channel.get("my-queue");
-expect(result).toBeSuccessful().toHaveContent();
+expect(result).toBeOk();
 if (result.message) {
   await channel.ack(result.message);
 }
@@ -584,7 +619,7 @@ await sqs.ensureQueue("my-queue");
 
 // Send message
 const result = await sqs.send(JSON.stringify({ event: "user.created" }));
-expect(result).toBeSuccessful().toHaveMessageId();
+expect(result).toBeOk().toHaveMessageId();
 
 // Receive and process
 const messages = await sqs.receive({ maxMessages: 10 });
@@ -652,7 +687,7 @@ Use assertions for expected successes, explicit checks for expected failures:
 ```typescript
 // Expected success - use assertions
 const res = await http.get("/users/1");
-expect(res).toBeSuccessful().toHaveStatus(200);
+expect(res).toBeOk().toHaveStatus(200);
 
 // Expected failure - disable throwing, check manually
 const res = await http.get("/users/nonexistent", { throwOnError: false });
@@ -670,7 +705,7 @@ Use retry configuration for network-dependent operations. See
   const res = await http.get("/external-api", {
     retry: { maxAttempts: 3, backoff: "exponential" },
   });
-  expect(res).toBeSuccessful();
+  expect(res).toBeOk();
 }, {
   timeout: 10000, // Allow time for retries
 })
