@@ -203,7 +203,7 @@ Validate query results:
 ```typescript
 expect(result)
   .toBeOk()
-  .toHaveRowsCount(1)
+  .toHaveRowCount(1)
   .toHaveRowsMatching({ name: "Alice" });
 
 // Match multiple rows
@@ -213,7 +213,7 @@ expect(result).toHaveRowsMatching([
 ]);
 
 // Additional row assertions
-expect(result).toHaveRowsPresent(); // Check if query returned any rows
+expect(result).not.toHaveRowsEmpty(); // Check if query returned any rows
 expect(result).toHaveRowCountGreaterThan(0); // More than 0 rows
 expect(result).toHaveRowCountLessThanOrEqual(10); // At most 10 rows
 ```

@@ -114,7 +114,7 @@ probitas run
 probitas run -s tag:example
 
 # Run with different reporter
-probitas run --reporter dot
+probitas run --reporter json
 ```
 
 ### Tag-Based Filtering
@@ -132,9 +132,7 @@ probitas run -s "!tag:slow"              # NOT logic
 Choose output format based on your needs:
 
 - `list` - Detailed human-readable output (default)
-- `dot` - Compact progress dots
 - `json` - Machine-readable JSON
-- `tap` - TAP format for CI integration
 
 ## Available Clients
 
@@ -190,7 +188,7 @@ expect(httpResponse)
 
 // SQL result
 expect(sqlResult)
-  .toHaveRowsCount(1)
+  .toHaveRowCount(1)
   .toHaveRowsMatching({ name: "Alice" });
 
 // gRPC response

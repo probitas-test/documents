@@ -24,14 +24,14 @@ the `probitas` section:
 }
 ```
 
-| Option           | Description                                   | Default                |
-| ---------------- | --------------------------------------------- | ---------------------- |
-| `reporter`       | Output reporter: `dot`, `list`, `json`, `tap` | `"list"`               |
-| `includes`       | Glob patterns for scenario file discovery     | `["**/*.probitas.ts"]` |
-| `excludes`       | Glob patterns to exclude from discovery       | `[]`                   |
-| `selectors`      | Default selectors for filtering scenarios     | `[]`                   |
-| `maxConcurrency` | Maximum parallel scenario execution           | unlimited              |
-| `maxFailures`    | Stop after this many failures                 | unlimited              |
+| Option           | Description                               | Default                |
+| ---------------- | ----------------------------------------- | ---------------------- |
+| `reporter`       | Output reporter: `list`, `json`           | `"list"`               |
+| `includes`       | Glob patterns for scenario file discovery | `["**/*.probitas.ts"]` |
+| `excludes`       | Glob patterns to exclude from discovery   | `[]`                   |
+| `selectors`      | Default selectors for filtering scenarios | `[]`                   |
+| `maxConcurrency` | Maximum parallel scenario execution       | unlimited              |
+| `maxFailures`    | Stop after this many failures             | unlimited              |
 
 ### Selectors
 
@@ -62,7 +62,7 @@ Command-line options override `deno.json` settings:
 
 ```bash
 # Override reporter
-probitas run --reporter dot
+probitas run --reporter json
 
 # Override concurrency
 probitas run --max-concurrency 1

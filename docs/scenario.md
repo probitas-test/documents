@@ -519,7 +519,7 @@ export default scenario("Database Transaction", { tags: ["db", "postgres"] })
       "SELECT name FROM users WHERE id = $1",
       [id],
     );
-    expect(result).toBeOk().toHaveRowsCount(1).toHaveRowsMatching({
+    expect(result).toBeOk().toHaveRowCount(1).toHaveRowsMatching({
       name: "Alice",
     });
   })
@@ -617,7 +617,7 @@ export default scenario("Full Stack Test", {
       "SELECT * FROM items WHERE id = $1",
       [id],
     );
-    expect(result).toBeOk().toHaveRowsCount(1).toHaveRowsMatching({
+    expect(result).toBeOk().toHaveRowCount(1).toHaveRowsMatching({
       name: "Test Item",
     });
   })

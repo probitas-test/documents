@@ -1,331 +1,17 @@
 {
   "name": "reporter",
   "specifier": "@probitas/reporter",
-  "version": "0.3.3",
-  "moduleDoc": "Test result reporting and formatting for Probitas.\n\nThis package provides multiple reporter implementations for formatting and\ndisplaying test execution results. All reporters implement the {@linkcode Reporter}\ninterface from `@probitas/runner` and can be passed to `ScenarioRunner.run()`.\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [@probitas/runner](https://jsr.io/@probitas/runner) | Uses reporters for output |\n| [@probitas/cli](https://jsr.io/@probitas/cli) | CLI that uses these reporters |\n| [@probitas/logger](https://jsr.io/@probitas/logger) | Logging used during execution |\n\n## Available Reporters\n\n- {@linkcode ListReporter} - Detailed hierarchical output showing scenario and step names\n- {@linkcode DotReporter} - Compact single-character output (`.` for pass, `F` for fail)\n- {@linkcode TapReporter} - TAP (Test Anything Protocol) format for CI integration\n- {@linkcode JsonReporter} - JSON output for machine-readable results\n\n## Base Class\n\n- {@linkcode BaseReporter} - Abstract base class with common functionality:\n  - Output stream management (defaults to stderr)\n  - Serialized write operations for concurrent scenarios\n  - Customizable color themes (use `noColor` option to disable)\n\n## Theming\n\n- {@linkcode Theme} - Interface defining semantic color functions\n- {@linkcode defaultTheme} - Default colored theme\n- {@linkcode noColorTheme} - Theme without ANSI color codes\n\n## Configuration Types\n\n- {@linkcode ReporterOptions} - Options for reporter initialization\n- {@linkcode ThemeFunction} - Type for theme color functions\n",
+  "version": "0.5.0",
+  "moduleDoc": "Test result reporting and formatting for Probitas.\n\nThis package provides multiple reporter implementations for formatting and\ndisplaying test execution results. All reporters implement the {@linkcode Reporter}\ninterface from `@probitas/runner` and can be passed to `ScenarioRunner.run()`.\n\n## Links\n\n- [GitHub Repository](https://github.com/jsr-probitas/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [@probitas/runner](https://jsr.io/@probitas/runner) | Uses reporters for output |\n| [@probitas/cli](https://jsr.io/@probitas/cli) | CLI that uses these reporters |\n| [@probitas/logger](https://jsr.io/@probitas/logger) | Logging used during execution |\n\n## Available Reporters\n\n- {@linkcode ListReporter} - Detailed hierarchical output showing scenario and step names\n- {@linkcode JsonReporter} - JSON output for machine-readable results\n",
   "exports": [
-    {
-      "name": "TAPReporterOptions",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/tap_reporter.ts",
-        "line": 15,
-        "col": 0,
-        "byteIndex": 457
-      },
-      "declarationKind": "export",
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [
-          {
-            "repr": "WriterOptions",
-            "kind": "typeRef",
-            "typeRef": {
-              "typeParams": null,
-              "typeName": "WriterOptions"
-            }
-          }
-        ],
-        "constructors": [],
-        "methods": [],
-        "properties": [],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
-      "name": "TAPReporter",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/tap_reporter.ts",
-        "line": 18,
-        "col": 0,
-        "byteIndex": 520
-      },
-      "declarationKind": "export",
-      "kind": "class",
-      "classDef": {
-        "isAbstract": false,
-        "constructors": [
-          {
-            "accessibility": null,
-            "hasBody": true,
-            "name": "constructor",
-            "params": [
-              {
-                "kind": "assign",
-                "left": {
-                  "kind": "identifier",
-                  "name": "options",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "TAPReporterOptions",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "TAPReporterOptions"
-                    }
-                  }
-                },
-                "right": "[UNSUPPORTED]",
-                "tsType": null
-              }
-            ],
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/tap_reporter.ts",
-              "line": 24,
-              "col": 2,
-              "byteIndex": 685
-            }
-          }
-        ],
-        "properties": [],
-        "indexSignatures": [],
-        "methods": [
-          {
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onRunStart",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "scenarios",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "",
-                    "kind": "typeOperator",
-                    "typeOperator": {
-                      "operator": "readonly",
-                      "tsType": {
-                        "repr": "",
-                        "kind": "array",
-                        "array": {
-                          "repr": "ScenarioDefinition",
-                          "kind": "typeRef",
-                          "typeRef": {
-                            "typeParams": null,
-                            "typeName": "ScenarioDefinition"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/tap_reporter.ts",
-              "line": 33,
-              "col": 2,
-              "byteIndex": 911
-            }
-          },
-          {
-            "jsDoc": {
-              "doc": "Called when step completes - output TAP result\n",
-              "tags": [
-                {
-                  "kind": "param",
-                  "name": "_step",
-                  "doc": "The step definition"
-                },
-                {
-                  "kind": "param",
-                  "name": "result",
-                  "doc": "The step execution result"
-                },
-                {
-                  "kind": "param",
-                  "name": "scenario",
-                  "doc": "The scenario being executed"
-                }
-              ]
-            },
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onStepEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "_step",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "StepDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "StepDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "result",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "StepResult",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "StepResult"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/tap_reporter.ts",
-              "line": 59,
-              "col": 2,
-              "byteIndex": 1715
-            }
-          },
-          {
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onRunEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "_scenarios",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "",
-                    "kind": "typeOperator",
-                    "typeOperator": {
-                      "operator": "readonly",
-                      "tsType": {
-                        "repr": "",
-                        "kind": "array",
-                        "array": {
-                          "repr": "ScenarioDefinition",
-                          "kind": "typeRef",
-                          "typeRef": {
-                            "typeParams": null,
-                            "typeName": "ScenarioDefinition"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "_result",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "RunResult",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "RunResult"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "void",
-                "kind": "keyword",
-                "keyword": "void"
-              },
-              "hasBody": true,
-              "isAsync": false,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/tap_reporter.ts",
-              "line": 103,
-              "col": 2,
-              "byteIndex": 3036
-            }
-          }
-        ],
-        "extends": null,
-        "implements": [
-          {
-            "repr": "Reporter",
-            "kind": "typeRef",
-            "typeRef": {
-              "typeParams": null,
-              "typeName": "Reporter"
-            }
-          }
-        ],
-        "typeParams": [],
-        "superTypeParams": []
-      }
-    },
     {
       "name": "ListReporterOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/list_reporter.ts",
-        "line": 36,
+        "filename": "https://jsr.io/@probitas/reporter/0.5.0/list_reporter.ts",
+        "line": 37,
         "col": 0,
-        "byteIndex": 990
+        "byteIndex": 1089
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -352,10 +38,10 @@
               "doc": "Custom theme for styling output.\nIf not provided, uses defaultTheme (or noColorTheme if Deno.noColor is set)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/list_reporter.ts",
-              "line": 41,
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/list_reporter.ts",
+              "line": 42,
               "col": 2,
-              "byteIndex": 1185
+              "byteIndex": 1284
             },
             "params": [],
             "computed": false,
@@ -369,6 +55,27 @@
               }
             },
             "typeParams": []
+          },
+          {
+            "name": "cwd",
+            "jsDoc": {
+              "doc": "Base directory for making paths relative in output.\nIf not provided, absolute paths are displayed as-is."
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/list_reporter.ts",
+              "line": 47,
+              "col": 2,
+              "byteIndex": 1428
+            },
+            "params": [],
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "string",
+              "kind": "keyword",
+              "keyword": "string"
+            },
+            "typeParams": []
           }
         ],
         "callSignatures": [],
@@ -380,14 +87,14 @@
       "name": "ListReporter",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/list_reporter.ts",
-        "line": 75,
+        "filename": "https://jsr.io/@probitas/reporter/0.5.0/list_reporter.ts",
+        "line": 81,
         "col": 0,
-        "byteIndex": 2140
+        "byteIndex": 2382
       },
       "declarationKind": "export",
       "jsDoc": {
-        "doc": "Reporter that outputs test results in a flat list format.\n\nFeatures:\n- Real-time per-step output as tests execute\n- Status indicators (✓ passed, ✗ failed, ⊘ skipped)\n- Source location information\n- Execution timing for each step\n- Skip reasons for conditional skips\n- Error messages and stack traces for failures\n- Summary statistics\n- Semantic coloring via Theme\n",
+        "doc": "Reporter that outputs test results in a flat list format.\n\nFeatures:\n- Real-time per-step output as tests execute\n- Status indicators (✓ passed, ✗ failed, ⊘ skipped)\n- Origin location information\n- Execution timing for each step\n- Skip reasons for conditional skips\n- Error messages and stack traces for failures\n- Summary statistics\n- Semantic coloring via Theme\n",
         "tags": [
           {
             "kind": "example",
@@ -406,7 +113,7 @@
                 {
                   "kind": "param",
                   "name": "options",
-                  "doc": "- Configuration (output stream, theme)"
+                  "doc": "- Configuration (output stream, theme, cwd)"
                 }
               ]
             },
@@ -434,10 +141,10 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/list_reporter.ts",
-              "line": 84,
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/list_reporter.ts",
+              "line": 91,
               "col": 2,
-              "byteIndex": 2335
+              "byteIndex": 2599
             }
           }
         ],
@@ -458,11 +165,11 @@
                   "name": "scenario",
                   "optional": false,
                   "tsType": {
-                    "repr": "ScenarioDefinition",
+                    "repr": "ScenarioMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ScenarioDefinition"
+                      "typeName": "ScenarioMetadata"
                     }
                   }
                 },
@@ -471,11 +178,11 @@
                   "name": "step",
                   "optional": false,
                   "tsType": {
-                    "repr": "StepDefinition",
+                    "repr": "StepMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "StepDefinition"
+                      "typeName": "StepMetadata"
                     }
                   }
                 },
@@ -513,10 +220,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/list_reporter.ts",
-              "line": 127,
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/list_reporter.ts",
+              "line": 136,
               "col": 2,
-              "byteIndex": 3427
+              "byteIndex": 3742
             }
           },
           {
@@ -551,11 +258,11 @@
                         "repr": "",
                         "kind": "array",
                         "array": {
-                          "repr": "ScenarioDefinition",
+                          "repr": "ScenarioMetadata",
                           "kind": "typeRef",
                           "typeRef": {
                             "typeParams": null,
-                            "typeName": "ScenarioDefinition"
+                            "typeName": "ScenarioMetadata"
                           }
                         }
                       }
@@ -596,10 +303,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/list_reporter.ts",
-              "line": 182,
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/list_reporter.ts",
+              "line": 197,
               "col": 2,
-              "byteIndex": 5300
+              "byteIndex": 5827
             }
           }
         ],
@@ -622,10 +329,10 @@
       "name": "JSONReporterOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+        "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
         "line": 19,
         "col": 0,
-        "byteIndex": 427
+        "byteIndex": 419
       },
       "declarationKind": "export",
       "kind": "interface",
@@ -652,10 +359,10 @@
       "name": "JSONReporter",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+        "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
         "line": 21,
         "col": 0,
-        "byteIndex": 490
+        "byteIndex": 482
       },
       "declarationKind": "export",
       "kind": "class",
@@ -687,10 +394,10 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
               "line": 24,
               "col": 2,
-              "byteIndex": 560
+              "byteIndex": 552
             }
           }
         ],
@@ -719,11 +426,11 @@
                         "repr": "",
                         "kind": "array",
                         "array": {
-                          "repr": "ScenarioDefinition",
+                          "repr": "ScenarioMetadata",
                           "kind": "typeRef",
                           "typeRef": {
                             "typeParams": null,
-                            "typeName": "ScenarioDefinition"
+                            "typeName": "ScenarioMetadata"
                           }
                         }
                       }
@@ -751,10 +458,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
               "line": 32,
               "col": 2,
-              "byteIndex": 758
+              "byteIndex": 750
             }
           },
           {
@@ -779,11 +486,11 @@
                         "repr": "",
                         "kind": "array",
                         "array": {
-                          "repr": "ScenarioDefinition",
+                          "repr": "ScenarioMetadata",
                           "kind": "typeRef",
                           "typeRef": {
                             "typeParams": null,
-                            "typeName": "ScenarioDefinition"
+                            "typeName": "ScenarioMetadata"
                           }
                         }
                       }
@@ -824,10 +531,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
               "line": 41,
               "col": 2,
-              "byteIndex": 921
+              "byteIndex": 911
             }
           },
           {
@@ -844,11 +551,11 @@
                   "name": "scenario",
                   "optional": false,
                   "tsType": {
-                    "repr": "ScenarioDefinition",
+                    "repr": "ScenarioMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ScenarioDefinition"
+                      "typeName": "ScenarioMetadata"
                     }
                   }
                 }
@@ -873,10 +580,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
               "line": 52,
               "col": 2,
-              "byteIndex": 1117
+              "byteIndex": 1105
             }
           },
           {
@@ -893,11 +600,11 @@
                   "name": "scenario",
                   "optional": false,
                   "tsType": {
-                    "repr": "ScenarioDefinition",
+                    "repr": "ScenarioMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ScenarioDefinition"
+                      "typeName": "ScenarioMetadata"
                     }
                   }
                 },
@@ -935,10 +642,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
               "line": 59,
               "col": 2,
-              "byteIndex": 1268
+              "byteIndex": 1254
             }
           },
           {
@@ -955,11 +662,11 @@
                   "name": "scenario",
                   "optional": false,
                   "tsType": {
-                    "repr": "ScenarioDefinition",
+                    "repr": "ScenarioMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ScenarioDefinition"
+                      "typeName": "ScenarioMetadata"
                     }
                   }
                 },
@@ -968,11 +675,11 @@
                   "name": "step",
                   "optional": false,
                   "tsType": {
-                    "repr": "StepDefinition",
+                    "repr": "StepMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "StepDefinition"
+                      "typeName": "StepMetadata"
                     }
                   }
                 }
@@ -997,10 +704,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
               "line": 70,
               "col": 2,
-              "byteIndex": 1466
+              "byteIndex": 1450
             }
           },
           {
@@ -1017,11 +724,11 @@
                   "name": "scenario",
                   "optional": false,
                   "tsType": {
-                    "repr": "ScenarioDefinition",
+                    "repr": "ScenarioMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "ScenarioDefinition"
+                      "typeName": "ScenarioMetadata"
                     }
                   }
                 },
@@ -1030,11 +737,11 @@
                   "name": "step",
                   "optional": false,
                   "tsType": {
-                    "repr": "StepDefinition",
+                    "repr": "StepMetadata",
                     "kind": "typeRef",
                     "typeRef": {
                       "typeParams": null,
-                      "typeName": "StepDefinition"
+                      "typeName": "StepMetadata"
                     }
                   }
                 },
@@ -1072,10 +779,10 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/json_reporter.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/json_reporter.ts",
               "line": 81,
               "col": 2,
-              "byteIndex": 1656
+              "byteIndex": 1636
             }
           }
         ],
@@ -1092,624 +799,16 @@
         ],
         "typeParams": [],
         "superTypeParams": []
-      }
-    },
-    {
-      "name": "DotReporterOptions",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/dot_reporter.ts",
-        "line": 16,
-        "col": 0,
-        "byteIndex": 469
-      },
-      "declarationKind": "export",
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [
-          {
-            "repr": "WriterOptions",
-            "kind": "typeRef",
-            "typeRef": {
-              "typeParams": null,
-              "typeName": "WriterOptions"
-            }
-          }
-        ],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "theme",
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/dot_reporter.ts",
-              "line": 17,
-              "col": 2,
-              "byteIndex": 531
-            },
-            "params": [],
-            "computed": false,
-            "optional": true,
-            "tsType": {
-              "repr": "Theme",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "Theme"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
-      "name": "DotReporter",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/dot_reporter.ts",
-        "line": 20,
-        "col": 0,
-        "byteIndex": 549
-      },
-      "declarationKind": "export",
-      "kind": "class",
-      "classDef": {
-        "isAbstract": false,
-        "constructors": [
-          {
-            "accessibility": null,
-            "hasBody": true,
-            "name": "constructor",
-            "params": [
-              {
-                "kind": "assign",
-                "left": {
-                  "kind": "identifier",
-                  "name": "options",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "DotReporterOptions",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "DotReporterOptions"
-                    }
-                  }
-                },
-                "right": "[UNSUPPORTED]",
-                "tsType": null
-              }
-            ],
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/dot_reporter.ts",
-              "line": 24,
-              "col": 2,
-              "byteIndex": 635
-            }
-          }
-        ],
-        "properties": [],
-        "indexSignatures": [],
-        "methods": [
-          {
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onScenarioEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "_scenario",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioDefinition",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioDefinition"
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "result",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "ScenarioResult",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "ScenarioResult"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/dot_reporter.ts",
-              "line": 39,
-              "col": 2,
-              "byteIndex": 1032
-            }
-          },
-          {
-            "accessibility": null,
-            "optional": false,
-            "isAbstract": false,
-            "isStatic": false,
-            "name": "onRunEnd",
-            "kind": "method",
-            "functionDef": {
-              "params": [
-                {
-                  "kind": "identifier",
-                  "name": "_scenarios",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "",
-                    "kind": "typeOperator",
-                    "typeOperator": {
-                      "operator": "readonly",
-                      "tsType": {
-                        "repr": "",
-                        "kind": "array",
-                        "array": {
-                          "repr": "ScenarioDefinition",
-                          "kind": "typeRef",
-                          "typeRef": {
-                            "typeParams": null,
-                            "typeName": "ScenarioDefinition"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                {
-                  "kind": "identifier",
-                  "name": "result",
-                  "optional": false,
-                  "tsType": {
-                    "repr": "RunResult",
-                    "kind": "typeRef",
-                    "typeRef": {
-                      "typeParams": null,
-                      "typeName": "RunResult"
-                    }
-                  }
-                }
-              ],
-              "returnType": {
-                "repr": "Promise",
-                "kind": "typeRef",
-                "typeRef": {
-                  "typeParams": [
-                    {
-                      "repr": "void",
-                      "kind": "keyword",
-                      "keyword": "void"
-                    }
-                  ],
-                  "typeName": "Promise"
-                }
-              },
-              "hasBody": true,
-              "isAsync": true,
-              "isGenerator": false,
-              "typeParams": []
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/dot_reporter.ts",
-              "line": 52,
-              "col": 2,
-              "byteIndex": 1429
-            }
-          }
-        ],
-        "extends": null,
-        "implements": [
-          {
-            "repr": "Reporter",
-            "kind": "typeRef",
-            "typeRef": {
-              "typeParams": null,
-              "typeName": "Reporter"
-            }
-          }
-        ],
-        "typeParams": [],
-        "superTypeParams": []
-      }
-    },
-    {
-      "name": "ThemeFunction",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-        "line": 28,
-        "col": 0,
-        "byteIndex": 706
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Function type for theme color/styling transformations.\n\nTakes a string and returns a styled version (typically with ANSI codes).\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "```ts\nconst bold: ThemeFunction = (text) => `\\x1b[1m${text}\\x1b[0m`;\nconst green: ThemeFunction = (text) => `\\x1b[32m${text}\\x1b[0m`;\n```"
-          }
-        ]
-      },
-      "kind": "typeAlias",
-      "typeAliasDef": {
-        "tsType": {
-          "repr": "",
-          "kind": "fnOrConstructor",
-          "fnOrConstructor": {
-            "constructor": false,
-            "tsType": {
-              "repr": "string",
-              "kind": "keyword",
-              "keyword": "string"
-            },
-            "params": [
-              {
-                "kind": "identifier",
-                "name": "text",
-                "optional": false,
-                "tsType": {
-                  "repr": "string",
-                  "kind": "keyword",
-                  "keyword": "string"
-                }
-              }
-            ],
-            "typeParams": []
-          }
-        },
-        "typeParams": []
-      }
-    },
-    {
-      "name": "Theme",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-        "line": 53,
-        "col": 0,
-        "byteIndex": 1476
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Theme interface for semantic output styling.\n\nProvides a consistent vocabulary for styling test output. Use semantic\nnames (`success`, `failure`) rather than colors (`green`, `red`) to\nsupport different terminal themes and accessibility needs.\n",
-        "tags": [
-          {
-            "kind": "example",
-            "doc": "Custom theme\n```ts\nconst myTheme: Theme = {\n  success: (t) => chalk.green(t),\n  failure: (t) => chalk.red.bold(t),\n  skip: (t) => chalk.yellow(t),\n  dim: (t) => chalk.gray(t),\n  title: (t) => chalk.bold(t),\n  info: (t) => chalk.cyan(t),\n  warning: (t) => chalk.yellow(t)\n};\n```\n"
-          },
-          {
-            "kind": "see",
-            "doc": "{@linkcode colorTheme} for the built-in colored theme"
-          },
-          {
-            "kind": "see",
-            "doc": "{@linkcode noColorTheme} for the plain text theme"
-          }
-        ]
-      },
-      "kind": "interface",
-      "interfaceDef": {
-        "extends": [],
-        "constructors": [],
-        "methods": [],
-        "properties": [
-          {
-            "name": "success",
-            "jsDoc": {
-              "doc": "Style for successful/passing states"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 55,
-              "col": 2,
-              "byteIndex": 1548
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "failure",
-            "jsDoc": {
-              "doc": "Style for failed/error states"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 58,
-              "col": 2,
-              "byteIndex": 1623
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "skip",
-            "jsDoc": {
-              "doc": "Style for skipped states"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 61,
-              "col": 2,
-              "byteIndex": 1693
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "dim",
-            "jsDoc": {
-              "doc": "Style for secondary/muted information"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 64,
-              "col": 2,
-              "byteIndex": 1773
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "title",
-            "jsDoc": {
-              "doc": "Style for titles and headers"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 67,
-              "col": 2,
-              "byteIndex": 1843
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "info",
-            "jsDoc": {
-              "doc": "Style for informational messages"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 70,
-              "col": 2,
-              "byteIndex": 1919
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "warning",
-            "jsDoc": {
-              "doc": "Style for warnings"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 73,
-              "col": 2,
-              "byteIndex": 1980
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          },
-          {
-            "name": "lightGray",
-            "jsDoc": {
-              "doc": "Style for light gray text (used for resource/setup step titles)"
-            },
-            "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-              "line": 76,
-              "col": 2,
-              "byteIndex": 2089
-            },
-            "params": [],
-            "readonly": true,
-            "computed": false,
-            "optional": false,
-            "tsType": {
-              "repr": "ThemeFunction",
-              "kind": "typeRef",
-              "typeRef": {
-                "typeParams": null,
-                "typeName": "ThemeFunction"
-              }
-            },
-            "typeParams": []
-          }
-        ],
-        "callSignatures": [],
-        "indexSignatures": [],
-        "typeParams": []
-      }
-    },
-    {
-      "name": "colorTheme",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-        "line": 82,
-        "col": 13,
-        "byteIndex": 2177
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "Default theme with colors"
-      },
-      "kind": "variable",
-      "variableDef": {
-        "tsType": {
-          "repr": "Theme",
-          "kind": "typeRef",
-          "typeRef": {
-            "typeParams": null,
-            "typeName": "Theme"
-          }
-        },
-        "kind": "const"
-      }
-    },
-    {
-      "name": "noColorTheme",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-        "line": 96,
-        "col": 13,
-        "byteIndex": 2399
-      },
-      "declarationKind": "export",
-      "jsDoc": {
-        "doc": "No-color theme (NO_COLOR compatible)"
-      },
-      "kind": "variable",
-      "variableDef": {
-        "tsType": {
-          "repr": "Theme",
-          "kind": "typeRef",
-          "typeRef": {
-            "typeParams": null,
-            "typeName": "Theme"
-          }
-        },
-        "kind": "const"
-      }
-    },
-    {
-      "name": "defaultTheme",
-      "isDefault": false,
-      "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/theme.ts",
-        "line": 107,
-        "col": 13,
-        "byteIndex": 2646
-      },
-      "declarationKind": "export",
-      "kind": "variable",
-      "variableDef": {
-        "tsType": null,
-        "kind": "const"
       }
     },
     {
       "name": "ReporterOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/reporter/0.3.3/types.ts",
+        "filename": "https://jsr.io/@probitas/reporter/0.5.0/types.ts",
         "line": 21,
         "col": 0,
-        "byteIndex": 417
+        "byteIndex": 438
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -1743,10 +842,10 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/types.ts",
               "line": 27,
               "col": 2,
-              "byteIndex": 546
+              "byteIndex": 567
             },
             "params": [],
             "readonly": true,
@@ -1768,10 +867,10 @@
               "doc": "Custom theme for styling output.\n\nIf not provided, uses {@linkcode defaultTheme} (or {@linkcode noColorTheme}\nif `Deno.noColor` is true)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/reporter/0.3.3/types.ts",
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/types.ts",
               "line": 35,
               "col": 2,
-              "byteIndex": 752
+              "byteIndex": 773
             },
             "params": [],
             "readonly": true,
@@ -1786,6 +885,28 @@
               }
             },
             "typeParams": []
+          },
+          {
+            "name": "cwd",
+            "jsDoc": {
+              "doc": "Base directory for making paths relative in output.\n\nIf provided, absolute paths in source locations will be displayed\nrelative to this directory."
+            },
+            "location": {
+              "filename": "https://jsr.io/@probitas/reporter/0.5.0/types.ts",
+              "line": 43,
+              "col": 2,
+              "byteIndex": 978
+            },
+            "params": [],
+            "readonly": true,
+            "computed": false,
+            "optional": true,
+            "tsType": {
+              "repr": "string",
+              "kind": "keyword",
+              "keyword": "string"
+            },
+            "typeParams": []
           }
         ],
         "callSignatures": [],
@@ -1794,5 +915,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-12T09:23:52.819Z"
+  "generatedAt": "2025-12-16T07:16:30.882Z"
 }

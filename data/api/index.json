@@ -3,7 +3,7 @@
     {
       "name": "builder",
       "specifier": "@probitas/builder",
-      "version": "0.2.8",
+      "version": "0.3.0",
       "exportCount": 4,
       "counts": {
         "classes": 0,
@@ -225,9 +225,23 @@
       }
     },
     {
+      "name": "core",
+      "specifier": "@probitas/core",
+      "version": "0.1.0",
+      "exportCount": 9,
+      "counts": {
+        "classes": 0,
+        "interfaces": 6,
+        "functions": 0,
+        "types": 3,
+        "variables": 0,
+        "enums": 0
+      }
+    },
+    {
       "name": "discover",
       "specifier": "@probitas/discover",
-      "version": "0.2.8",
+      "version": "0.2.10",
       "exportCount": 2,
       "counts": {
         "classes": 0,
@@ -241,12 +255,12 @@
     {
       "name": "expect",
       "specifier": "@probitas/expect",
-      "version": "0.2.0",
-      "exportCount": 247,
+      "version": "0.2.2",
+      "exportCount": 249,
       "counts": {
-        "classes": 53,
+        "classes": 54,
         "interfaces": 120,
-        "functions": 39,
+        "functions": 40,
         "types": 18,
         "variables": 2,
         "enums": 0
@@ -255,7 +269,7 @@
     {
       "name": "logger",
       "specifier": "@probitas/logger",
-      "version": "0.2.8",
+      "version": "0.2.10",
       "exportCount": 5,
       "counts": {
         "classes": 0,
@@ -269,7 +283,7 @@
     {
       "name": "probitas",
       "specifier": "@probitas/probitas",
-      "version": "0.5.0",
+      "version": "0.5.2",
       "exportCount": 88,
       "counts": {
         "classes": 8,
@@ -283,26 +297,26 @@
     {
       "name": "reporter",
       "specifier": "@probitas/reporter",
-      "version": "0.3.3",
-      "exportCount": 14,
+      "version": "0.5.0",
+      "exportCount": 5,
       "counts": {
-        "classes": 4,
-        "interfaces": 6,
+        "classes": 2,
+        "interfaces": 3,
         "functions": 0,
-        "types": 1,
-        "variables": 3,
+        "types": 0,
+        "variables": 0,
         "enums": 0
       }
     },
     {
       "name": "runner",
       "specifier": "@probitas/runner",
-      "version": "0.2.8",
-      "exportCount": 9,
+      "version": "0.3.1",
+      "exportCount": 11,
       "counts": {
         "classes": 2,
         "interfaces": 5,
-        "functions": 0,
+        "functions": 2,
         "types": 2,
         "variables": 0,
         "enums": 0
@@ -311,7 +325,7 @@
     {
       "name": "scenario",
       "specifier": "@probitas/scenario",
-      "version": "0.2.8",
+      "version": "0.2.9",
       "exportCount": 17,
       "counts": {
         "classes": 0,
@@ -323,5 +337,5 @@
       }
     }
   ],
-  "generatedAt": "2025-12-12T09:23:52.881Z"
+  "generatedAt": "2025-12-16T07:16:30.938Z"
 }
