@@ -589,7 +589,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
   })
   .step("Get user", async (ctx) => {
     const { http } = ctx.resources;
-    const { id } = ctx.previous!;
+    const { id } = ctx.previous;
     const res = await http.get(`/users/${id}`);
     expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
       id,
@@ -599,7 +599,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
   })
   .step("Update user", async (ctx) => {
     const { http } = ctx.resources;
-    const { id } = ctx.previous!;
+    const { id } = ctx.previous;
     const res = await http.patch(`/users/${id}`, { name: "Bob" });
     expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
       name: "Bob",
@@ -608,7 +608,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
   })
   .step("Delete user", async (ctx) => {
     const { http } = ctx.resources;
-    const { id } = ctx.previous!;
+    const { id } = ctx.previous;
     const res = await http.delete(`/users/${id}`);
     expect(res).toBeOk().toHaveStatus(204);
   })
@@ -653,13 +653,13 @@ export default scenario("Database Transaction", { tags: ["db", "postgres"] })
         "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id",
         ["Alice", "alice@example.com"],
       );
-      return insert.rows.first();
+      return insert.rows.first()!;
     });
     return result;
   })
   .step("Verify user exists", async (ctx) => {
     const { pg } = ctx.resources;
-    const { id } = ctx.previous!;
+    const { id } = ctx.previous;
     const result = await pg.query<{ name: string }>(
       "SELECT name FROM users WHERE id = $1",
       [id],
@@ -757,7 +757,7 @@ export default scenario("Full Stack Test", {
   })
   .step("Verify in database", async (ctx) => {
     const { pg } = ctx.resources;
-    const { id } = ctx.previous!;
+    const { id } = ctx.previous;
     const result = await pg.query(
       "SELECT * FROM items WHERE id = $1",
       [id],
@@ -796,33 +796,52 @@ scenario("Email Test")
 Return data that subsequent steps need. This enables type-safe data flow through
 `ctx.previous`.
 
+Good - returns data needed by next step:
+
 ```typescript
-import { client, scenario } from "jsr:@probitas/probitas";
+import { client, expect, scenario } from "jsr:@probitas/probitas";
 
-const data = { name: "Alice", email: "alice@example.com" };
-
-// Good - returns data needed by next step
-scenario("Good Example")
+scenario("User creation and retrieval")
   .resource(
     "http",
     () => client.http.createHttpClient({ url: "http://localhost:8080" }),
   )
   .step("Create user", async (ctx) => {
-    const { http } = ctx.resources;
-    const res = await http.post("/users", data);
-    return res.data<{ id: number }>();
+    const res = await ctx.resources.http.post("/users", {
+      name: "Alice",
+      email: "alice@example.com",
+    });
+    return res.data<{ id: number }>()!;
+  })
+  .step("Get created user", async (ctx) => {
+    // ctx.previous is typed as { id: number }
+    const res = await ctx.resources.http.get(`/users/${ctx.previous.id}`);
+    expect(res).toHaveStatus(200).toHaveDataMatching({ name: "Alice" });
   })
   .build();
+```
 
-// Avoid - loses useful data
-scenario("Avoid Example")
+Avoid - loses useful data:
+
+```ts
+import { client, expect, scenario } from "jsr:@probitas/probitas";
+
+scenario("User creation and retrieval")
   .resource(
     "http",
     () => client.http.createHttpClient({ url: "http://localhost:8080" }),
   )
   .step("Create user", async (ctx) => {
-    const { http } = ctx.resources;
-    await http.post("/users", data);
+    await ctx.resources.http.post("/users", {
+      name: "Alice",
+      email: "alice@example.com",
+    });
+    // No return value - next step can't access created user's ID!
+  })
+  .step("Get created user", async (ctx) => {
+    // ctx.previous is undefined - we lost the user ID!
+    const res = await ctx.resources.http.get("/users/???");
+    expect(res).toHaveStatus(200);
   })
   .build();
 ```
@@ -905,4 +924,197 @@ scenario("Avoid Setup Example")
     await seedTestData(ctx.resources.db);
   })
   .build();
+```
+
+### Split Scenarios for Better Organization
+
+Export multiple focused scenarios from a single file rather than one large
+scenario. This provides several benefits:
+
+- **Parallel execution**: Separate scenarios can run concurrently, improving
+  overall test speed
+- **Tag filtering**: Each scenario can have its own tags for fine-grained test
+  selection
+- **Clear failure identification**: When a test fails, you immediately know
+  which specific scenario failed
+
+Good - multiple focused scenarios:
+
+```typescript
+// user-validation.probitas.ts
+import { client, expect, scenario } from "jsr:@probitas/probitas";
+
+export default [
+  scenario("User validation - rejects empty name", {
+    tags: ["api", "validation"],
+  })
+    .resource(
+      "http",
+      () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+    )
+    .step("Create user with empty name", async (ctx) => {
+      const res = await ctx.resources.http.post("/users", { name: "" });
+      expect(res).toHaveStatus(400);
+    })
+    .build(),
+
+  scenario("User validation - rejects duplicate email", {
+    tags: ["api", "validation"],
+  })
+    .resource(
+      "http",
+      () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+    )
+    .setup(async (ctx) => {
+      const res = await ctx.resources.http.post("/users", {
+        name: "Alice",
+        email: "alice@example.com",
+      });
+      const user = res.data<{ id: number }>();
+      return async () => {
+        await ctx.resources.http.delete(`/users/${user!.id}`);
+      };
+    })
+    .step("Create user with duplicate email", async (ctx) => {
+      const res = await ctx.resources.http.post("/users", {
+        name: "Bob",
+        email: "alice@example.com",
+      });
+      expect(res).toHaveStatus(409);
+    })
+    .build(),
+
+  scenario("User validation - rejects invalid email format", {
+    tags: ["api", "validation"],
+  })
+    .resource(
+      "http",
+      () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+    )
+    .step("Create user with invalid email", async (ctx) => {
+      const res = await ctx.resources.http.post("/users", {
+        name: "Alice",
+        email: "not-an-email",
+      });
+      expect(res).toHaveStatus(400);
+    })
+    .build(),
+];
+```
+
+Avoid - one monolithic scenario:
+
+```ts
+// user-validation.probitas.ts
+import { client, expect, scenario } from "jsr:@probitas/probitas";
+
+export default scenario("User validation", { tags: ["api", "validation"] })
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step("Reject empty name", async (ctx) => {
+    const res = await ctx.resources.http.post("/users", { name: "" });
+    expect(res).toHaveStatus(400);
+  })
+  .step("Reject duplicate email", async (ctx) => {
+    // Create first user
+    await ctx.resources.http.post("/users", {
+      name: "Alice",
+      email: "alice@example.com",
+    });
+    // Try to create another user with same email
+    const res = await ctx.resources.http.post("/users", {
+      name: "Bob",
+      email: "alice@example.com",
+    });
+    expect(res).toHaveStatus(409);
+  })
+  .step("Reject invalid email format", async (ctx) => {
+    const res = await ctx.resources.http.post("/users", {
+      name: "Alice",
+      email: "not-an-email",
+    });
+    expect(res).toHaveStatus(400);
+  })
+  .build();
+```
+
+However, when steps are part of a sequential workflow where each step depends on
+the previous one, keep them in a single scenario. Use `ctx.previous` to pass
+data between steps:
+
+Good - sequential CRUD operations as a single scenario:
+
+```ts
+// user-crud.probitas.ts
+import { client, expect, scenario } from "jsr:@probitas/probitas";
+
+export default scenario("User CRUD workflow", { tags: ["api", "crud"] })
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step("Create user", async (ctx) => {
+    const res = await ctx.resources.http.post("/users", {
+      name: "Alice",
+      email: "alice@example.com",
+    });
+    expect(res).toHaveStatus(201);
+    return res.data<{ id: number }>()!;
+  })
+  .step("Get user", async (ctx) => {
+    const res = await ctx.resources.http.get(`/users/${ctx.previous.id}`);
+    expect(res).toHaveStatus(200).toHaveDataMatching({ name: "Alice" });
+    return ctx.previous;
+  })
+  .step("Update user", async (ctx) => {
+    const res = await ctx.resources.http.patch(`/users/${ctx.previous.id}`, {
+      name: "Alice Smith",
+    });
+    expect(res).toHaveStatus(200);
+    return ctx.previous;
+  })
+  .step("Delete user", async (ctx) => {
+    const res = await ctx.resources.http.delete(`/users/${ctx.previous.id}`);
+    expect(res).toHaveStatus(204);
+  })
+  .build();
+```
+
+Avoid - splitting sequential workflow into separate scenarios:
+
+```ts
+// user-crud.probitas.ts - DON'T do this!
+import { client, expect, scenario } from "jsr:@probitas/probitas";
+
+// These scenarios cannot run in parallel - they share state!
+export default [
+  scenario("User CRUD - create", { tags: ["api", "crud"] })
+    .resource(
+      "http",
+      () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+    )
+    .step("Create user", async (ctx) => {
+      const res = await ctx.resources.http.post("/users", {
+        name: "Alice",
+        email: "alice@example.com",
+      });
+      expect(res).toHaveStatus(201);
+      // Problem: How do we pass the user ID to the next scenario?
+    })
+    .build(),
+
+  scenario("User CRUD - get", { tags: ["api", "crud"] })
+    .resource(
+      "http",
+      () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+    )
+    .step("Get user", async (ctx) => {
+      // Problem: We don't know the user ID from the previous scenario!
+      const res = await ctx.resources.http.get("/users/???");
+      expect(res).toHaveStatus(200);
+    })
+    .build(),
+];
 ```
