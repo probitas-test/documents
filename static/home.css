@@ -1,0 +1,457 @@
+/**
+ * Home page styles - specific to the landing page
+ *
+ * Contains:
+ * - Home Header (absolute positioning for hero overlay)
+ * - Hero Section
+ * - Code Carousel
+ * - Features Section
+ * - Clients Section
+ * - AI-Friendly Section
+ */
+
+/* ========================================
+   Home Header (absolute, overlays hero)
+   ======================================== */
+.home-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ========================================
+   Hero Section
+   ======================================== */
+.hero {
+  text-align: center;
+  padding: 8rem 1.5rem 4rem;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    var(--hero-gradient),
+    transparent
+  );
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.hero-badge span {
+  color: #22c55e;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 700;
+  margin: 0 0 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--text-heading) 0%,
+    var(--text-muted) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-title {
+  position: relative;
+}
+
+.hero-title::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: url("/static/probitas.png") center / contain no-repeat;
+  opacity: 0.15;
+}
+
+.tagline {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+}
+
+.cta-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ========================================
+   Code Carousel
+   ======================================== */
+.code-carousel {
+  max-width: 750px;
+  margin: 4rem auto 0;
+}
+
+.carousel-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.carousel-tab {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.carousel-tab:hover {
+  color: var(--text-heading);
+}
+
+.carousel-tab.active {
+  color: var(--accent-light);
+  border-bottom-color: var(--accent);
+}
+
+.carousel-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.carousel-nav:hover {
+  color: var(--text-heading);
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.carousel-nav i {
+  font-size: 20px;
+}
+
+/* ========================================
+   Code Preview
+   ======================================== */
+.code-preview {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.carousel-slide {
+  display: none;
+}
+
+.carousel-slide.active {
+  display: block;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-code-header);
+}
+
+.code-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.code-dot:nth-child(1) {
+  background: #ff5f56;
+}
+.code-dot:nth-child(2) {
+  background: #ffbd2e;
+}
+.code-dot:nth-child(3) {
+  background: #27c93f;
+}
+
+.code-title {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* ========================================
+   Features Section
+   ======================================== */
+.features {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.feature:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.feature h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+  color: var(--text-heading);
+}
+
+.feature p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   Clients Section
+   ======================================== */
+.clients-section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  text-align: center;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-icon {
+  font-size: 2rem;
+}
+
+.section-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 0;
+}
+
+.clients-section > p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.client-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+a.client-tag {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text-heading);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+a.client-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent-light);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   AI-Friendly Section
+   ======================================== */
+.ai-friendly-section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.ai-friendly-description {
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+}
+
+.ai-friendly-description a {
+  color: var(--accent-light);
+  text-decoration: underline;
+}
+
+.ai-friendly-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.ai-friendly-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.ai-friendly-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.ai-friendly-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--accent-light);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.ai-friendly-card-header i {
+  font-size: 1.25rem;
+}
+
+.ai-friendly-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.ai-friendly-card code {
+  background: var(--bg-primary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--accent-light);
+}
+
+.ai-friendly-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: gap 0.2s;
+}
+
+.ai-friendly-link:hover {
+  gap: 0.5rem;
+}
+
+.ai-friendly-link i {
+  font-size: 1rem;
+}
+
+/* ========================================
+   Home Page Responsive (480px)
+   ======================================== */
+@media (max-width: 480px) {
+  /* Hero section */
+  .hero {
+    padding: 6rem 1rem 3rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .cta-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-group .btn {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  /* Carousel */
+  .carousel-nav {
+    display: none;
+  }
+
+  .code-preview {
+    border-radius: 12px;
+  }
+
+  /* Features */
+  .features {
+    padding: 2rem 1rem;
+  }
+
+  .feature {
+    padding: 1.25rem;
+  }
+}

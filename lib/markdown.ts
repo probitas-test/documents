@@ -36,12 +36,60 @@ marked.use({
       const title = token.title ? ` title="${token.title}"` : "";
       return `<a href="${href}"${title}>${token.text}</a>`;
     },
+    table(token: Tokens.Table): string {
+      // Wrap table in scrollable container for mobile
+      let header = "";
+      let body = "";
+
+      // Build header row
+      let headerRow = "";
+      for (let j = 0; j < token.header.length; j++) {
+        const cell = token.header[j];
+        const align = token.align[j];
+        const alignAttr = align ? ` style="text-align:${align}"` : "";
+        // deno-lint-ignore no-explicit-any
+        const content = (this as any).parser.parseInline(cell.tokens);
+        headerRow += `<th${alignAttr}>${content}</th>`;
+      }
+      header = `<thead><tr>${headerRow}</tr></thead>`;
+
+      // Build body rows
+      if (token.rows.length > 0) {
+        let bodyRows = "";
+        for (let i = 0; i < token.rows.length; i++) {
+          const row = token.rows[i];
+          let rowHtml = "";
+          for (let j = 0; j < row.length; j++) {
+            const cell = row[j];
+            const align = token.align[j];
+            const alignAttr = align ? ` style="text-align:${align}"` : "";
+            // deno-lint-ignore no-explicit-any
+            const content = (this as any).parser.parseInline(cell.tokens);
+            rowHtml += `<td${alignAttr}>${content}</td>`;
+          }
+          bodyRows += `<tr>${rowHtml}</tr>`;
+        }
+        body = `<tbody>${bodyRows}</tbody>`;
+      }
+
+      return `<div class="table-wrapper"><table>${header}${body}</table></div>\n`;
+    },
   },
 });
 
-/** Parse markdown content to HTML */
-export function parseMarkdown(content: string): string {
-  return marked.parse(content, { async: false }) as string;
+/**
+ * Parse markdown content to HTML
+ * @param content - Markdown content
+ * @param headerExtra - Optional HTML to insert after h1 inside header
+ */
+export function parseMarkdown(content: string, headerExtra?: string): string {
+  const html = marked.parse(content, { async: false }) as string;
+  // Wrap first h1 in <header class="content-header">
+  const extra = headerExtra ?? "";
+  return html.replace(
+    /^(<h1[^>]*>.*?<\/h1>)/,
+    `<header class="content-header">$1${extra}</header>`,
+  );
 }
 
 /**

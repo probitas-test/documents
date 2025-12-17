@@ -121,7 +121,7 @@ export default scenario("Probitas docs site health", {
     }
   })
   .step("serves static assets", async ({ resources }) => {
-    const res = await resources.http.get("/static/style.css");
+    const res = await resources.http.get("/static/common.css");
     expect(res).toBeOk().toHaveStatus(200).toHaveHeadersPropertyContaining(
       "content-type",
       "text/css",

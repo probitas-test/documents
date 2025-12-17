@@ -32,13 +32,18 @@ export function MarkdownDoc(
     label: item.label,
   }));
 
-  // Parse markdown to HTML
-  const html = parseMarkdown(content);
-
   // Alternate markdown URL (path ends with /, so append index.md)
   const alternateMarkdown = markdownPath
     ? `${basePath}${markdownPath}index.md`
     : undefined;
+
+  // Build header extra HTML (toolbelt with source link)
+  const headerExtra = alternateMarkdown
+    ? `<div class="content-toolbelt"><a href="${alternateMarkdown}" class="markdown-source-link" title="View Markdown source"><i class="ti ti-markdown"></i></a></div>`
+    : undefined;
+
+  // Parse markdown to HTML
+  const html = parseMarkdown(content, headerExtra);
 
   return (
     <Layout
@@ -50,18 +55,9 @@ export function MarkdownDoc(
       <DocLayout
         sidebar={<TableOfContents items={tocItems} />}
       >
-        <div class="doc-article-container">
-          {alternateMarkdown && (
-            <a
-              href={alternateMarkdown}
-              class="markdown-source-link"
-              title="View Markdown source"
-            >
-              <i class="ti ti-markdown" />
-            </a>
-          )}
+        <div class="content-article-container">
           <article
-            class="doc-article markdown-body"
+            class="content-article markdown-body"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>

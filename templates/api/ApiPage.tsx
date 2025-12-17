@@ -37,13 +37,15 @@ export async function ApiIndexPage() {
       description="Complete API reference for all Probitas packages including core, client, and SQL modules."
       pagePath="/api"
     >
-      <div class="api-layout">
-        <aside class="api-sidebar">
+      <div class="content-layout">
+        <aside class="content-sidebar">
           <PackageSidebar groups={groups} />
         </aside>
-        <main class="api-content">
-          <article class="api-article">
-            <h1>API Reference</h1>
+        <main class="content-main">
+          <article class="content-article">
+            <header class="content-header">
+              <h1>API Reference</h1>
+            </header>
             <p class="api-intro">
               Complete API documentation for all <code>@probitas/*</code>{" "}
               packages. Browse <strong>{packages.length} packages</strong> with
@@ -173,17 +175,17 @@ export async function PackagePage({ packageName }: PackagePageProps) {
       alternateJson={`${basePath}/api/${packageName}/index.json`}
       alternateMarkdown={`${basePath}/api/${packageName}/index.md`}
     >
-      <div class="api-layout">
-        <aside class="api-sidebar">
+      <div class="content-layout">
+        <aside class="content-sidebar">
           <PackageSidebar groups={groups} currentPackage={packageName} />
         </aside>
-        <main class="api-content">
+        <main class="content-main">
           <div class="api-main-with-toc">
-            <div class="api-article-container">
-              <article class="api-article">
-                <header class="package-header">
+            <div class="content-article-container">
+              <article class="content-article">
+                <header class="content-header">
                   <h1>{doc.specifier}</h1>
-                  <div class="api-source-links">
+                  <div class="content-toolbelt">
                     <a
                       href={`${basePath}/api/${packageName}/index.md`}
                       class="source-link md-source-link"
@@ -199,7 +201,7 @@ export async function PackagePage({ packageName }: PackagePageProps) {
                       <i class="ti ti-braces" />
                     </a>
                   </div>
-                  <div class="package-header-meta">
+                  <div class="content-header-meta">
                     <span class="package-version">v{doc.version}</span>
                     <a
                       href={`https://jsr.io/${doc.specifier}`}
@@ -320,10 +322,12 @@ function NotFoundPage({ packageName }: NotFoundPageProps) {
       title="Package Not Found - Probitas Documentation"
       description={`Package ${packageName} not found`}
     >
-      <div class="api-layout">
-        <main class="api-content">
-          <article class="api-article error-page">
-            <h1>Package Not Found</h1>
+      <div class="content-layout">
+        <main class="content-main">
+          <article class="content-article error-page">
+            <header class="content-header">
+              <h1>Package Not Found</h1>
+            </header>
             <p>
               The package <code>@probitas/{packageName}</code> was not found.
             </p>

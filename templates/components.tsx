@@ -36,9 +36,9 @@ interface DocLayoutProps {
 /** Two-column documentation layout */
 export function DocLayout({ sidebar, children }: DocLayoutProps) {
   return (
-    <div class="doc-layout">
-      <aside class="doc-sidebar">{sidebar}</aside>
-      <main class="doc-content">{children}</main>
+    <div class="content-layout">
+      <aside class="content-sidebar">{sidebar}</aside>
+      <main class="content-main">{children}</main>
     </div>
   );
 }

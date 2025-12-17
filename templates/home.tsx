@@ -5,7 +5,7 @@ import { clients } from "../data/clients.ts";
 import { basePath } from "../data/docs.ts";
 import { features } from "../data/features.ts";
 import { loadSampleCodes, type SampleCode } from "../data/sample_codes.ts";
-import { Layout } from "./Layout.tsx";
+import { HomeLayout } from "./HomeLayout.tsx";
 import { mainScript } from "./scripts.ts";
 
 function CarouselTabs({ sampleCodes }: { sampleCodes: SampleCode[] }) {
@@ -196,15 +196,12 @@ export async function HomePage() {
   const sampleCodes = await loadSampleCodes();
 
   return (
-    <Layout
-      title="Probitas - Scenario-based Testing Framework"
-      showLogo={false}
-    >
+    <HomeLayout title="Probitas - Scenario-based Testing Framework">
       <Hero sampleCodes={sampleCodes} />
       <FeaturesSection />
       <ClientsSection />
       <AiFriendlySection />
       <script dangerouslySetInnerHTML={{ __html: mainScript }} />
-    </Layout>
+    </HomeLayout>
   );
 }

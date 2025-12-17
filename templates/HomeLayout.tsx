@@ -1,8 +1,13 @@
 /**
- * Base HTML layout component
+ * Home page layout - separate from doc/api pages
+ *
+ * The home page has a distinct design with:
+ * - Absolute positioned header (overlays hero)
+ * - No logo in header (hero has the branding)
+ * - Full-width sections
  */
 import type { Child } from "hono/jsx";
-import { basePath, docPages, siteMetadata } from "../data/docs.ts";
+import { basePath, siteMetadata } from "../data/docs.ts";
 import { themeInitScript } from "./scripts.ts";
 
 const GITHUB_URL = "https://github.com/jsr-probitas/probitas";
@@ -10,45 +15,25 @@ const GITHUB_URL = "https://github.com/jsr-probitas/probitas";
 const CDN = {
   fonts:
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
-  // Pin to v3.25.0 - v3.26+ has rendering issues where icons appear filled/black
-  // See: https://github.com/tabler/tabler-icons/issues/1310
   tablerIcons:
     "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.25.0/dist/tabler-icons.min.css",
   hljs: "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build",
 };
 
-interface LayoutProps {
+interface HomeLayoutProps {
   title: string;
   children: Child;
-  /** URL path to alternate markdown source (for doc pages) */
-  alternateMarkdown?: string;
-  /** URL path to alternate JSON data (for API pages) */
-  alternateJson?: string;
-  /** Page description for SEO and JSON-LD */
-  description?: string;
-  /** Current page path for JSON-LD */
-  pagePath?: string;
 }
 
-function generateJsonLd(
-  title: string,
-  description: string,
-  pagePath?: string,
-): object {
+function generateJsonLd(title: string, description: string): object {
   const baseUrl = siteMetadata.baseUrl;
   return {
     "@context": "https://schema.org",
-    "@type": "TechArticle",
+    "@type": "WebSite",
     "name": title,
     "headline": title,
     "description": description,
-    "url": pagePath ? `${baseUrl}${pagePath}` : baseUrl,
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": siteMetadata.name,
-      "url": baseUrl,
-      "description": siteMetadata.description,
-    },
+    "url": baseUrl,
     "publisher": {
       "@type": "Organization",
       "name": siteMetadata.name,
@@ -57,25 +42,16 @@ function generateJsonLd(
   };
 }
 
-export function Layout(
-  {
-    title,
-    children,
-    alternateMarkdown,
-    alternateJson,
-    description,
-    pagePath,
-  }: LayoutProps,
-) {
-  const pageDescription = description || siteMetadata.description;
-  const jsonLd = generateJsonLd(title, pageDescription, pagePath);
+export function HomeLayout({ title, children }: HomeLayoutProps) {
+  const description = siteMetadata.description;
+  const jsonLd = generateJsonLd(title, description);
 
   return (
     <html lang="en">
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content={pageDescription} />
+        <meta name="description" content={description} />
         <title>{title}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -86,30 +62,13 @@ export function Layout(
         <link href={CDN.fonts} rel="stylesheet" />
         <link rel="stylesheet" href={CDN.tablerIcons} />
         <link rel="stylesheet" href={`${basePath}/static/common.css`} />
-        <link rel="stylesheet" href={`${basePath}/static/content.css`} />
+        <link rel="stylesheet" href={`${basePath}/static/home.css`} />
         <link rel="icon" href={`${basePath}/static/favicon.ico`} />
         <link
           id="hljs-theme"
           rel="stylesheet"
           href={`${CDN.hljs}/styles/github-dark.min.css`}
         />
-        {/* Pagefind UI CSS intentionally not loaded - using custom styles in content.css */}
-        {alternateMarkdown && (
-          <link
-            rel="alternate"
-            type="text/markdown"
-            href={alternateMarkdown}
-            title="Markdown source"
-          />
-        )}
-        {alternateJson && (
-          <link
-            rel="alternate"
-            type="application/json"
-            href={alternateJson}
-            title="JSON data"
-          />
-        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -118,8 +77,8 @@ export function Layout(
         <script src={`${CDN.hljs}/languages/typescript.min.js`} />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body>
-        <Header />
+      <body class="page-home">
+        <HomeHeader />
         {children}
         <SearchModal />
         <ScrollToTop />
@@ -128,6 +87,35 @@ export function Layout(
         <script dangerouslySetInnerHTML={{ __html: scrollToTopScript }} />
       </body>
     </html>
+  );
+}
+
+function HomeHeader() {
+  return (
+    <header class="home-header">
+      <div />
+      <div />
+      <div class="header-right">
+        <button
+          type="button"
+          class="theme-toggle"
+          onclick="toggleTheme()"
+          aria-label="Toggle theme"
+        >
+          <i class="ti ti-sun icon-sun" />
+          <i class="ti ti-moon icon-moon" />
+        </button>
+        <a
+          href={GITHUB_URL}
+          class="github-link"
+          target="_blank"
+          rel="noopener"
+        >
+          <i class="ti ti-brand-github" />
+          <span class="github-text">GitHub</span>
+        </a>
+      </div>
+    </header>
   );
 }
 
@@ -230,53 +218,3 @@ document.addEventListener('keydown', (e) => {
   }
 });
 `;
-
-function Header() {
-  return (
-    <header class="global-header">
-      <a href={`${basePath}/`} class="logo">
-        <img
-          src={`${basePath}/static/probitas.png`}
-          alt="Probitas"
-          class="logo-img"
-        />
-        <span class="logo-text">Probitas</span>
-      </a>
-      <nav class="header-nav">
-        {docPages.map((doc) => (
-          <a key={doc.path} href={`${basePath}${doc.path}`}>{doc.label}</a>
-        ))}
-        <a href={`${basePath}/api/`}>API</a>
-      </nav>
-      <div class="header-right">
-        <button
-          type="button"
-          class="search-toggle"
-          onclick="openSearch()"
-          aria-label="Search"
-        >
-          <i class="ti ti-search" />
-          <span class="search-shortcut">⌘K</span>
-        </button>
-        <button
-          type="button"
-          class="theme-toggle"
-          onclick="toggleTheme()"
-          aria-label="Toggle theme"
-        >
-          <i class="ti ti-sun icon-sun" />
-          <i class="ti ti-moon icon-moon" />
-        </button>
-        <a
-          href={GITHUB_URL}
-          class="github-link"
-          target="_blank"
-          rel="noopener"
-        >
-          <i class="ti ti-brand-github" />
-          <span class="github-text">GitHub</span>
-        </a>
-      </div>
-    </header>
-  );
-}
