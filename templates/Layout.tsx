@@ -10,8 +10,10 @@ const GITHUB_URL = "https://github.com/jsr-probitas/probitas";
 const CDN = {
   fonts:
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+  // Pin to v3.25.0 - v3.26+ has rendering issues where icons appear filled/black
+  // See: https://github.com/tabler/tabler-icons/issues/1310
   tablerIcons:
-    "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css",
+    "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.25.0/dist/tabler-icons.min.css",
   hljs: "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build",
 };
 
