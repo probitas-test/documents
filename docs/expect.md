@@ -335,8 +335,148 @@ export default scenario("Error Example")
   .build();
 ```
 
-## Next Steps
+### Error Output Example
 
-- [Overview](/docs/) - Get started with Probitas
-- [Scenario Guide](/docs/scenario/) - Learn how to write scenarios
-- [Client API](/docs/client/) - Detailed reference for each client
+When an assertion fails, the List reporter displays detailed error information:
+
+```
+T┆ ✗ User API Test > Check user response (user.probitas.ts:15) [12.34ms]
+ ┆ └ Expected status to be 200, but got 404
+
+Failed Tests
+T┆ ✗ User API Test > Check user response (user.probitas.ts:15) [12.34ms]
+ ┆
+ ┆   Expected status to be 200, but got 404
+ ┆
+ ┆   Diff (-Actual / +Expected):
+ ┆
+ ┆       - 404
+ ┆       + 200
+ ┆
+ ┆   Subject
+ ┆
+ ┆     {
+ ┆       ok: false,
+ ┆       status: 404,
+ ┆       statusText: "Not Found"
+ ┆     }
+ ┆
+ ┆   Stack trace
+ ┆
+ ┆     at file:///path/to/user.probitas.ts:15:12
+```
+
+**Output components:**
+
+| Component      | Description                                       |
+| -------------- | ------------------------------------------------- |
+| `T┆`           | Step type indicator (T=step, s=setup, r=resource) |
+| `✗`            | Failure icon (red)                                |
+| `(file.ts:15)` | Source location                                   |
+| `[12.34ms]`    | Execution duration                                |
+| `Diff`         | Shows difference between actual and expected      |
+| `Subject`      | The object being tested                           |
+| `Stack trace`  | Call stack for debugging                          |
+
+## Best Practices
+
+### Use Specific Assertions
+
+Prefer specific assertions over generic ones for better error messages:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const res = await http.get("/users/1");
+
+// Good: Clear, descriptive error message on failure
+// "Expected status to be 200, but got 404"
+expect(res).toHaveStatus(200);
+
+// Good: Shows diff of expected vs actual data
+expect(res).toHaveDataMatching({ id: 1 });
+
+// Less ideal: Generic message "Expected 200 but received 404"
+expect(res.status).toBe(200);
+```
+
+### Chain Related Assertions
+
+Group related assertions in a single chain for readability:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const res = await http.get("/users/1");
+
+// Good: Single chain for related checks
+expect(res)
+  .toBeOk()
+  .toHaveStatus(200)
+  .toHaveDataMatching({ id: 1, name: "Alice" });
+
+// Less ideal: Separate expect calls
+expect(res).toBeOk();
+expect(res).toHaveStatus(200);
+expect(res).toHaveDataMatching({ id: 1, name: "Alice" });
+```
+
+### Use `.not` for Negative Assertions
+
+Use `.not` to explicitly check for absence or negative conditions:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const res = await http.get("/users/1");
+
+// Check error responses are NOT returned
+expect(res)
+  .not.toHaveStatus(404)
+  .not.toHaveStatus(500)
+  .toBeOk();
+
+// Verify data does NOT contain sensitive fields
+expect(res).not.toHaveDataProperty("password");
+```
+
+### Validate Structure Before Values
+
+Check structure exists before asserting on specific values:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const res = await http.get("/users/1");
+
+// Good: Validates structure progressively
+expect(res)
+  .toBeOk()
+  .toHaveDataProperty("user")
+  .toHaveDataMatching({
+    user: { id: 1, email: "alice@example.com" },
+  });
+```
+
+### Use `toHaveDataMatching` for Partial Validation
+
+When you only care about specific fields, use partial matching:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const res = await http.get("/users/1");
+
+// Good: Only validates relevant fields
+expect(res).toHaveDataMatching({
+  id: 1,
+  status: "active",
+});
+
+// This ignores other fields like createdAt, updatedAt, etc.
+```
