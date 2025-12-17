@@ -8,9 +8,9 @@
     "start": "deno run --allow-net --allow-read main.ts",
     "build": "deno run --allow-net --allow-read --allow-write --allow-env --allow-run scripts/build.ts",
     "preview": "deno run --allow-net --allow-read jsr:@std/http/file-server ./dist",
-    "check": "deno check main.ts templates/**/*.tsx data/*.ts lib/*.ts scripts/*.ts",
+    "check": "deno check --doc && deno check --doc-only **/*.md",
+    "test": "deno test -A --shuffle --parallel",
     "verify": "deno fmt && deno lint && deno task check && deno task test",
-    "test": "deno test --allow-net --allow-read --allow-env",
     "generate-api": "deno run --allow-run --allow-write --allow-read --allow-net --allow-env scripts/generate-api-docs.ts"
   },
   "imports": {
@@ -19,7 +19,6 @@
     "marked": "npm:marked@^15.0.12"
   },
   "exclude": [
-    "data/index/",
     "probitas/"
   ],
   "lint": {

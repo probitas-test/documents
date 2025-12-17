@@ -43,15 +43,23 @@ Register clients as resources for automatic lifecycle management. Resources are
 disposed in reverse order after the scenario completes.
 
 ```typescript
-.resource("http", () =>
-  client.http.createHttpClient({ url: "..." })
-)
-// Automatically disposed when scenario ends
+import { client, scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step(() => {})
+  .build();
+// Resource automatically disposed when scenario ends
 ```
 
 For manual control outside scenarios, use `await using`:
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 await using http = client.http.createHttpClient({
   url: "http://localhost:8080",
 });
@@ -64,6 +72,8 @@ The HTTP client provides a fluent API for making HTTP requests with built-in
 JSON handling and response assertions.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const http = client.http.createHttpClient({
   url: "http://localhost:8080",
   headers: { "Content-Type": "application/json" },
@@ -78,13 +88,17 @@ See [Configuration](/docs/configuration#http-client) for all options.
 The client supports all standard HTTP methods:
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+
 // GET with query parameters
-const res = await http.get("/users", {
+const res1 = await http.get("/users", {
   query: { page: 1, limit: 10 },
 });
 
 // POST with JSON body
-const res = await http.post("/users", {
+const res2 = await http.post("/users", {
   name: "Alice",
   email: "alice@example.com",
 });
@@ -98,17 +112,21 @@ await http.delete("/users/1");
 Override client settings per request:
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+
 // Custom headers for authenticated request
-const res = await http.get("/protected", {
+const res1 = await http.get("/protected", {
   headers: { Authorization: "Bearer token123" },
 });
 
 // Disable error throwing for expected failures
-const res = await http.get("/maybe-404", {
+const res2 = await http.get("/maybe-404", {
   throwOnError: false,
 });
-if (!res.ok) {
-  console.log("Status:", res.status);
+if (!res2.ok) {
+  console.log("Status:", res2.status);
 }
 ```
 
@@ -117,6 +135,11 @@ if (!res.ok) {
 Validate responses with chainable assertions:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const res = await http.get("/users/1");
+
 expect(res)
   .toBeOk() // Status 2xx
   .toHaveStatus(200) // Exact status code
@@ -124,10 +147,11 @@ expect(res)
   .toHaveDataMatching({ name: "Alice" }) // Partial JSON match
   .toHaveDurationLessThan(1000); // Response time limit
 
-// Additional assertions
-expect(res).not.toBeOk(); // Status not 2xx
+// Additional assertions examples
+const res2 = await http.get("/error", { throwOnError: false });
+expect(res2).not.toBeOk(); // Status not 2xx
 expect(res).toHaveHeadersProperty("X-Request-Id");
-expect(res).toHaveTextContaining(/success/);
+expect(res).toHaveTextContaining("success");
 expect(res).toHaveDataPresent(); // Check if response has data
 ```
 
@@ -143,12 +167,14 @@ Probitas supports multiple SQL databases with a consistent query interface.
 | DuckDB     | `client.sql.duckdb.createDuckDbClient()`     |
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const pg = client.sql.postgres.createPostgresClient({
   url: {
     host: "localhost",
     port: 5432,
     database: "testdb",
-    user: "testuser",
+    username: "testuser",
     password: "testpass",
   },
 });
@@ -161,19 +187,26 @@ See [Configuration](/docs/configuration#postgresql-client) for all options.
 Run queries with parameterized values:
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
+const pg = await client.sql.postgres.createPostgresClient({
+  url: "postgres://testuser:testpass@localhost:5432/testdb",
+});
+
 // Simple query
-const result = await pg.query("SELECT * FROM users");
+const result1 = await pg.query("SELECT * FROM users");
 
 // Parameterized query (type-safe)
-const result = await pg.query<{ id: number; name: string }>(
+const userId = 1;
+const result2 = await pg.query<{ id: number; name: string }>(
   "SELECT * FROM users WHERE id = $1",
   [userId],
 );
 
 // Access results
-const users = result.rows.all(); // All rows
-const first = result.rows.first(); // First row
-const count = result.count; // Row count
+const allRows = result2.rows; // All rows
+const first = result2.rows[0]; // First row
+const rowCount = result2.rowCount; // Row count
 ```
 
 ### Transactions
@@ -181,6 +214,12 @@ const count = result.count; // Row count
 Wrap multiple queries in a transaction:
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
+const pg = await client.sql.postgres.createPostgresClient({
+  url: "postgres://testuser:testpass@localhost:5432/testdb",
+});
+
 const result = await pg.transaction(async (tx) => {
   const insert = await tx.query<{ id: number }>(
     "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id",
@@ -189,10 +228,10 @@ const result = await pg.transaction(async (tx) => {
 
   await tx.query(
     "INSERT INTO profiles (user_id, bio) VALUES ($1, $2)",
-    [insert.rows.first().id, "Hello!"],
+    [insert.rows[0]!.id, "Hello!"],
   );
 
-  return insert.rows.first();
+  return insert.rows[0];
 });
 ```
 
@@ -201,13 +240,22 @@ const result = await pg.transaction(async (tx) => {
 Validate query results:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const pg = await client.sql.postgres.createPostgresClient({
+  url: "postgres://testuser:testpass@localhost:5432/testdb",
+});
+
+const result = await pg.query("SELECT * FROM users WHERE name = $1", ["Alice"]);
+
 expect(result)
   .toBeOk()
   .toHaveRowCount(1)
   .toHaveRowsMatching({ name: "Alice" });
 
 // Match multiple rows
-expect(result).toHaveRowsMatching([
+const allResult = await pg.query("SELECT * FROM users");
+expect(allResult).toHaveRowsMatching([
   { id: 1, name: "Alice" },
   { id: 2, name: "Bob" },
 ]);
@@ -224,6 +272,8 @@ The gRPC client supports unary calls, server streaming, client streaming, and
 bidirectional streaming.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const grpc = client.grpc.createGrpcClient({
   url: "localhost:50051",
   metadata: { authorization: "Bearer token" },
@@ -237,6 +287,10 @@ See [Configuration](/docs/configuration#grpc-client) for all options.
 Standard request-response pattern:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
+
 const res = await grpc.call("echo.EchoService", "Echo", {
   message: "Hello",
 });
@@ -250,6 +304,10 @@ const data = res.data();
 Receive multiple responses from a single request:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
+
 const messages: unknown[] = [];
 for await (
   const res of grpc.serverStream("echo.EchoService", "ServerStream", {
@@ -266,14 +324,18 @@ for await (
 Send multiple requests, receive a single response:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
+
 const res = await grpc.clientStream(
   "echo.EchoService",
   "ClientStream",
-  async function* () {
+  (async function* () {
     yield { message: "First" };
     yield { message: "Second" };
     yield { message: "Third" };
-  },
+  })(),
 );
 expect(res).toBeOk();
 ```
@@ -283,14 +345,18 @@ expect(res).toBeOk();
 Stream in both directions simultaneously:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
+
 for await (
   const res of grpc.bidiStream(
     "echo.EchoService",
     "BidiStream",
-    async function* () {
+    (async function* () {
       yield { message: "Ping 1" };
       yield { message: "Ping 2" };
-    },
+    })(),
   )
 ) {
   expect(res).toBeOk();
@@ -304,6 +370,8 @@ The ConnectRPC client supports Connect, gRPC, and gRPC-Web protocols with a
 unified API.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const connect = client.connectrpc.createConnectRpcClient({
   url: "localhost:8080",
 });
@@ -312,6 +380,12 @@ const connect = client.connectrpc.createConnectRpcClient({
 ### Unary Calls
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const connect = client.connectrpc.createConnectRpcClient({
+  url: "localhost:8080",
+});
+
 const res = await connect.call("echo.EchoService", "Echo", {
   message: "Hello",
 });
@@ -322,6 +396,12 @@ expect(res).toBeOk().toHaveDataMatching({ message: "Hello" });
 ### Server Streaming
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const connect = client.connectrpc.createConnectRpcClient({
+  url: "localhost:8080",
+});
+
 for await (
   const res of connect.serverStream("echo.EchoService", "ServerStream", {
     count: 3,
@@ -337,10 +417,11 @@ for await (
 The GraphQL client provides methods for queries, mutations, and subscriptions.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const graphql = client.graphql.createGraphqlClient({
   url: "http://localhost:4000/graphql",
   headers: { Authorization: "Bearer token" },
-  wsUrl: "ws://localhost:4000/graphql",
 });
 ```
 
@@ -351,7 +432,11 @@ See [Configuration](/docs/configuration#graphql-client) for all options.
 Fetch data with GraphQL queries:
 
 ```typescript
-import { outdent } from "jsr:@probitas/probitas";
+import { client, expect, outdent } from "jsr:@probitas/probitas";
+
+const graphql = client.graphql.createGraphqlClient({
+  url: "http://localhost:4000/graphql",
+});
 
 const res = await graphql.query(
   outdent`
@@ -369,7 +454,7 @@ const res = await graphql.query(
 expect(res).toBeOk().toHaveDataMatching({
   user: { name: "Alice" },
 });
-const user = res.data().user;
+const user = res.data()!.user;
 ```
 
 ### Mutations
@@ -377,7 +462,13 @@ const user = res.data().user;
 Modify data with GraphQL mutations:
 
 ```typescript
-const res = await graphql.mutate(
+import { client, expect, outdent } from "jsr:@probitas/probitas";
+
+const graphql = client.graphql.createGraphqlClient({
+  url: "http://localhost:4000/graphql",
+});
+
+const res = await graphql.mutation(
   outdent`
     mutation CreateUser($input: CreateUserInput!) {
       createUser(input: $input) {
@@ -390,7 +481,7 @@ const res = await graphql.mutate(
 );
 
 expect(res).toBeOk();
-const newUser = res.data().createUser;
+const newUser = res.data()!.createUser;
 ```
 
 ### Subscriptions
@@ -398,6 +489,12 @@ const newUser = res.data().createUser;
 Listen for real-time updates:
 
 ```typescript
+import { client, expect, outdent } from "jsr:@probitas/probitas";
+
+const graphql = client.graphql.createGraphqlClient({
+  url: "http://localhost:4000/graphql",
+});
+
 const subscription = graphql.subscribe(outdent`
   subscription OnUserCreated {
     userCreated {
@@ -409,7 +506,7 @@ const subscription = graphql.subscribe(outdent`
 
 for await (const res of subscription) {
   expect(res).toBeOk();
-  console.log("New user:", res.data().userCreated);
+  console.log("New user:", res.data()!.userCreated);
 }
 ```
 
@@ -418,6 +515,14 @@ for await (const res of subscription) {
 Check for GraphQL errors and extensions:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const graphql = client.graphql.createGraphqlClient({
+  url: "http://localhost:4000/graphql",
+});
+
+const res = await graphql.query("query { user(id: 1) { name } }");
+
 // Check for errors
 expect(res).toHaveErrorsPresent(); // Has GraphQL errors
 expect(res).toHaveErrorCount(2); // Exactly 2 errors
@@ -433,6 +538,8 @@ expect(res).toHaveExtensionsPropertyContaining("tracing", { version: 1 }); // Ex
 The Redis client provides operations for strings, hashes, lists, and sets.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const redis = client.redis.createRedisClient({
   url: "redis://localhost:6379",
 });
@@ -445,14 +552,21 @@ See [Configuration](/docs/configuration#redis-client) for all options.
 Common Redis operations:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const redis = await client.redis.createRedisClient({
+  url: "redis://localhost:6379",
+});
+
 // Strings
 await redis.set("key", "value");
 await redis.set("key", "value", { ex: 3600 }); // With TTL
 const result = await redis.get("key");
-expect(result).toBeOk().toHaveValueMatching("value");
+expect(result).toBeOk().toHaveValue("value");
 
 // Hashes
-await redis.hset("user:1", { name: "Alice", age: "30" });
+await redis.hset("user:1", "name", "Alice");
+await redis.hset("user:1", "age", "30");
 const user = await redis.hgetall("user:1");
 
 // Lists
@@ -468,9 +582,9 @@ await redis.del("key");
 
 // Value assertions
 expect(result).toHaveValuePresent(); // Check if value exists
-expect(result).toHaveValueMatching("expected"); // Match exact value
+expect(result).toHaveValue("expected"); // Match exact value
 expect(result).toHaveValueContaining("substring"); // Value contains substring
-expect(result).toHaveValueCount(5); // String length or collection size
+// expect(result).toHaveValueCount(5); // String length or collection size
 ```
 
 ## MongoDB Client
@@ -478,8 +592,10 @@ expect(result).toHaveValueCount(5); // String length or collection size
 The MongoDB client provides document operations with a familiar API.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const mongo = client.mongodb.createMongoClient({
-  uri: "mongodb://localhost:27017",
+  url: "mongodb://localhost:27017",
   database: "testdb",
 });
 ```
@@ -491,6 +607,19 @@ See [Configuration](/docs/configuration#mongodb-client) for all options.
 Work with collections and documents:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+interface User {
+  name: string;
+  email: string;
+  age?: number;
+}
+
+const mongo = await client.mongodb.createMongoClient({
+  url: "mongodb://localhost:27017",
+  database: "testdb",
+});
+
 const users = mongo.collection<User>("users");
 
 // Insert
@@ -505,7 +634,8 @@ const user = await users.findOne({ _id: result.insertedId });
 expect(user).toBeOk().toHaveDocMatching({ name: "Alice" });
 
 // Find many
-const allUsers = await users.find({ age: { $gte: 18 } }).toArray();
+const allUsersResult = await users.find({ age: { $gte: 18 } });
+const allUsers = allUsersResult.docs;
 
 // Update
 await users.updateOne(
@@ -514,15 +644,13 @@ await users.updateOne(
 );
 
 // Delete
-await users.deleteOne({ _id: result.insertedId });
+const deleteResult = await users.deleteOne({ _id: result.insertedId });
 
 // Document assertions
-expect(result).toHaveDocsPresent(); // Check if documents were returned
-expect(result).toHaveDocsCount(5); // Exactly 5 documents
-expect(result).toHaveDocsMatching([...]); // Match multiple documents
-expect(result).toHaveInsertedCount(1); // 1 document inserted
-expect(result).toHaveModifiedCount(1); // 1 document modified
-expect(result).toHaveDeletedCount(1); // 1 document deleted
+expect(result).toHaveInsertedId(result.insertedId); // Check inserted ID
+expect(allUsersResult).toHaveDocsCount(5); // Exactly 5 documents
+expect(allUsersResult).toHaveDocsMatching([{ name: "Alice" }]); // Match multiple documents
+expect(deleteResult).toHaveDeletedCount(1); // 1 document deleted
 ```
 
 ## Deno KV Client
@@ -530,6 +658,8 @@ expect(result).toHaveDeletedCount(1); // 1 document deleted
 The Deno KV client provides access to Deno's built-in key-value store.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const kv = client.deno_kv.createDenoKvClient();
 ```
 
@@ -538,14 +668,18 @@ By default, an in-memory database is used for testing.
 ### Operations
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const kv = await client.deno_kv.createDenoKvClient();
+
 // Set and get
 await kv.set(["users", "1"], { name: "Alice" });
 const result = await kv.get(["users", "1"]);
-expect(result).toBeOk().toHaveValueMatching({ name: "Alice" });
+expect(result).toBeOk().toHaveValue({ name: "Alice" });
 
 // List by prefix
-const users = await kv.list({ prefix: ["users"] });
-for await (const entry of users) {
+const listResult = await kv.list({ prefix: ["users"] });
+for (const entry of listResult.entries) {
   console.log(entry.key, entry.value);
 }
 
@@ -565,6 +699,8 @@ await kv.delete(["users", "1"]);
 The RabbitMQ client provides AMQP messaging for publish/subscribe patterns.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const rabbitmq = client.rabbitmq.createRabbitMqClient({
   url: "amqp://guest:guest@localhost:5672",
 });
@@ -575,6 +711,12 @@ See [Configuration](/docs/configuration#rabbitmq-client) for all options.
 ### Operations
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const rabbitmq = await client.rabbitmq.createRabbitMqClient({
+  url: "amqp://guest:guest@localhost:5672",
+});
+
 const channel = await rabbitmq.channel();
 
 // Declare queue
@@ -599,12 +741,14 @@ await channel.close();
 The AWS SQS client provides cloud message queue operations.
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 const sqs = client.sqs.createSqsClient({
-  endpoint: "http://localhost:4566", // LocalStack or AWS endpoint
+  url: "http://localhost:4566", // LocalStack or AWS endpoint
   region: "us-east-1",
   credentials: {
-    accessKeyId: "...",
-    secretAccessKey: "...",
+    accessKeyId: "test",
+    secretAccessKey: "test",
   },
 });
 ```
@@ -614,18 +758,26 @@ See [Configuration](/docs/configuration#sqs-client) for all options.
 ### Operations
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const sqs = await client.sqs.createSqsClient({
+  url: "http://localhost:4566",
+  region: "us-east-1",
+  credentials: { accessKeyId: "test", secretAccessKey: "test" },
+});
+
 // Ensure queue exists
 await sqs.ensureQueue("my-queue");
 
 // Send message
 const result = await sqs.send(JSON.stringify({ event: "user.created" }));
-expect(result).toBeOk().toHaveMessageId();
+expect(result).toBeOk().toHaveMessageId(result.messageId);
 
 // Receive and process
-const messages = await sqs.receive({ maxMessages: 10 });
-for (const msg of messages) {
+const receiveResult = await sqs.receive({ maxMessages: 10 });
+for (const msg of receiveResult.messages) {
   console.log("Received:", msg.body);
-  await msg.delete();
+  await sqs.delete(msg.receiptHandle);
 }
 ```
 
@@ -654,14 +806,24 @@ for (const msg of messages) {
 Always register clients as resources for automatic cleanup:
 
 ```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
 // Good - automatic lifecycle management
-.resource("http", () => client.http.createHttpClient(...))
+scenario("Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step(() => {})
+  .build();
 
 // Avoid - manual cleanup required
-.step("Make request", async () => {
-  const http = client.http.createHttpClient(...);
-  // Must manually dispose
-})
+scenario("Bad Example")
+  .step("Make request", async () => {
+    const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+    // Must manually dispose
+  })
+  .build();
 ```
 
 ### Use Type Parameters
@@ -669,15 +831,23 @@ Always register clients as resources for automatic cleanup:
 Provide type parameters for type-safe responses:
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
+const pg = await client.sql.postgres.createPostgresClient({
+  url: "postgres://testuser:testpass@localhost:5432/testdb",
+});
+
+const userId = 1;
+
 // Good - typed response
-const result = await pg.query<{ id: number; name: string }>(
+const result1 = await pg.query<{ id: number; name: string }>(
   "SELECT id, name FROM users WHERE id = $1",
   [userId],
 );
-const user = result.rows.first(); // Type: { id: number; name: string }
+const user = result1.rows[0]; // Type: { id: number; name: string } | undefined
 
 // Avoid - untyped response
-const result = await pg.query("SELECT * FROM users");
+const result2 = await pg.query("SELECT * FROM users");
 ```
 
 ### Handle Errors Appropriately
@@ -685,13 +855,17 @@ const result = await pg.query("SELECT * FROM users");
 Use assertions for expected successes, explicit checks for expected failures:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+
 // Expected success - use assertions
-const res = await http.get("/users/1");
-expect(res).toBeOk().toHaveStatus(200);
+const res1 = await http.get("/users/1");
+expect(res1).toBeOk().toHaveStatus(200);
 
 // Expected failure - disable throwing, check manually
-const res = await http.get("/users/nonexistent", { throwOnError: false });
-expect(res).toHaveStatus(404);
+const res2 = await http.get("/users/nonexistent", { throwOnError: false });
+expect(res2).toHaveStatus(404);
 ```
 
 ### Configure Retries
@@ -700,13 +874,25 @@ Use retry configuration for network-dependent operations. See
 [Configuration](/docs/configuration#retry-configuration) for all retry options.
 
 ```typescript
-.step("External API call", async (ctx) => {
-  const { http } = ctx.resources;
-  const res = await http.get("/external-api", {
-    retry: { maxAttempts: 3, backoff: "exponential" },
-  });
-  expect(res).toBeOk();
-}, {
-  timeout: 10000, // Allow time for retries
-})
+import { client, expect, scenario } from "jsr:@probitas/probitas";
+
+scenario("Retry Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step(
+    "External API call",
+    async (ctx) => {
+      const { http } = ctx.resources;
+      const res = await http.get("/external-api", {
+        retry: { maxAttempts: 3, backoff: "exponential" },
+      });
+      expect(res).toBeOk();
+    },
+    {
+      timeout: 10000, // Allow time for retries
+    },
+  )
+  .build();
 ```

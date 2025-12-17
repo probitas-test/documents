@@ -68,13 +68,17 @@ probitas run -s tag:smoke
 Configure scenarios using the options parameter of `scenario()`.
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 scenario("My Test", {
   tags: ["api", "integration"],
   stepOptions: {
     timeout: 60000,
     retry: { maxAttempts: 3, backoff: "exponential" },
   },
-});
+})
+  .step(() => {})
+  .build();
 ```
 
 | Option                          | Description                                     | Default    |
@@ -89,9 +93,13 @@ scenario("My Test", {
 Use tags to categorize and filter scenarios:
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 scenario("API Integration", {
   tags: ["api", "integration", "slow"],
-});
+})
+  .step(() => {})
+  .build();
 ```
 
 Run scenarios by tag using selectors:
@@ -112,18 +120,32 @@ probitas run -s "tag:api,!tag:slow"
 Override scenario defaults for individual steps:
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 scenario("Mixed Timeouts")
-  .step("Quick check", async (ctx) => {
-    // Must complete in 1 second
-  }, { timeout: 1000 })
-  .step("Slow operation", async (ctx) => {
-    // Can take up to 60 seconds
-  }, { timeout: 60000 })
-  .step("Flaky external call", async (ctx) => {
-    // Retry up to 5 times with exponential backoff
-  }, {
-    retry: { maxAttempts: 5, backoff: "exponential" },
-  })
+  .step(
+    "Quick check",
+    async (_ctx) => {
+      // Must complete in 1 second
+    },
+    { timeout: 1000 },
+  )
+  .step(
+    "Slow operation",
+    async (_ctx) => {
+      // Can take up to 60 seconds
+    },
+    { timeout: 60000 },
+  )
+  .step(
+    "Flaky external call",
+    async (_ctx) => {
+      // Retry up to 5 times with exponential backoff
+    },
+    {
+      retry: { maxAttempts: 5, backoff: "exponential" },
+    },
+  )
   .build();
 ```
 
@@ -143,11 +165,21 @@ When a step times out:
 4. Cleanup hooks still execute
 
 ```typescript
-.step("Cancellable operation", async (ctx) => {
-  // Pass signal to cancellable operations
-  const response = await fetch(url, { signal: ctx.signal });
-  return response.json();
-}, { timeout: 5000 })
+import { scenario } from "jsr:@probitas/probitas";
+
+const url = "https://api.example.com/data";
+
+scenario("Timeout Example")
+  .step(
+    "Cancellable operation",
+    async (ctx) => {
+      // Pass signal to cancellable operations
+      const response = await fetch(url, { signal: ctx.signal });
+      return response.json();
+    },
+    { timeout: 5000 },
+  )
+  .build();
 ```
 
 ## Retry Configuration
@@ -172,18 +204,31 @@ Configure automatic retries for flaky operations.
 ### Custom Retry Logic
 
 ```typescript
-const res = await http.get("/endpoint", {
-  retry: {
-    maxAttempts: 3,
-    backoff: "exponential",
-    initialDelay: 500,
-    maxDelay: 10000,
-    retryOn: (error) => {
-      // Only retry on network errors
-      return error.kind === "connection" || error.kind === "timeout";
-    },
-  },
-});
+import { client, scenario } from "jsr:@probitas/probitas";
+
+scenario("Retry Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step(async (ctx) => {
+    const { http } = ctx.resources;
+    const res = await http.get("/endpoint", {
+      retry: {
+        maxAttempts: 3,
+        backoff: "exponential",
+        initialDelay: 500,
+        maxDelay: 10000,
+        retryOn: (error: Error) => {
+          // Only retry on specific errors
+          return error.message.includes("network") ||
+            error.message.includes("timeout");
+        },
+      },
+    });
+    return res.data();
+  })
+  .build();
 ```
 
 ## Client Configurations
@@ -191,6 +236,8 @@ const res = await http.get("/endpoint", {
 ### HTTP Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.http.createHttpClient({
   url: "http://localhost:8080",
   headers: { "Content-Type": "application/json" },
@@ -210,15 +257,17 @@ client.http.createHttpClient({
 ### PostgreSQL Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.sql.postgres.createPostgresClient({
   url: {
     host: "localhost",
     port: 5432,
     database: "testdb",
-    user: "testuser",
+    username: "testuser",
     password: "testpass",
   },
-  pool: { min: 1, max: 10 },
+  pool: { max: 10 },
 });
 ```
 
@@ -232,6 +281,8 @@ client.sql.postgres.createPostgresClient({
 Connection can also be a URL string:
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.sql.postgres.createPostgresClient({
   url: "postgres://user:pass@localhost:5432/mydb",
 });
@@ -240,6 +291,8 @@ client.sql.postgres.createPostgresClient({
 ### gRPC Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.grpc.createGrpcClient({
   url: "localhost:50051",
   metadata: { authorization: "Bearer token" },
@@ -257,10 +310,11 @@ client.grpc.createGrpcClient({
 ### GraphQL Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.graphql.createGraphqlClient({
   url: "http://localhost:4000/graphql",
   headers: { Authorization: "Bearer token" },
-  wsUrl: "ws://localhost:4000/graphql",
 });
 ```
 
@@ -274,6 +328,8 @@ client.graphql.createGraphqlClient({
 ### Redis Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.redis.createRedisClient({
   url: "redis://localhost:6379",
 });
@@ -286,8 +342,10 @@ client.redis.createRedisClient({
 ### MongoDB Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.mongodb.createMongoClient({
-  uri: "mongodb://localhost:27017",
+  url: "mongodb://localhost:27017",
   database: "testdb",
 });
 ```
@@ -300,6 +358,8 @@ client.mongodb.createMongoClient({
 ### RabbitMQ Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.rabbitmq.createRabbitMqClient({
   url: "amqp://guest:guest@localhost:5672",
 });
@@ -312,8 +372,10 @@ client.rabbitmq.createRabbitMqClient({
 ### SQS Client
 
 ```typescript
+import { client } from "jsr:@probitas/probitas";
+
 client.sqs.createSqsClient({
-  endpoint: "http://localhost:4566",
+  url: "http://localhost:4566",
   region: "us-east-1",
   credentials: {
     accessKeyId: "test",
@@ -324,7 +386,7 @@ client.sqs.createSqsClient({
 
 | Option        | Description               | Default |
 | ------------- | ------------------------- | ------- |
-| `endpoint`    | SQS endpoint URL          | —       |
+| `url`         | SQS endpoint URL          | —       |
 | `region`      | AWS region                | —       |
 | `credentials` | AWS access key and secret | —       |
 
@@ -339,6 +401,8 @@ Probitas respects these environment variables:
 ### Using Environment Variables
 
 ```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
 scenario("Production Test")
   .resource("http", () =>
     client.http.createHttpClient({
@@ -352,6 +416,7 @@ scenario("Production Test")
       url: Deno.env.get("DATABASE_URL") ??
         "postgres://user:pass@localhost/testdb",
     }))
+  .step(() => {})
   .build();
 ```
 
@@ -360,6 +425,8 @@ scenario("Production Test")
 ### Environment-Aware Configuration
 
 ```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
 const isProduction = Deno.env.get("ENV") === "production";
 
 scenario("API Test")
@@ -371,25 +438,23 @@ scenario("API Test")
         ? { maxAttempts: 3, backoff: "exponential" }
         : undefined,
     }))
+  .step(() => {})
   .build();
 ```
 
 ### Shared Configuration
 
 ```typescript
-// config.ts
-export const httpDefaults = {
+import { client, scenario } from "jsr:@probitas/probitas";
+
+const httpDefaults = {
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 };
 
-export const dbDefaults = {
-  timeout: 10000,
+const dbDefaults = {
   pool: { min: 1, max: 5 },
 };
-
-// scenario.ts
-import { dbDefaults, httpDefaults } from "./config.ts";
 
 scenario("Test")
   .resource("http", () =>
@@ -399,52 +464,55 @@ scenario("Test")
     }))
   .resource("pg", () =>
     client.sql.postgres.createPostgresClient({
-      url: "postgres://...",
+      url: "postgres://user:pass@localhost:5432/mydb",
       ...dbDefaults,
     }))
+  .step(() => {})
   .build();
 ```
 
 ### Resource Factory Pattern
 
 ```typescript
-// factories.ts
-export function createApiClient(url?: string) {
+import { client, scenario } from "jsr:@probitas/probitas";
+
+function createApiClient() {
   return client.http.createHttpClient({
-    url: url ?? Deno.env.get("API_URL") ?? "http://localhost:8080",
+    url: Deno.env.get("API_URL") ?? "http://localhost:8080",
     timeout: 10000,
     retry: { maxAttempts: 2 },
   });
 }
 
-export function createTestDatabase() {
+function createTestDatabase() {
   return client.sql.postgres.createPostgresClient({
     url: {
       host: Deno.env.get("DB_HOST") ?? "localhost",
       port: Number(Deno.env.get("DB_PORT") ?? 5432),
       database: "testdb",
-      user: "testuser",
+      username: "testuser",
       password: "testpass",
     },
   });
 }
 
-// scenario.ts
-import { createApiClient, createTestDatabase } from "./factories.ts";
-
 scenario("Test")
   .resource("http", createApiClient)
   .resource("pg", createTestDatabase)
+  .step(() => {})
   .build();
 ```
 
 ### Conditional Resources
 
 ```typescript
-import { Skip } from "jsr:@probitas/probitas";
+import { client, scenario, Skip } from "jsr:@probitas/probitas";
 
 scenario("Conditional Features")
-  .resource("http", () => createHttpClient(...))
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
   .resource("redis", () => {
     const redisUrl = Deno.env.get("REDIS_URL");
     if (!redisUrl) {
@@ -454,5 +522,6 @@ scenario("Conditional Features")
       url: redisUrl,
     });
   })
+  .step(() => {})
   .build();
 ```

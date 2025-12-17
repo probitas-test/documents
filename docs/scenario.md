@@ -31,7 +31,7 @@ export default scenario("User API CRUD", {
     const { http } = ctx.resources;
     const res = await http.get("/users/test-user");
     expect(res).toHaveStatus(200);
-    return res.json();
+    return res.data();
   })
   .build();
 ```
@@ -41,17 +41,23 @@ export default scenario("User API CRUD", {
 Scenarios must be exported as the default export:
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 // Single scenario
-export default scenario("Name").step(...).build();
+export default scenario("Name")
+  .step(() => {})
+  .build();
 ```
 
 You can also export multiple scenarios as an array:
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 // Multiple scenarios
 export default [
-  scenario("First").step(...).build(),
-  scenario("Second").step(...).build(),
+  scenario("First").step(() => {}).build(),
+  scenario("Second").step(() => {}).build(),
 ];
 ```
 
@@ -81,23 +87,35 @@ result of the previous step.
 | `options?` | `object`     | Per-step timeout and retry (see [Configuration](/docs/configuration#step-options)) |
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 // Named step
-.step("Step name", async (ctx) => {
-  return result;
-})
+scenario("Example")
+  .step("Step name", async (_ctx) => {
+    return "result";
+  })
+  .build();
 
 // Unnamed step (auto-named as "Step 1", "Step 2", etc.)
-.step(async (ctx) => {
-  return result;
-})
+scenario("Example")
+  .step(async (_ctx) => {
+    return "result";
+  })
+  .build();
 
 // With options
-.step("Step name", async (ctx) => {
-  return result;
-}, {
-  timeout: 5000,
-  retry: { maxAttempts: 3, backoff: "exponential" }
-})
+scenario("Example")
+  .step(
+    "Step name",
+    async (_ctx) => {
+      return "result";
+    },
+    {
+      timeout: 5000,
+      retry: { maxAttempts: 3, backoff: "exponential" },
+    },
+  )
+  .build();
 ```
 
 ### `.resource(name, factory, options?)`
@@ -112,17 +130,28 @@ steps run and automatically disposed after the scenario completes.
 | `options?` | `object`     | Per-resource timeout and retry (see [Configuration](/docs/configuration#step-options)) |
 
 ```typescript
-.resource("http", () =>
-  client.http.createHttpClient({
-    url: "http://localhost:8080",
-  })
-)
+import { client, scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .resource("http", () =>
+    client.http.createHttpClient({
+      url: "http://localhost:8080",
+    }))
+  .step(() => {})
+  .build();
 
 // With options
-.resource("db", () =>
-  client.sql.postgres.createPostgresClient({ ... }),
-  { timeout: 10000 }
-)
+scenario("Example")
+  .resource(
+    "db",
+    () =>
+      client.sql.postgres.createPostgresClient({
+        url: "postgresql://localhost:5432/testdb",
+      }),
+    { timeout: 10000 },
+  )
+  .step(() => {})
+  .build();
 ```
 
 #### Resource Behavior
@@ -144,36 +173,62 @@ that runs after all steps complete (even on failure).
 | `options?` | `object`            | Per-setup timeout and retry (see [Configuration](/docs/configuration#step-options)) |
 
 ```typescript
-// Named setup with cleanup function
-.setup("Seed test data", async (ctx) => {
-  const { db } = ctx.resources;
-  await db.query("INSERT INTO test_data ...");
+import { client, scenario } from "jsr:@probitas/probitas";
 
-  return async () => {
-    await db.query("DELETE FROM test_data ...");
-  };
-})
+// Named setup with cleanup function
+scenario("Example")
+  .resource("db", () =>
+    client.sql.postgres.createPostgresClient({
+      url: "postgresql://localhost:5432/testdb",
+    }))
+  .setup("Seed test data", async (ctx) => {
+    const { db } = ctx.resources;
+    await db.query("INSERT INTO test_data VALUES (1)");
+
+    return async () => {
+      await db.query("DELETE FROM test_data WHERE id = 1");
+    };
+  })
+  .step(() => {})
+  .build();
 
 // Unnamed setup (auto-named as "Setup step 1", etc.)
-.setup(async (ctx) => {
-  const { db } = ctx.resources;
-  await db.query("INSERT INTO test_data ...");
-})
+scenario("Example")
+  .resource("db", () =>
+    client.sql.postgres.createPostgresClient({
+      url: "postgresql://localhost:5432/testdb",
+    }))
+  .setup(async (ctx) => {
+    const { db } = ctx.resources;
+    await db.query("INSERT INTO test_data VALUES (1)");
+  })
+  .step(() => {})
+  .build();
 
 // Setup with Disposable
-.setup((ctx) => {
-  const resource = createResource();
-  return {
-    [Symbol.dispose]() {
-      resource.close();
-    }
-  };
-})
+scenario("Example")
+  .setup((_ctx) => {
+    const handle = { close() {} };
+    return {
+      [Symbol.dispose]() {
+        handle.close();
+      },
+    };
+  })
+  .step(() => {})
+  .build();
 
 // Setup with options
-.setup("Long setup", async (ctx) => {
-  await prepareTestEnvironment();
-}, { timeout: 60000 })
+scenario("Example")
+  .setup(
+    "Long setup",
+    async (_ctx) => {
+      await Promise.resolve();
+    },
+    { timeout: 60000 },
+  )
+  .step(() => {})
+  .build();
 ```
 
 ### `.build()`
@@ -200,13 +255,17 @@ Every step, resource factory, and setup function receives a context object
 Use this to chain data between steps:
 
 ```typescript
-.step("Create user", async (ctx) => {
-  return { id: 1, name: "Alice" };
-})
-.step("Update user", async (ctx) => {
-  const user = ctx.previous; // { id: 1, name: "Alice" }
-  return { ...user, updated: true };
-})
+import { scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .step("Create user", async (_ctx) => {
+    return { id: 1, name: "Alice" };
+  })
+  .step("Update user", async (ctx) => {
+    const user = ctx.previous; // { id: 1, name: "Alice" }
+    return { ...user, updated: true };
+  })
+  .build();
 ```
 
 ### `ctx.results`
@@ -214,13 +273,18 @@ Use this to chain data between steps:
 Useful when you need data from steps other than the immediately previous one:
 
 ```typescript
-.step("Step 1", () => "first")
-.step("Step 2", () => 42)
-.step("Step 3", (ctx) => {
-  const [step1, step2] = ctx.results;
-  // step1: "first"
-  // step2: 42
-})
+import { scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .step("Step 1", () => "first")
+  .step("Step 2", () => 42)
+  .step("Step 3", (ctx) => {
+    const [step1, step2] = ctx.results;
+    // step1: "first"
+    // step2: 42
+    return { step1, step2 };
+  })
+  .build();
 ```
 
 ### `ctx.resources`
@@ -228,12 +292,24 @@ Useful when you need data from steps other than the immediately previous one:
 Access registered resources:
 
 ```typescript
-.resource("http", () => createHttpClient(...))
-.resource("db", () => createPostgresClient(...))
-.step("Use resources", async (ctx) => {
-  const { http, db } = ctx.resources;
-  // Both clients are available
-})
+import { client, scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .resource("db", () =>
+    client.sql.postgres.createPostgresClient({
+      url: "postgresql://localhost:5432/testdb",
+    }))
+  .step("Use resources", async (ctx) => {
+    const { http, db } = ctx.resources;
+    // Both clients are available
+    void http;
+    void db;
+  })
+  .build();
 ```
 
 ### `ctx.store`
@@ -241,12 +317,17 @@ Access registered resources:
 Pass data that doesn't fit the step return value pattern:
 
 ```typescript
-.step("Save to store", (ctx) => {
-  ctx.store.set("key", "value");
-})
-.step("Read from store", (ctx) => {
-  const value = ctx.store.get("key"); // "value"
-})
+import { scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .step("Save to store", (ctx) => {
+    ctx.store.set("key", "value");
+  })
+  .step("Read from store", (ctx) => {
+    const value = ctx.store.get("key"); // "value"
+    return value;
+  })
+  .build();
 ```
 
 ### `ctx.signal`
@@ -254,10 +335,16 @@ Pass data that doesn't fit the step return value pattern:
 Pass to fetch calls or other cancelable operations:
 
 ```typescript
-.step("Long operation", async (ctx) => {
-  const response = await fetch(url, { signal: ctx.signal });
-  return response.json();
-})
+import { scenario } from "jsr:@probitas/probitas";
+
+const url = "https://api.example.com/data";
+
+scenario("Example")
+  .step("Long operation", async (ctx) => {
+    const response = await fetch(url, { signal: ctx.signal });
+    return response.json();
+  })
+  .build();
 ```
 
 ## Resources
@@ -271,10 +358,15 @@ Register a resource with a factory function. The resource becomes available to
 all subsequent steps via `ctx.resources`.
 
 ```typescript
-.resource("name", (ctx) => {
-  // Create and return resource
-  return client.http.createHttpClient({ url: "..." });
-})
+import { client, scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .resource("http", (_ctx) => {
+    // Create and return resource
+    return client.http.createHttpClient({ url: "http://localhost:8080" });
+  })
+  .step(() => {})
+  .build();
 ```
 
 ### Resource Dependencies
@@ -282,13 +374,18 @@ all subsequent steps via `ctx.resources`.
 Resources can depend on earlier resources. They're created in declaration order.
 
 ```typescript
-.resource("config", () => ({
-  url: Deno.env.get("API_URL") ?? "http://localhost:8080",
-}))
-.resource("http", (ctx) => {
-  const { config } = ctx.resources;
-  return client.http.createHttpClient({ url: config.url });
-})
+import { client, scenario } from "jsr:@probitas/probitas";
+
+scenario("Example")
+  .resource("config", () => ({
+    url: Deno.env.get("API_URL") ?? "http://localhost:8080",
+  }))
+  .resource("http", (ctx) => {
+    const { config } = ctx.resources;
+    return client.http.createHttpClient({ url: config.url });
+  })
+  .step(() => {})
+  .build();
 ```
 
 ### Auto-Disposal
@@ -297,9 +394,17 @@ All Probitas clients implement `AsyncDisposable`, so they're automatically
 cleaned up when the scenario ends.
 
 ```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
 // All Probitas clients implement AsyncDisposable
-.resource("http", () => client.http.createHttpClient(...))
-// Automatically disposed after scenario completes
+scenario("Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  // Automatically disposed after scenario completes
+  .step(() => {})
+  .build();
 ```
 
 ## Setup and Cleanup
@@ -312,21 +417,26 @@ restore the environment afterward.
 You can chain multiple setup hooks. Each can return a cleanup function.
 
 ```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
 scenario("Multi-setup")
-  .resource("db", () => createPostgresClient(...))
+  .resource("db", () =>
+    client.sql.postgres.createPostgresClient({
+      url: "postgresql://localhost:5432/testdb",
+    }))
   .setup(async (ctx) => {
     // First setup: create schema
-    await ctx.resources.db.query("CREATE TABLE IF NOT EXISTS ...");
+    await ctx.resources.db.query("CREATE TABLE IF NOT EXISTS test (id INT)");
   })
   .setup(async (ctx) => {
     // Second setup: seed data
-    await ctx.resources.db.query("INSERT INTO ...");
+    await ctx.resources.db.query("INSERT INTO test VALUES (1)");
     return async () => {
       // Cleanup: remove seeded data
-      await ctx.resources.db.query("DELETE FROM ...");
+      await ctx.resources.db.query("DELETE FROM test WHERE id = 1");
     };
   })
-  .step("Test with data", async (ctx) => {
+  .step("Test with data", async (_ctx) => {
     // Schema and data are ready
   })
   .build();
@@ -338,14 +448,19 @@ Cleanup functions run in **reverse order** (last setup's cleanup runs first).
 This ensures proper teardown of dependent resources.
 
 ```typescript
-.setup(() => {
-  console.log("Setup 1");
-  return () => console.log("Cleanup 1"); // Runs last
-})
-.setup(() => {
-  console.log("Setup 2");
-  return () => console.log("Cleanup 2"); // Runs first
-})
+import { scenario } from "jsr:@probitas/probitas";
+
+scenario("Cleanup Order Example")
+  .setup(() => {
+    console.log("Setup 1");
+    return () => console.log("Cleanup 1"); // Runs last
+  })
+  .setup(() => {
+    console.log("Setup 2");
+    return () => console.log("Cleanup 2"); // Runs first
+  })
+  .step(() => {})
+  .build();
 
 // Output:
 // Setup 1
@@ -363,27 +478,40 @@ Throw `Skip` to conditionally skip the remaining steps. This is useful for
 environment-specific tests.
 
 ```typescript
-import { Skip } from "jsr:@probitas/probitas";
+import { scenario, Skip } from "jsr:@probitas/probitas";
 
-.step("Check precondition", () => {
-  if (!Deno.env.get("INTEGRATION_ENABLED")) {
-    throw new Skip("Integration tests disabled");
-  }
-})
-.step("Integration test", async (ctx) => {
-  // This step is skipped if Skip was thrown
-})
+scenario("Integration Test")
+  .step("Check precondition", () => {
+    if (!Deno.env.get("INTEGRATION_ENABLED")) {
+      throw new Skip("Integration tests disabled");
+    }
+  })
+  .step("Integration test", async (_ctx) => {
+    // This step is skipped if Skip was thrown
+  })
+  .build();
 ```
 
 You can also skip from resources or setup hooks:
 
 ```typescript
-.resource("external", () => {
-  if (!checkExternalService()) {
-    throw new Skip("External service unavailable");
-  }
-  return createExternalClient();
-})
+import { client, scenario, Skip } from "jsr:@probitas/probitas";
+
+function checkExternalService(): boolean {
+  return Deno.env.get("EXTERNAL_SERVICE_URL") !== undefined;
+}
+
+scenario("External Service Test")
+  .resource("external", () => {
+    if (!checkExternalService()) {
+      throw new Skip("External service unavailable");
+    }
+    return client.http.createHttpClient({
+      url: Deno.env.get("EXTERNAL_SERVICE_URL")!,
+    });
+  })
+  .step(() => {})
+  .build();
 ```
 
 ### Error Handling
@@ -392,13 +520,17 @@ When a step throws an error, the scenario fails but **cleanup still runs**. This
 ensures resources are properly disposed.
 
 ```typescript
-.setup(() => {
-  return () => console.log("Cleanup runs even on error");
-})
-.step("Failing step", () => {
-  throw new Error("Step failed");
-})
-// Cleanup still executes
+import { scenario } from "jsr:@probitas/probitas";
+
+scenario("Error Handling Example")
+  .setup(() => {
+    return () => console.log("Cleanup runs even on error");
+  })
+  .step("Failing step", () => {
+    throw new Error("Step failed");
+  })
+  // Cleanup still executes
+  .build();
 ```
 
 ### Retry on Failure
@@ -408,13 +540,26 @@ For flaky operations, configure automatic retries. See
 options.
 
 ```typescript
-.step("Flaky operation", async (ctx) => {
-  const res = await http.get("/sometimes-fails");
-  expect(res).toBeOk();
-  return res.json();
-}, {
-  retry: { maxAttempts: 3, backoff: "exponential" }
-})
+import { client, expect, scenario } from "jsr:@probitas/probitas";
+
+scenario("Retry Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step(
+    "Flaky operation",
+    async (ctx) => {
+      const { http } = ctx.resources;
+      const res = await http.get("/sometimes-fails");
+      expect(res).toBeOk();
+      return res.data();
+    },
+    {
+      retry: { maxAttempts: 3, backoff: "exponential" },
+    },
+  )
+  .build();
 ```
 
 ## Complete Examples
@@ -440,21 +585,21 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
     expect(res).toBeOk().toHaveStatus(201).toHaveDataMatching({
       name: "Alice",
     });
-    return res.json<{ id: number }>();
+    return res.data<{ id: number }>()!;
   })
   .step("Get user", async (ctx) => {
     const { http } = ctx.resources;
-    const { id } = ctx.previous;
+    const { id } = ctx.previous!;
     const res = await http.get(`/users/${id}`);
     expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
       id,
       name: "Alice",
     });
-    return res.json();
+    return res.data<{ id: number }>()!;
   })
   .step("Update user", async (ctx) => {
     const { http } = ctx.resources;
-    const { id } = ctx.previous;
+    const { id } = ctx.previous!;
     const res = await http.patch(`/users/${id}`, { name: "Bob" });
     expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
       name: "Bob",
@@ -463,7 +608,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
   })
   .step("Delete user", async (ctx) => {
     const { http } = ctx.resources;
-    const { id } = ctx.previous;
+    const { id } = ctx.previous!;
     const res = await http.delete(`/users/${id}`);
     expect(res).toBeOk().toHaveStatus(204);
   })
@@ -484,7 +629,7 @@ export default scenario("Database Transaction", { tags: ["db", "postgres"] })
         host: "localhost",
         port: 5432,
         database: "testdb",
-        user: "testuser",
+        username: "testuser",
         password: "testpass",
       },
     }))
@@ -514,7 +659,7 @@ export default scenario("Database Transaction", { tags: ["db", "postgres"] })
   })
   .step("Verify user exists", async (ctx) => {
     const { pg } = ctx.resources;
-    const { id } = ctx.previous;
+    const { id } = ctx.previous!;
     const result = await pg.query<{ name: string }>(
       "SELECT name FROM users WHERE id = $1",
       [id],
@@ -582,7 +727,7 @@ export default scenario("Full Stack Test", {
         host: "localhost",
         port: 5432,
         database: "testdb",
-        user: "testuser",
+        username: "testuser",
         password: "testpass",
       },
     }))
@@ -608,11 +753,11 @@ export default scenario("Full Stack Test", {
     const { http } = ctx.resources;
     const res = await http.post("/items", { name: "Test Item" });
     expect(res).toBeOk().toHaveStatus(201);
-    return res.json<{ id: number }>();
+    return res.data<{ id: number }>()!;
   })
   .step("Verify in database", async (ctx) => {
     const { pg } = ctx.resources;
-    const { id } = ctx.previous;
+    const { id } = ctx.previous!;
     const result = await pg.query(
       "SELECT * FROM items WHERE id = $1",
       [id],
@@ -631,13 +776,19 @@ export default scenario("Full Stack Test", {
 Good names make test output readable and debugging easier.
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 // Good
-.step("Create user with valid email", ...)
-.step("Verify email confirmation sent", ...)
+scenario("Email Test")
+  .step("Create user with valid email", () => {})
+  .step("Verify email confirmation sent", () => {})
+  .build();
 
 // Avoid
-.step("Step 1", ...)
-.step("Test", ...)
+scenario("Email Test")
+  .step("Step 1", () => {})
+  .step("Test", () => {})
+  .build();
 ```
 
 ### Return Meaningful Values
@@ -646,16 +797,34 @@ Return data that subsequent steps need. This enables type-safe data flow through
 `ctx.previous`.
 
 ```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
+const data = { name: "Alice", email: "alice@example.com" };
+
 // Good - returns data needed by next step
-.step("Create user", async (ctx) => {
-  const res = await http.post("/users", data);
-  return res.json<{ id: number }>();
-})
+scenario("Good Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step("Create user", async (ctx) => {
+    const { http } = ctx.resources;
+    const res = await http.post("/users", data);
+    return res.data<{ id: number }>();
+  })
+  .build();
 
 // Avoid - loses useful data
-.step("Create user", async (ctx) => {
-  await http.post("/users", data);
-})
+scenario("Avoid Example")
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step("Create user", async (ctx) => {
+    const { http } = ctx.resources;
+    await http.post("/users", data);
+  })
+  .build();
 ```
 
 ### Use Tags for Filtering
@@ -664,9 +833,13 @@ Tags let you run subsets of tests (e.g., only fast tests, or only tests that
 don't need Docker).
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 scenario("Slow Integration Test", {
   tags: ["integration", "slow", "requires-docker"],
-});
+})
+  .step(() => {})
+  .build();
 ```
 
 ### Keep Steps Focused
@@ -675,13 +848,19 @@ Each step should do one thing. This makes failures easier to diagnose and tests
 easier to maintain.
 
 ```typescript
+import { scenario } from "jsr:@probitas/probitas";
+
 // Good - single responsibility
-.step("Create order", ...)
-.step("Process payment", ...)
-.step("Send confirmation", ...)
+scenario("Order Flow - Good")
+  .step("Create order", () => {})
+  .step("Process payment", () => {})
+  .step("Send confirmation", () => {})
+  .build();
 
 // Avoid - too many concerns
-.step("Create order, process payment, and send confirmation", ...)
+scenario("Order Flow - Avoid")
+  .step("Create order, process payment, and send confirmation", () => {})
+  .build();
 ```
 
 ### Use Setup for Test Data
@@ -690,14 +869,40 @@ Setup hooks with cleanup are better than steps for managing test fixtures. They
 guarantee cleanup even on failure.
 
 ```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
+async function seedTestData(
+  _db: Awaited<
+    ReturnType<typeof client.sql.postgres.createPostgresClient>
+  >,
+): Promise<void> {}
+async function cleanupTestData(
+  _db: Awaited<
+    ReturnType<typeof client.sql.postgres.createPostgresClient>
+  >,
+): Promise<void> {}
+
 // Good - setup manages test data lifecycle
-.setup(async (ctx) => {
-  await seedTestData(ctx.resources.db);
-  return () => cleanupTestData(ctx.resources.db);
-})
+scenario("Good Setup Example")
+  .resource("db", () =>
+    client.sql.postgres.createPostgresClient({
+      url: "postgresql://localhost:5432/testdb",
+    }))
+  .setup(async (ctx) => {
+    await seedTestData(ctx.resources.db);
+    return () => cleanupTestData(ctx.resources.db);
+  })
+  .step(() => {})
+  .build();
 
 // Avoid - pollutes step logic
-.step("Setup test data", async (ctx) => {
-  await seedTestData(ctx.resources.db);
-})
+scenario("Avoid Setup Example")
+  .resource("db", () =>
+    client.sql.postgres.createPostgresClient({
+      url: "postgresql://localhost:5432/testdb",
+    }))
+  .step("Setup test data", async (ctx) => {
+    await seedTestData(ctx.resources.db);
+  })
+  .build();
 ```

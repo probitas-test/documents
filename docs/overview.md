@@ -173,16 +173,31 @@ scenario(name, options?)
 The `expect()` function auto-dispatches based on result type:
 
 ```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const httpResponse = await http.get("/users/1");
+
 // HTTP response
 expect(httpResponse)
   .toBeOk()
   .toHaveStatus(200)
   .toHaveDataMatching({ id: 1 });
 
+const pg = await client.sql.postgres.createPostgresClient({
+  url: "postgres://user:pass@localhost/db",
+});
+const sqlResult = await pg.query("SELECT * FROM users WHERE id = $1", [1]);
+
 // SQL result
 expect(sqlResult)
   .toHaveRowCount(1)
   .toHaveRowsMatching({ name: "Alice" });
+
+const grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
+const grpcResponse = await grpc.call("users.UserService", "GetUser", {
+  id: "123",
+});
 
 // gRPC response
 expect(grpcResponse)

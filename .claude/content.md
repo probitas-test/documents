@@ -83,8 +83,12 @@ Every concept should have a runnable code example:
 import { client, expect, scenario } from "jsr:@probitas/probitas";
 
 export default scenario("Example")
-  .resource("http", client.http.createHttpClient())
-  .step("make request", async ({ http }) => {
+  .resource(
+    "http",
+    () => client.http.createHttpClient({ url: "http://localhost:8080" }),
+  )
+  .step("make request", async (ctx) => {
+    const { http } = ctx.resources;
     const res = await http.get("/api/users");
     expect(res).toBeOk().toHaveStatus(200);
   })

@@ -7,7 +7,7 @@ export default scenario("Redis Cache Test", {
     client.redis.createRedisClient({
       url: "redis://localhost:6379",
     }))
-  .resource("key", () => `cache:${faker.string.uuid()}`)
+  .resource("key", () => `cache:${faker.random.uuid()}`)
   .setup((ctx) => {
     const { redis, key } = ctx.resources;
     return async () => {
@@ -19,14 +19,14 @@ export default scenario("Redis Cache Test", {
     await redis.set(key, "hello world");
     const res = await redis.get(key);
 
-    expect(res).toBeOk().toHaveValueMatching("hello world");
+    expect(res).toBeOk().toHaveValue("hello world");
   })
   .step("INCR counter", async (ctx) => {
     const { redis } = ctx.resources;
     await redis.set("test:counter", "0");
     const res = await redis.incr("test:counter");
 
-    expect(res).toBeOk().toHaveValueMatching(1);
+    expect(res).toBeOk().toHaveValue(1);
 
     // Cleanup
     await redis.del("test:counter");
