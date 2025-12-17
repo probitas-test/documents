@@ -252,20 +252,13 @@ function generateFunctionMarkdown(
     lines.push("");
   }
 
-  // Examples
+  // Examples - doc field is already Markdown, output as-is
   const examples = getExamples(node);
   if (examples.length > 0) {
     lines.push("**Example:**");
     lines.push("");
     for (const example of examples) {
-      const trimmed = example.trim();
-      if (trimmed.startsWith("```")) {
-        lines.push(trimmed);
-      } else {
-        lines.push("```typescript");
-        lines.push(trimmed);
-        lines.push("```");
-      }
+      lines.push(example.trim());
       lines.push("");
     }
   }
@@ -360,20 +353,13 @@ function generateClassMarkdown(
     }
   }
 
-  // Examples
+  // Examples - doc field is already Markdown, output as-is
   const examples = getExamples(node);
   if (examples.length > 0) {
     lines.push("**Example:**");
     lines.push("");
     for (const example of examples) {
-      const trimmed = example.trim();
-      if (trimmed.startsWith("```")) {
-        lines.push(trimmed);
-      } else {
-        lines.push("```typescript");
-        lines.push(trimmed);
-        lines.push("```");
-      }
+      lines.push(example.trim());
       lines.push("");
     }
   }
@@ -446,20 +432,13 @@ function generateInterfaceMarkdown(
     }
   }
 
-  // Examples
+  // Examples - doc field is already Markdown, output as-is
   const examples = getExamples(node);
   if (examples.length > 0) {
     lines.push("**Example:**");
     lines.push("");
     for (const example of examples) {
-      const trimmed = example.trim();
-      if (trimmed.startsWith("```")) {
-        lines.push(trimmed);
-      } else {
-        lines.push("```typescript");
-        lines.push(trimmed);
-        lines.push("```");
-      }
+      lines.push(example.trim());
       lines.push("");
     }
   }

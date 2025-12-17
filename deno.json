@@ -19,6 +19,7 @@
     "marked": "npm:marked@^15.0.12"
   },
   "exclude": [
+    "dist/",
     "probitas/"
   ],
   "lint": {
