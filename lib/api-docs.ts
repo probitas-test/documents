@@ -330,15 +330,11 @@ export interface PackageDoc {
   moduleDoc?: string;
   /** Exported items */
   exports: DocNode[];
-  /** Generation timestamp */
-  generatedAt: string;
 }
 
 export interface ApiDocsIndex {
   /** All packages */
   packages: PackageInfo[];
-  /** Generation timestamp */
-  generatedAt: string;
 }
 
 export interface ExportCounts {

@@ -738,10 +738,5 @@ export function generateApiMarkdown(
     }
   }
 
-  // Footer
-  lines.push("---");
-  lines.push("");
-  lines.push(`*Generated at: ${pkg.generatedAt}*`);
-
   return lines.join("\n");
 }

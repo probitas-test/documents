@@ -25,7 +25,6 @@ function createPackageDoc(overrides: Partial<PackageDoc> = {}): PackageDoc {
     specifier: "@probitas/test-package",
     version: "1.0.0",
     exports: [],
-    generatedAt: "2024-01-01T00:00:00Z",
     ...overrides,
   };
 }
@@ -488,15 +487,6 @@ Deno.test("generateApiMarkdown - generates local type links", () => {
 
   assertStringIncludes(result, "### This Package");
   assertStringIncludes(result, "`Config`");
-});
-
-Deno.test("generateApiMarkdown - includes generation timestamp", () => {
-  const pkg = createPackageDoc({
-    generatedAt: "2024-03-15T10:30:00Z",
-  });
-  const result = generateApiMarkdown(pkg);
-
-  assertStringIncludes(result, "*Generated at: 2024-03-15T10:30:00Z*");
 });
 
 Deno.test("generateApiMarkdown - includes examples from JSDoc", () => {

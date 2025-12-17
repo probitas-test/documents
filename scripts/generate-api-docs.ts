@@ -134,7 +134,6 @@ async function generatePackageDoc(pkg: JsrPackage): Promise<PackageDoc | null> {
     version: pkg.latestVersion,
     moduleDoc,
     exports,
-    generatedAt: new Date().toISOString(),
   };
 }
 
@@ -156,7 +155,6 @@ async function savePackageDoc(doc: PackageDoc): Promise<void> {
 async function saveIndex(packages: PackageInfo[]): Promise<void> {
   const index: ApiDocsIndex = {
     packages,
-    generatedAt: new Date().toISOString(),
   };
 
   const filename = new URL("index.json", API_DIR);
