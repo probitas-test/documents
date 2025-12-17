@@ -7,7 +7,7 @@ export default scenario("Redis Cache Test", {
     client.redis.createRedisClient({
       url: "redis://localhost:6379",
     }))
-  .resource("key", () => `cache:${faker.random.uuid()}`)
+  .resource("key", () => `cache:${faker.string.uuid()}`)
   .setup((ctx) => {
     const { redis, key } = ctx.resources;
     return async () => {

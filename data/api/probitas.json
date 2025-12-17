@@ -463,10 +463,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 60,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 61,
         "col": 0,
-        "byteIndex": 2159
+        "byteIndex": 2258
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -496,17 +496,11 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "HttpResponseExpectation",
           "kind": "typeRef",
           "typeRef": {
-            "typeParams": [
-              {
-                "repr": "expectHttpResponse",
-                "kind": "typeQuery",
-                "typeQuery": "expectHttpResponse"
-              }
-            ],
-            "typeName": "ReturnType"
+            "typeParams": null,
+            "typeName": "HttpResponseExpectation"
           }
         },
         "isAsync": false,
@@ -530,10 +524,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 63,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 64,
         "col": 0,
-        "byteIndex": 2261
+        "byteIndex": 2346
       },
       "declarationKind": "export",
       "kind": "function",
@@ -554,17 +548,11 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "ConnectRpcResponseExpectation",
           "kind": "typeRef",
           "typeRef": {
-            "typeParams": [
-              {
-                "repr": "expectConnectRpcResponse",
-                "kind": "typeQuery",
-                "typeQuery": "expectConnectRpcResponse"
-              }
-            ],
-            "typeName": "ReturnType"
+            "typeParams": null,
+            "typeName": "ConnectRpcResponseExpectation"
           }
         },
         "isAsync": false,
@@ -588,10 +576,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 66,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 67,
         "col": 0,
-        "byteIndex": 2375
+        "byteIndex": 2446
       },
       "declarationKind": "export",
       "kind": "function",
@@ -612,17 +600,11 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "GraphqlResponseExpectation",
           "kind": "typeRef",
           "typeRef": {
-            "typeParams": [
-              {
-                "repr": "expectGraphqlResponse",
-                "kind": "typeQuery",
-                "typeQuery": "expectGraphqlResponse"
-              }
-            ],
-            "typeName": "ReturnType"
+            "typeParams": null,
+            "typeName": "GraphqlResponseExpectation"
           }
         },
         "isAsync": false,
@@ -646,10 +628,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 69,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 70,
         "col": 0,
-        "byteIndex": 2483
+        "byteIndex": 2540
       },
       "declarationKind": "export",
       "kind": "function",
@@ -698,10 +680,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 72,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 73,
         "col": 0,
-        "byteIndex": 2575
+        "byteIndex": 2632
       },
       "declarationKind": "export",
       "kind": "function",
@@ -722,17 +704,20 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "DenoKvExpectation",
           "kind": "typeRef",
           "typeRef": {
             "typeParams": [
               {
-                "repr": "expectDenoKvResult",
-                "kind": "typeQuery",
-                "typeQuery": "expectDenoKvResult"
+                "repr": "T",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "T"
+                }
               }
             ],
-            "typeName": "ReturnType"
+            "typeName": "DenoKvExpectation"
           }
         },
         "isAsync": false,
@@ -756,10 +741,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 75,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 76,
         "col": 0,
-        "byteIndex": 2680
+        "byteIndex": 2717
       },
       "declarationKind": "export",
       "kind": "function",
@@ -780,17 +765,20 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "RedisExpectation",
           "kind": "typeRef",
           "typeRef": {
             "typeParams": [
               {
-                "repr": "expectRedisResult",
-                "kind": "typeQuery",
-                "typeQuery": "expectRedisResult"
+                "repr": "T",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "T"
+                }
               }
             ],
-            "typeName": "ReturnType"
+            "typeName": "RedisExpectation"
           }
         },
         "isAsync": false,
@@ -814,10 +802,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 78,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 79,
         "col": 0,
-        "byteIndex": 2783
+        "byteIndex": 2800
       },
       "declarationKind": "export",
       "kind": "function",
@@ -838,17 +826,20 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "MongoExpectation",
           "kind": "typeRef",
           "typeRef": {
             "typeParams": [
               {
-                "repr": "expectMongoResult",
-                "kind": "typeQuery",
-                "typeQuery": "expectMongoResult"
+                "repr": "T",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "T"
+                }
               }
             ],
-            "typeName": "ReturnType"
+            "typeName": "MongoExpectation"
           }
         },
         "isAsync": false,
@@ -872,10 +863,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 81,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 82,
         "col": 0,
-        "byteIndex": 2886
+        "byteIndex": 2883
       },
       "declarationKind": "export",
       "kind": "function",
@@ -896,17 +887,20 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "RabbitMqExpectation",
           "kind": "typeRef",
           "typeRef": {
             "typeParams": [
               {
-                "repr": "expectRabbitMqResult",
-                "kind": "typeQuery",
-                "typeQuery": "expectRabbitMqResult"
+                "repr": "T",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "T"
+                }
               }
             ],
-            "typeName": "ReturnType"
+            "typeName": "RabbitMqExpectation"
           }
         },
         "isAsync": false,
@@ -930,10 +924,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 84,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 85,
         "col": 0,
-        "byteIndex": 2995
+        "byteIndex": 2972
       },
       "declarationKind": "export",
       "kind": "function",
@@ -954,17 +948,20 @@
           }
         ],
         "returnType": {
-          "repr": "ReturnType",
+          "repr": "SqsExpectation",
           "kind": "typeRef",
           "typeRef": {
             "typeParams": [
               {
-                "repr": "expectSqsResult",
-                "kind": "typeQuery",
-                "typeQuery": "expectSqsResult"
+                "repr": "T",
+                "kind": "typeRef",
+                "typeRef": {
+                  "typeParams": null,
+                  "typeName": "T"
+                }
               }
             ],
-            "typeName": "ReturnType"
+            "typeName": "SqsExpectation"
           }
         },
         "isAsync": false,
@@ -988,10 +985,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 87,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 88,
         "col": 0,
-        "byteIndex": 3094
+        "byteIndex": 3051
       },
       "declarationKind": "export",
       "kind": "function",
@@ -1025,10 +1022,10 @@
       "name": "expect",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/expect/0.2.4/expect.ts",
-        "line": 88,
+        "filename": "https://jsr.io/@probitas/expect/0.2.5/expect.ts",
+        "line": 89,
         "col": 0,
-        "byteIndex": 3155
+        "byteIndex": 3112
       },
       "declarationKind": "export",
       "kind": "function",

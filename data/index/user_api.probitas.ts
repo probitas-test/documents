@@ -4,8 +4,8 @@ export default scenario("User API Integration Test", {
   tags: ["integration", "http", "postgres"],
 })
   .resource("user", () => ({
-    id: faker.random.uuid(),
-    name: faker.name.findName(),
+    id: faker.string.uuid(),
+    name: faker.person.fullName(),
     email: faker.internet.email(),
   }))
   .resource("db", () =>

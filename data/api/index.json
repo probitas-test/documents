@@ -255,13 +255,13 @@
     {
       "name": "expect",
       "specifier": "@probitas/expect",
-      "version": "0.2.4",
-      "exportCount": 249,
+      "version": "0.2.5",
+      "exportCount": 287,
       "counts": {
         "classes": 54,
-        "interfaces": 120,
+        "interfaces": 153,
         "functions": 40,
-        "types": 18,
+        "types": 23,
         "variables": 2,
         "enums": 0
       }
