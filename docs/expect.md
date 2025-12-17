@@ -36,6 +36,35 @@ export default scenario("Assertion Example")
   .build();
 ```
 
+## Negation with `.not`
+
+All expectation types support the `.not` modifier to negate assertions. The
+`.not` modifier only affects the immediately following assertion, then resets to
+non-negated state:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+const res = await http.get("/users/1");
+
+// .not only affects the next assertion
+expect(res)
+  .not.toHaveStatus(404) // Negated: status is NOT 404
+  .not.toHaveStatus(500) // Negated: status is NOT 500
+  .toHaveStatus(200); // Not negated: status IS 200
+
+// Works with generic expectations too
+expect(42)
+  .not.toBe(43) // Negated
+  .toBeGreaterThan(40); // Not negated
+
+expect("hello world")
+  .not.toBe("goodbye")
+  .not.toBeNull()
+  .toContain("world");
+```
+
 ## Unified expect Function
 
 The [`expect()`](/api/expect/#expect) function automatically dispatches to the
