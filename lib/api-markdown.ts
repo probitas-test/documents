@@ -61,7 +61,7 @@ class TypeReferenceCollector {
     localTypes: Set<string>,
     typeToPackage: Map<string, string>,
     currentPackage: string,
-    baseUrl = "https://documents.probitas.deno.net",
+    baseUrl = "https://jsr-probitas.github.io/documents",
   ) {
     this.localTypes = localTypes;
     this.typeToPackage = typeToPackage;
@@ -532,6 +532,8 @@ export interface ApiMarkdownOptions {
   allPackages?: PackageDoc[];
   /** Base URL for links */
   baseUrl?: string;
+  /** Last updated timestamp (from file mtime) */
+  updatedAt?: Date;
 }
 
 /**
@@ -542,8 +544,11 @@ export function generateApiMarkdown(
   options: ApiMarkdownOptions = {},
 ): string {
   const lines: string[] = [];
-  const { allPackages = [], baseUrl = "https://documents.probitas.deno.net" } =
-    options;
+  const {
+    allPackages = [],
+    baseUrl = "https://jsr-probitas.github.io/documents",
+    updatedAt,
+  } = options;
 
   // Build local types set
   const localTypes = new Set<string>();
@@ -736,6 +741,13 @@ export function generateApiMarkdown(
       }
       lines.push("");
     }
+  }
+
+  // Footer with last updated timestamp
+  if (updatedAt) {
+    lines.push("---");
+    lines.push("");
+    lines.push(`*Last updated: ${updatedAt.toISOString().split("T")[0]}*`);
   }
 
   return lines.join("\n");

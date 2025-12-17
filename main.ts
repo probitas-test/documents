@@ -134,8 +134,12 @@ app.get(
         `./data/api/${packageName}.json`,
         import.meta.url,
       );
-      const content = await Deno.readTextFile(jsonPath);
+      const [content, stat] = await Promise.all([
+        Deno.readTextFile(jsonPath),
+        Deno.stat(jsonPath),
+      ]);
       const pkg: PackageDoc = JSON.parse(content);
+      const updatedAt = stat.mtime ?? undefined;
 
       // Load all packages for cross-package linking
       const indexPath = new URL("./data/api/index.json", import.meta.url);
@@ -156,7 +160,7 @@ app.get(
         }
       }
 
-      const markdown = generateApiMarkdown(pkg, { allPackages });
+      const markdown = generateApiMarkdown(pkg, { allPackages, updatedAt });
       return c.text(markdown, 200, {
         "Content-Type": "text/markdown; charset=utf-8",
       });

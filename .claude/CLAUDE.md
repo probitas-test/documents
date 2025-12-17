@@ -8,7 +8,7 @@ Repository: `probitas/documents`
 
 - **Runtime**: Deno 2.x
 - **Framework**: Hono (web server)
-- **Deploy**: New Deno Deploy (`documents.probitas.deno.net`)
+- **Deploy**: GitHub Pages (`https://jsr-probitas.github.io/documents`)
 
 ## Commands
 
@@ -17,39 +17,22 @@ deno task dev      # Start dev server with watch mode
 deno task start    # Start production server
 deno task check    # Type check all .ts files
 deno task verify   # Run fmt, lint, and check
+deno task build    # Build static site for deployment
 ```
 
 ## Deployment
 
-This project uses the **new Deno Deploy** (not Deploy Classic).
+This project is deployed to **GitHub Pages** as a static site.
 
-### Key Differences from Deploy Classic
+### Build Process
 
-| Feature    | New Deno Deploy              | Deploy Classic              |
-| ---------- | ---------------------------- | --------------------------- |
-| URL format | `{app}.{org}.deno.net`       | `{project}.deno.dev`        |
-| Console    | `console.deno.com`           | `dash.deno.com`             |
-| Build      | Integrated CI/CD or external | External only (`deployctl`) |
-| CLI        | `deno` CLI built-in          | Separate `deployctl`        |
+1. Run `deno task build` to generate static files in `dist/`
+2. GitHub Actions automatically deploys on push to main branch
 
-### New Deno Deploy Features
+### Local Development
 
-- **Integrated CI/CD**: Connect GitHub repo for automatic branch deploys and
-  previews
-- **`--tunnel` flag**: `deno run --tunnel` exposes local dev to public URL with
-  environment variables from dashboard
-- **OpenTelemetry**: Built-in logging, tracing, and metrics
-- **Framework detection**: Auto-detects Hono and optimizes configuration
-
-### Deployment Methods
-
-1. **GitHub Integration** (recommended): Connect repo, auto-deploy on push
-2. **Manual trigger**: Select branch and trigger build from console
-3. **Local tunnel**: `deno run --tunnel main.ts` for testing with production env
-
-### Console Access
-
-- Dashboard: https://console.deno.com
+- `deno task dev` - Start dev server with hot reload
+- `deno task start` - Start production server locally
 
 ## Related Documentation
 
