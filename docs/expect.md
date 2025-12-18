@@ -45,7 +45,9 @@ non-negated state:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const res = await http.get("/users/1");
 
 // .not only affects the next assertion
@@ -92,7 +94,9 @@ client responses:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const res = await http.get("/users/1");
 
 // Status assertions
@@ -134,7 +138,7 @@ SQL client results:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const pg = await client.sql.postgres.createPostgresClient({
+await using pg = await client.sql.postgres.createPostgresClient({
   url: "postgres://user:pass@localhost/db",
 });
 const result = await pg.query("SELECT * FROM users WHERE active = $1", [true]);
@@ -168,7 +172,7 @@ GraphQL client responses:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const gql = client.graphql.createGraphqlClient({
+await using gql = client.graphql.createGraphqlClient({
   url: "http://localhost:4000/graphql",
 });
 const res = await gql.query(`query { user(id: 1) { name email } }`);
@@ -198,7 +202,7 @@ Use [`GrpcResponseExpectation`](/api/expect/#GrpcResponseExpectation) or
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
+await using grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
 const res = await grpc.call("users.UserService", "GetUser", { id: "123" });
 
 expect(res)
@@ -215,7 +219,7 @@ results:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const redis = await client.redis.createRedisClient({
+await using redis = await client.redis.createRedisClient({
   url: "redis://localhost:6379",
 });
 
@@ -251,7 +255,7 @@ results:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const mongo = await client.mongodb.createMongoClient({
+await using mongo = await client.mongodb.createMongoClient({
   url: "mongodb://localhost:27017",
   database: "testdb",
 });
@@ -387,7 +391,9 @@ Prefer specific assertions over generic ones for better error messages:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const res = await http.get("/users/1");
 
 // Good: Clear, descriptive error message on failure
@@ -408,7 +414,9 @@ Group related assertions in a single chain for readability:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const res = await http.get("/users/1");
 
 // Good: Single chain for related checks
@@ -430,7 +438,9 @@ Use `.not` to explicitly check for absence or negative conditions:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const res = await http.get("/users/1");
 
 // Check error responses are NOT returned
@@ -450,7 +460,9 @@ Check structure exists before asserting on specific values:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const res = await http.get("/users/1");
 
 // Good: Validates structure progressively
@@ -469,7 +481,9 @@ When you only care about specific fields, use partial matching:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const res = await http.get("/users/1");
 
 // Good: Only validates relevant fields

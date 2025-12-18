@@ -198,7 +198,9 @@ type:
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
 
-const http = client.http.createHttpClient({ url: "http://localhost:8080" });
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
 const httpResponse = await http.get("/users/1");
 
 // HTTP response
@@ -207,7 +209,7 @@ expect(httpResponse)
   .toHaveStatus(200)
   .toHaveDataMatching({ id: 1 });
 
-const pg = await client.sql.postgres.createPostgresClient({
+await using pg = await client.sql.postgres.createPostgresClient({
   url: "postgres://user:pass@localhost/db",
 });
 const sqlResult = await pg.query("SELECT * FROM users WHERE id = $1", [1]);
@@ -217,7 +219,7 @@ expect(sqlResult)
   .toHaveRowCount(1)
   .toHaveRowsMatching({ name: "Alice" });
 
-const grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
+await using grpc = client.grpc.createGrpcClient({ url: "localhost:50051" });
 const grpcResponse = await grpc.call("users.UserService", "GetUser", {
   id: "123",
 });
@@ -253,6 +255,6 @@ import {
 ## Next Steps
 
 - [Scenario Guide](/docs/scenario/) - Learn how to write scenarios in detail
-- [Client API](/docs/client/) - Detailed reference for each client
-- [Expect API](/docs/expect/) - Type-safe assertions for response validation
+- [Client Guide](/docs/client/) - Detailed reference for each client
+- [Expect Guide](/docs/expect/) - Type-safe assertions for response validation
 - [Configuration](/docs/configuration/) - Timeout, retry, and other options

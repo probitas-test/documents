@@ -10,13 +10,7 @@ export default scenario("User API Integration Test", {
   }))
   .resource("db", () =>
     client.sql.postgres.createPostgresClient({
-      url: {
-        host: "localhost",
-        port: 5432,
-        database: "app",
-        username: "testuser",
-        password: "testpassword",
-      },
+      url: "postgres://testuser:testpassword@localhost:5432/app",
     }))
   .resource("http", () =>
     client.http.createHttpClient({
