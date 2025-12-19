@@ -777,6 +777,95 @@ export default scenario("Full Stack Test", {
 
 ## Best Practices
 
+### Make Step Dependencies Explicit
+
+Keep steps in the same scenario only when they need data from `ctx.previous`.
+If a step does not read the previous result, extract it into its own scenario
+and share a resource factory instead.
+
+```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
+const http = () =>
+  client.http.createHttpClient({
+    url: Deno.env.get("API_URL") ?? "http://localhost:8080",
+  });
+
+// Avoid - unrelated steps bundled together
+scenario("User checks")
+  .resource("http", http)
+  .step("Create user", async (ctx) => {
+    await ctx.resources.http.post("/users", { body: { name: "Alice" } });
+  })
+  .step("List users", async (ctx) => {
+    await ctx.resources.http.get("/users");
+  })
+  .build();
+
+// Good - separate scenarios that can run independently
+export default [
+  scenario("Create user").resource("http", http).step(() => {}).build(),
+  scenario("List users").resource("http", http).step(() => {}).build(),
+];
+```
+
+### Finish Builders and Exports
+
+Every scenario must end with `.build()` and be exported as `export default`,
+either as a single scenario or an array of scenarios.
+
+```typescript
+// Correct - single scenario
+export default scenario("Example").step(() => {}).build();
+
+// Correct - multiple scenarios
+export default [
+  scenario("First").step(() => {}).build(),
+  scenario("Second").step(() => {}).build(),
+];
+```
+
+### Use Environment-Driven URLs
+
+Parameterize endpoints so tests run consistently across environments and avoid
+hard-coding localhost URLs.
+
+```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
+const apiUrl = Deno.env.get("API_URL") ?? "http://localhost:8080";
+
+export default scenario("API test")
+  .resource("http", () => client.http.createHttpClient({ url: apiUrl }))
+  .step(() => {})
+  .build();
+```
+
+### Prefer Fluent Assertions
+
+Use `expect()` chains instead of manual `if/throw` checks, and keep related
+assertions in a single chain for clearer failures.
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+await using http = client.http.createHttpClient({
+  url: "http://localhost:8080",
+});
+const res = await http.get("/users/1");
+
+// Avoid - manual checks
+if (res.status !== 200) {
+  throw new Error(`Expected 200, got ${res.status}`);
+}
+
+// Good - fluent assertions
+expect(res)
+  .toBeOk()
+  .toHaveStatus(200)
+  .not.toHaveJsonProperty(["metadata", "x-internal-token"]);
+```
+
 ### Use Descriptive Step Names
 
 Good names make test output readable and debugging easier.
@@ -1148,3 +1237,12 @@ export default [
     .build(),
 ];
 ```
+
+## Common Mistakes
+
+- Forgetting `export default` or `.build()` when returning the scenario builder
+- Bundling independent tests in one scenario instead of splitting them when
+  they do not use `ctx.previous`
+- Hard-coding endpoints instead of using environment-driven URLs
+- Using manual `if/throw` checks instead of fluent `expect()` chains
+- Omitting cleanup functions from `.setup()` when creating external fixtures

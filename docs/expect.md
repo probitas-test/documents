@@ -409,7 +409,8 @@ expect(res.status).toBe(200);
 
 ### Chain Related Assertions
 
-Group related assertions in a single chain for readability:
+Keep related checks in a single `expect()` chain so failures stay grouped and
+the assertion state stays consistent:
 
 ```typescript
 import { client, expect } from "jsr:@probitas/probitas";
@@ -425,7 +426,7 @@ expect(res)
   .toHaveStatus(200)
   .toHaveJsonMatching({ id: 1, name: "Alice" });
 
-// Less ideal: Separate expect calls
+// Avoid: Separate expect calls on the same subject
 expect(res).toBeOk();
 expect(res).toHaveStatus(200);
 expect(res).toHaveJsonMatching({ id: 1, name: "Alice" });
@@ -451,6 +452,24 @@ expect(res)
 
 // Verify JSON does NOT contain sensitive fields
 expect(res).not.toHaveJsonProperty("password");
+```
+
+### Avoid Manual Checks
+
+Use fluent assertions instead of `if/throw` logic or `JSON.stringify` checks.
+Assertions provide clearer diffs and consistent failure output.
+
+```typescript
+// Avoid - manual validation
+if (res.status !== 200) {
+  throw new Error(`Expected 200, got ${res.status}`);
+}
+
+// Good - fluent assertion chain
+expect(res)
+  .toBeOk()
+  .toHaveStatus(200)
+  .not.toHaveJsonProperty(["metadata", "x-internal-token"]);
 ```
 
 ### Validate Structure Before Values
@@ -493,4 +512,16 @@ expect(res).toHaveJsonMatching({
 });
 
 // This ignores other fields like createdAt, updatedAt, etc.
+```
+
+### Use Array Paths for Nested Properties
+
+For nested fields, prefer array paths over dot notation and keep positive and
+negative checks in the same chain.
+
+```typescript
+expect(res)
+  .toBeOk()
+  .toHaveJsonProperty("metadata")
+  .not.toHaveJsonProperty(["metadata", "x-internal-token"]);
 ```

@@ -43,7 +43,7 @@ Register clients as resources for automatic lifecycle management. Resources are
 disposed in reverse order after the scenario completes.
 
 ```typescript
-import { client, scenario } from "jsr:@probitas/probitas";
+import { client, expect, scenario } from "jsr:@probitas/probitas";
 
 scenario("Example")
   .resource(
@@ -835,6 +835,25 @@ scenario("Bad Example")
   .step("Make request", async () => {
     const http = client.http.createHttpClient({ url: "http://localhost:8080" });
     // Must manually dispose
+  })
+  .build();
+```
+
+### Use Environment-Driven Endpoints
+
+Parameterize service URLs so scenarios run consistently across environments and
+avoid hard-coded localhost values.
+
+```typescript
+import { client, scenario } from "jsr:@probitas/probitas";
+
+const apiUrl = Deno.env.get("API_URL") ?? "http://localhost:8080";
+
+scenario("API check")
+  .resource("http", () => client.http.createHttpClient({ url: apiUrl }))
+  .step("Ping service", async (ctx) => {
+    const res = await ctx.resources.http.get("/health");
+    expect(res).toBeOk();
   })
   .build();
 ```
