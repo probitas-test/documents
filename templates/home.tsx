@@ -187,6 +187,26 @@ function AiFriendlySection() {
             Example: /docs/index.md <i class="ti ti-arrow-right" />
           </a>
         </div>
+
+        <div class="ai-friendly-card">
+          <div class="ai-friendly-card-header">
+            <i class="ti ti-plug-connected" />
+            <span>Claude Plugins</span>
+          </div>
+          <p>
+            Official Claude Code plugin marketplace with the Probitas plugin
+            (scenario-writer agent, commands, and skills) for AI-assisted
+            authoring.
+          </p>
+          <a
+            href="https://github.com/jsr-probitas/claude-plugins"
+            class="ai-friendly-link"
+            target="_blank"
+            rel="noopener"
+          >
+            View marketplace repo <i class="ti ti-arrow-right" />
+          </a>
+        </div>
       </div>
     </section>
   );

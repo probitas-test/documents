@@ -17,6 +17,14 @@ export interface DocPage {
 
 export const docPages: DocPage[] = [
   {
+    path: "/AI/",
+    file: "./AI.md",
+    title: "AI Scenario Testing",
+    label: "AI",
+    description:
+      "How to have AI write and run Probitas scenario tests with Claude plugins",
+  },
+  {
     path: "/docs/",
     file: "./docs/overview.md",
     title: "Overview",
