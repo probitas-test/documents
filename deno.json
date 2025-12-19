@@ -19,19 +19,6 @@
     "marked": "npm:marked@^17.0.1"
   },
   "exclude": [
-    "dist/",
-    "probitas/"
-  ],
-  "lint": {
-    "exclude": [
-      "data/index/",
-      "probitas/"
-    ]
-  },
-  "fmt": {
-    "exclude": [
-      "data/index/",
-      "probitas/"
-    ]
-  }
+    "dist/"
+  ]
 }
