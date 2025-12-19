@@ -16,52 +16,21 @@ other backend services.
 
 ## Installation
 
-### Install CLI
-
-Requires [Deno](https://deno.land/) v2.x or later.
-
-Install the CLI to run scenarios using the shell installer:
+Install the CLI to run scenarios. Choose your preferred method:
 
 ```bash
+# Shell installer (requires Deno)
 curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | bash
-```
 
-**Options via environment variables:**
-
-```bash
-# Install specific version
-curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | PROBITAS_VERSION=0.7.3 bash
-
-# Install to custom directory
-curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | PROBITAS_INSTALL_DIR=/usr/local/bin bash
-```
-
-### Using Homebrew (macOS/Linux)
-
-Install via the official Homebrew tap:
-
-```bash
-# Add the tap and install
-brew tap jsr-probitas/tap
-brew install probitas
-
-# Or install directly
+# Homebrew (macOS/Linux)
 brew install jsr-probitas/tap/probitas
-```
 
-Deno is installed automatically as a dependency.
-
-### Using Nix
-
-Use the flake to run or install the CLI:
-
-```bash
-# Run without installing
+# Nix
 nix run github:jsr-probitas/cli
-
-# Install into your profile
-nix profile install github:jsr-probitas/cli
 ```
+
+See [Installation Guide](/docs/installation/) for detailed options including Nix
+flake integration for project-level dependency management.
 
 ## Quick Start
 

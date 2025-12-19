@@ -21,8 +21,15 @@ export const docPages: DocPage[] = [
     file: "./docs/overview.md",
     title: "Overview",
     label: "Overview",
+    description: "Introduction to Probitas, quick start, and core concepts",
+  },
+  {
+    path: "/docs/installation/",
+    file: "./docs/installation.md",
+    title: "Installation",
+    label: "Installation",
     description:
-      "Introduction to Probitas, installation guide, quick start, and core concepts",
+      "Install Probitas CLI via shell script, Homebrew, or Nix flake with project integration",
   },
   {
     path: "/docs/scenario/",

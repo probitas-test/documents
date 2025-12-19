@@ -29,6 +29,18 @@ function toggleTheme() {
   updateHljsTheme(next);
 }
 
+function toggleMobileMenu() {
+  const header = document.querySelector('.global-header');
+  header.classList.toggle('menu-open');
+  document.body.classList.toggle('menu-open');
+}
+
+function closeMobileMenu() {
+  const header = document.querySelector('.global-header');
+  header.classList.remove('menu-open');
+  document.body.classList.remove('menu-open');
+}
+
 function initCarousel() {
   const tabs = document.querySelectorAll('.carousel-tab');
   const slides = document.querySelectorAll('.carousel-slide');

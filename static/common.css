@@ -200,6 +200,94 @@ a {
 }
 
 /* ========================================
+   Mobile Menu Toggle
+   ======================================== */
+.mobile-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  margin-left: auto;
+}
+
+.mobile-menu-toggle:hover {
+  color: var(--text-heading);
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.mobile-menu-toggle i {
+  font-size: 20px;
+}
+
+.mobile-menu-toggle .icon-close {
+  display: none;
+}
+
+.global-header.menu-open .mobile-menu-toggle .icon-menu {
+  display: none;
+}
+
+.global-header.menu-open .mobile-menu-toggle .icon-close {
+  display: block;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 900px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .header-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+    gap: 0;
+    margin: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .global-header.menu-open .header-nav {
+    display: flex;
+  }
+
+  .header-nav a {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  .header-nav a:hover {
+    background: rgba(99, 102, 241, 0.1);
+  }
+
+  .header-right {
+    margin-left: 0.75rem;
+  }
+
+  .search-shortcut {
+    display: none;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
+/* ========================================
    Buttons
    ======================================== */
 .btn {

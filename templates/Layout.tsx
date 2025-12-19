@@ -242,6 +242,15 @@ function Header() {
         />
         <span class="logo-text">Probitas</span>
       </a>
+      <button
+        type="button"
+        class="mobile-menu-toggle"
+        onclick="toggleMobileMenu()"
+        aria-label="Toggle menu"
+      >
+        <i class="ti ti-menu-2 icon-menu" />
+        <i class="ti ti-x icon-close" />
+      </button>
       <nav class="header-nav">
         {docPages.map((doc) => (
           <a key={doc.path} href={`${basePath}${doc.path}`}>{doc.label}</a>
