@@ -101,13 +101,17 @@ const res1 = await http.get("/users", {
 
 // POST with JSON body
 const res2 = await http.post("/users", {
-  name: "Alice",
-  email: "alice@example.com",
+  body: {
+    name: "Alice",
+    email: "alice@example.com",
+  },
 });
 
 // PUT, PATCH, DELETE
-await http.put("/users/1", { name: "Alice Updated" });
-await http.patch("/users/1", { email: "new@example.com" });
+await http.put("/users/1", { body: { name: "Alice Updated" } });
+await http.patch("/users/1", {
+  body: { email: "new@example.com" },
+});
 await http.delete("/users/1");
 ```
 
@@ -150,7 +154,7 @@ expect(res)
   .toBeOk() // Status 2xx
   .toHaveStatus(200) // Exact status code
   .toHaveHeadersPropertyContaining("content-type", "application/json") // Content-Type contains
-  .toHaveDataMatching({ name: "Alice" }) // Partial JSON match
+  .toHaveJsonMatching({ name: "Alice" }) // Partial JSON match
   .toHaveDurationLessThan(1000); // Response time limit
 
 // Additional assertions examples
@@ -158,7 +162,7 @@ const res2 = await http.get("/error", { throwOnError: false });
 expect(res2).not.toBeOk(); // Status not 2xx
 expect(res).toHaveHeadersProperty("X-Request-Id");
 expect(res).toHaveTextContaining("success");
-expect(res).toHaveDataPresent(); // Check if response has data
+expect(res).toHaveJsonPresent(); // Check if response has JSON data
 ```
 
 ## SQL Clients
@@ -204,8 +208,8 @@ const result2 = await pg.query<{ id: number; name: string }>(
 );
 
 // Access results
-const allRows = result2.rows; // All rows
-const first = result2.rows[0]; // First row
+const allRows = result2.rows ?? []; // All rows
+const first = result2.rows?.[0]; // First row
 const rowCount = result2.rowCount; // Row count
 ```
 
@@ -228,10 +232,10 @@ const result = await pg.transaction(async (tx) => {
 
   await tx.query(
     "INSERT INTO profiles (user_id, bio) VALUES ($1, $2)",
-    [insert.rows[0]!.id, "Hello!"],
+    [insert.rows?.[0]!.id, "Hello!"],
   );
 
-  return insert.rows[0];
+  return insert.rows?.[0];
 });
 ```
 
@@ -296,7 +300,8 @@ const res = await grpc.call("echo.EchoService", "Echo", {
 });
 
 expect(res).toBeOk().toHaveDataMatching({ message: "Hello" });
-const data = res.data();
+// Note: For gRPC responses, use toHaveDataMatching (not toHaveJsonMatching)
+const data = res.data;
 ```
 
 ### Server Streaming
@@ -315,7 +320,7 @@ for await (
   })
 ) {
   expect(res).toBeOk();
-  messages.push(res.data());
+  messages.push(res.data);
 }
 ```
 
@@ -391,6 +396,7 @@ const res = await connect.call("echo.EchoService", "Echo", {
 });
 
 expect(res).toBeOk().toHaveDataMatching({ message: "Hello" });
+// Note: For gRPC responses, use toHaveDataMatching (not toHaveJsonMatching)
 ```
 
 ### Server Streaming
@@ -408,7 +414,7 @@ for await (
   })
 ) {
   expect(res).toBeOk();
-  console.log("Received:", res.data());
+  console.log("Received:", res.data);
 }
 ```
 
@@ -454,7 +460,8 @@ const res = await graphql.query(
 expect(res).toBeOk().toHaveDataMatching({
   user: { name: "Alice" },
 });
-const user = res.data()!.user;
+const user =
+  res.data<{ user: { id: string; name: string; email: string } }>()!.user;
 ```
 
 ### Mutations
@@ -481,7 +488,8 @@ const res = await graphql.mutation(
 );
 
 expect(res).toBeOk();
-const newUser = res.data()!.createUser;
+const newUser =
+  res.data<{ createUser: { id: string; name: string } }>()!.createUser;
 ```
 
 ### Subscriptions
@@ -506,7 +514,10 @@ const subscription = graphql.subscribe(outdent`
 
 for await (const res of subscription) {
   expect(res).toBeOk();
-  console.log("New user:", res.data()!.userCreated);
+  console.log(
+    "New user:",
+    res.data<{ userCreated: { id: string; name: string } }>()!.userCreated,
+  );
 }
 ```
 
@@ -524,9 +535,11 @@ await using graphql = client.graphql.createGraphqlClient({
 const res = await graphql.query("query { user(id: 1) { name } }");
 
 // Check for errors
-expect(res).toHaveErrorsPresent(); // Has GraphQL errors
-expect(res).toHaveErrorCount(2); // Exactly 2 errors
-expect(res).toHaveErrorCountGreaterThan(0); // Has at least 1 error
+expect(res).toHaveErrorPresent(); // Has GraphQL errors
+expect(res).toHaveError({ message: "Not found" }); // Specific error
+
+// Or check for no errors
+expect(res).toHaveErrorNullish(); // No GraphQL errors
 
 // Check for extensions
 expect(res).toHaveExtensionsProperty("tracing"); // Has tracing extension
@@ -570,15 +583,15 @@ await redis.hset("user:1", "age", "30");
 const user = await redis.hgetall("user:1");
 
 // Lists
-await redis.lpush("queue", "task1", "task2");
+await redis.lpush("queue", ["task1", "task2"]);
 const task = await redis.rpop("queue");
 
 // Sets
-await redis.sadd("tags", "typescript", "deno");
+await redis.sadd("tags", ["typescript", "deno"]);
 const tags = await redis.smembers("tags");
 
 // Delete
-await redis.del("key");
+await redis.del(["key"]);
 
 // Value assertions
 expect(result).toHaveValuePresent(); // Check if value exists
@@ -775,7 +788,7 @@ expect(result).toBeOk().toHaveMessageId(result.messageId);
 
 // Receive and process
 const receiveResult = await sqs.receive({ maxMessages: 10 });
-for (const msg of receiveResult.messages) {
+for (const msg of receiveResult.messages ?? []) {
   console.log("Received:", msg.body);
   await sqs.delete(msg.receiptHandle);
 }
@@ -844,7 +857,7 @@ const result1 = await pg.query<{ id: number; name: string }>(
   "SELECT id, name FROM users WHERE id = $1",
   [userId],
 );
-const user = result1.rows[0]; // Type: { id: number; name: string } | undefined
+const user = result1.rows?.[0]; // Type: { id: number; name: string } | undefined
 
 // Avoid - untyped response
 const result2 = await pg.query("SELECT * FROM users");

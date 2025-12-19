@@ -3,6 +3,11 @@
     "jsx": "precompile",
     "jsxImportSource": "hono/jsx"
   },
+  "lint": {
+    "rules": {
+      "exclude": ["no-import-prefix", "no-unversioned-import"]
+    }
+  },
   "tasks": {
     "dev": "deno run --allow-net --allow-read --allow-env --watch main.ts",
     "start": "deno run --allow-net --allow-read main.ts",

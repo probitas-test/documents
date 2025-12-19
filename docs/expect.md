@@ -31,7 +31,7 @@ export default scenario("Assertion Example")
     expect(res)
       .toBeOk()
       .toHaveStatus(200)
-      .toHaveDataMatching({ id: 1, name: "Alice" });
+      .toHaveJsonMatching({ id: 1, name: "Alice" });
   })
   .build();
 ```
@@ -105,11 +105,11 @@ expect(res)
   .toHaveStatus(200) // status === 200
   .toHaveStatusText("OK"); // statusText === "OK"
 
-// Data assertions
+// JSON assertions
 expect(res)
-  .toHaveData({ id: 1, name: "Alice" }) // exact match
-  .toHaveDataMatching({ id: 1 }) // partial match
-  .toHaveDataProperty("email"); // property exists
+  .toHaveJson({ id: 1, name: "Alice" }) // exact match
+  .toHaveJsonMatching({ id: 1 }) // partial match
+  .toHaveJsonProperty("email"); // property exists
 
 // Header assertions
 expect(res)
@@ -124,9 +124,9 @@ expect(res)
 | `toBeOk()`                              | Response `ok` is `true`         |
 | `toHaveStatus(n)`                       | Status equals `n`               |
 | `toHaveStatusText(s)`                   | Status text equals `s`          |
-| `toHaveData(d)`                         | Data deeply equals `d`          |
-| `toHaveDataMatching(d)`                 | Data matches partial object `d` |
-| `toHaveDataProperty(k)`                 | Data has property `k`           |
+| `toHaveJson(d)`                         | JSON deeply equals `d`          |
+| `toHaveJsonMatching(d)`                 | JSON matches partial object `d` |
+| `toHaveJsonProperty(k)`                 | JSON has property `k`           |
 | `toHaveHeadersProperty(k)`              | Header `k` exists               |
 | `toHaveHeadersPropertyContaining(k, v)` | Header `k` contains `v`         |
 
@@ -179,7 +179,7 @@ const res = await gql.query(`query { user(id: 1) { name email } }`);
 
 expect(res)
   .toBeOk()
-  .toHaveErrorsEmpty() // no GraphQL errors
+  .toHaveErrorNullish() // no GraphQL errors
   .toHaveData({ user: { name: "Alice", email: "alice@example.com" } })
   .toHaveDataMatching({ user: { name: "Alice" } });
 ```
@@ -189,8 +189,8 @@ expect(res)
 | Method                  | Description                     |
 | ----------------------- | ------------------------------- |
 | `toBeOk()`              | Response `ok` is `true`         |
-| `toHaveErrorsEmpty()`   | No GraphQL errors in response   |
-| `toHaveErrors(errs)`    | Has specific GraphQL errors     |
+| `toHaveErrorNullish()`  | No GraphQL errors in response   |
+| `toHaveError(err)`      | Has specific GraphQL error      |
 | `toHaveData(d)`         | Data deeply equals `d`          |
 | `toHaveDataMatching(d)` | Data matches partial object `d` |
 
@@ -234,7 +234,7 @@ const count = await redis.incr("counter");
 expect(count).toHaveValue(1);
 
 // Set operations
-await redis.sadd("tags", "a", "b", "c");
+await redis.sadd("tags", ["a", "b", "c"]);
 const members = await redis.smembers("tags");
 expect(members).toHaveValueContaining("a");
 ```
@@ -400,8 +400,8 @@ const res = await http.get("/users/1");
 // "Expected status to be 200, but got 404"
 expect(res).toHaveStatus(200);
 
-// Good: Shows diff of expected vs actual data
-expect(res).toHaveDataMatching({ id: 1 });
+// Good: Shows diff of expected vs actual JSON
+expect(res).toHaveJsonMatching({ id: 1 });
 
 // Less ideal: Generic message "Expected 200 but received 404"
 expect(res.status).toBe(200);
@@ -423,12 +423,12 @@ const res = await http.get("/users/1");
 expect(res)
   .toBeOk()
   .toHaveStatus(200)
-  .toHaveDataMatching({ id: 1, name: "Alice" });
+  .toHaveJsonMatching({ id: 1, name: "Alice" });
 
 // Less ideal: Separate expect calls
 expect(res).toBeOk();
 expect(res).toHaveStatus(200);
-expect(res).toHaveDataMatching({ id: 1, name: "Alice" });
+expect(res).toHaveJsonMatching({ id: 1, name: "Alice" });
 ```
 
 ### Use `.not` for Negative Assertions
@@ -449,8 +449,8 @@ expect(res)
   .not.toHaveStatus(500)
   .toBeOk();
 
-// Verify data does NOT contain sensitive fields
-expect(res).not.toHaveDataProperty("password");
+// Verify JSON does NOT contain sensitive fields
+expect(res).not.toHaveJsonProperty("password");
 ```
 
 ### Validate Structure Before Values
@@ -468,13 +468,13 @@ const res = await http.get("/users/1");
 // Good: Validates structure progressively
 expect(res)
   .toBeOk()
-  .toHaveDataProperty("user")
-  .toHaveDataMatching({
+  .toHaveJsonProperty("user")
+  .toHaveJsonMatching({
     user: { id: 1, email: "alice@example.com" },
   });
 ```
 
-### Use `toHaveDataMatching` for Partial Validation
+### Use `toHaveJsonMatching` for Partial Validation
 
 When you only care about specific fields, use partial matching:
 
@@ -487,7 +487,7 @@ await using http = client.http.createHttpClient({
 const res = await http.get("/users/1");
 
 // Good: Only validates relevant fields
-expect(res).toHaveDataMatching({
+expect(res).toHaveJsonMatching({
   id: 1,
   status: "active",
 });

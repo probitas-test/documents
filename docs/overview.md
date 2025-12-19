@@ -12,7 +12,7 @@ other backend services.
   message queues with unified APIs
 - **Type-safe**: Full type inference through the builder chain
 - **Fluent assertions**: Natural syntax like
-  `expect(result).toBeOk().toHaveDataMatching({...})`
+  `expect(result).toBeOk().toHaveJsonMatching({...})`
 
 ## Installation
 
@@ -102,7 +102,7 @@ export default scenario("User API Test")
     expect(res)
       .toBeOk()
       .toHaveStatus(200)
-      .toHaveDataMatching({ id: 1 });
+      .toHaveJsonMatching({ id: 1 });
   })
   .build();
 ```
@@ -207,7 +207,7 @@ const httpResponse = await http.get("/users/1");
 expect(httpResponse)
   .toBeOk()
   .toHaveStatus(200)
-  .toHaveDataMatching({ id: 1 });
+  .toHaveJsonMatching({ id: 1 });
 
 await using pg = await client.sql.postgres.createPostgresClient({
   url: "postgres://user:pass@localhost/db",

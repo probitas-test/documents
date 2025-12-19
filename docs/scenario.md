@@ -20,7 +20,7 @@ export default scenario("User API CRUD", {
   .setup(async (ctx) => {
     // Create test user before steps
     const { http } = ctx.resources;
-    await http.post("/users", { name: "test-user" });
+    await http.post("/users", { body: { name: "test-user" } });
 
     return async () => {
       // Cleanup: delete test user after steps
@@ -31,7 +31,7 @@ export default scenario("User API CRUD", {
     const { http } = ctx.resources;
     const res = await http.get("/users/test-user");
     expect(res).toHaveStatus(200);
-    return res.data();
+    return res.json();
   })
   .build();
 ```
@@ -553,7 +553,7 @@ scenario("Retry Example")
       const { http } = ctx.resources;
       const res = await http.get("/sometimes-fails");
       expect(res).toBeOk();
-      return res.data();
+      return res.json();
     },
     {
       retry: { maxAttempts: 3, backoff: "exponential" },
@@ -579,29 +579,33 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
   .step("Create user", async (ctx) => {
     const { http } = ctx.resources;
     const res = await http.post("/users", {
-      name: "Alice",
-      email: "alice@example.com",
+      body: {
+        name: "Alice",
+        email: "alice@example.com",
+      },
     });
-    expect(res).toBeOk().toHaveStatus(201).toHaveDataMatching({
+    expect(res).toBeOk().toHaveStatus(201).toHaveJsonMatching({
       name: "Alice",
     });
-    return res.data<{ id: number }>()!;
+    return res.json<{ id: number }>()!;
   })
   .step("Get user", async (ctx) => {
     const { http } = ctx.resources;
     const { id } = ctx.previous;
     const res = await http.get(`/users/${id}`);
-    expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
+    expect(res).toBeOk().toHaveStatus(200).toHaveJsonMatching({
       id,
       name: "Alice",
     });
-    return res.data<{ id: number }>()!;
+    return res.json<{ id: number }>()!;
   })
   .step("Update user", async (ctx) => {
     const { http } = ctx.resources;
     const { id } = ctx.previous;
-    const res = await http.patch(`/users/${id}`, { name: "Bob" });
-    expect(res).toBeOk().toHaveStatus(200).toHaveDataMatching({
+    const res = await http.patch(`/users/${id}`, {
+      body: { name: "Bob" },
+    });
+    expect(res).toBeOk().toHaveStatus(200).toHaveJsonMatching({
       name: "Bob",
     });
     return { id };
@@ -653,7 +657,7 @@ export default scenario("Database Transaction", { tags: ["db", "postgres"] })
         "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id",
         ["Alice", "alice@example.com"],
       );
-      return insert.rows.first()!;
+      return insert.rows![0]!;
     });
     return result;
   })
@@ -689,7 +693,7 @@ export default scenario("gRPC Echo Service", { tags: ["grpc"] })
       message: "Hello",
     });
     expect(res).toBeOk().toHaveDataMatching({ message: "Hello" });
-    return res.data();
+    return res.data!;
   })
   .step("Server streaming", async (ctx) => {
     const { grpc } = ctx.resources;
@@ -700,7 +704,7 @@ export default scenario("gRPC Echo Service", { tags: ["grpc"] })
       })
     ) {
       expect(res).toBeOk();
-      messages.push(res.data());
+      messages.push(res.data);
     }
     return messages;
   })
@@ -739,7 +743,7 @@ export default scenario("Full Stack Test", {
     const { redis } = ctx.resources;
     await redis.set("api:enabled", "true");
     return async () => {
-      await redis.del("api:enabled");
+      await redis.del(["api:enabled"]);
     };
   })
   .step("Check API enabled", async (ctx) => {
@@ -751,9 +755,11 @@ export default scenario("Full Stack Test", {
   })
   .step("Create via API", async (ctx) => {
     const { http } = ctx.resources;
-    const res = await http.post("/items", { name: "Test Item" });
+    const res = await http.post("/items", {
+      body: { name: "Test Item" },
+    });
     expect(res).toBeOk().toHaveStatus(201);
-    return res.data<{ id: number }>()!;
+    return res.json<{ id: number }>()!;
   })
   .step("Verify in database", async (ctx) => {
     const { pg } = ctx.resources;
@@ -808,15 +814,17 @@ scenario("User creation and retrieval")
   )
   .step("Create user", async (ctx) => {
     const res = await ctx.resources.http.post("/users", {
-      name: "Alice",
-      email: "alice@example.com",
+      body: {
+        name: "Alice",
+        email: "alice@example.com",
+      },
     });
-    return res.data<{ id: number }>()!;
+    return res.json<{ id: number }>()!;
   })
   .step("Get created user", async (ctx) => {
     // ctx.previous is typed as { id: number }
     const res = await ctx.resources.http.get(`/users/${ctx.previous.id}`);
-    expect(res).toHaveStatus(200).toHaveDataMatching({ name: "Alice" });
+    expect(res).toHaveStatus(200).toHaveJsonMatching({ name: "Alice" });
   })
   .build();
 ```
@@ -833,8 +841,10 @@ scenario("User creation and retrieval")
   )
   .step("Create user", async (ctx) => {
     await ctx.resources.http.post("/users", {
-      name: "Alice",
-      email: "alice@example.com",
+      body: {
+        name: "Alice",
+        email: "alice@example.com",
+      },
     });
     // No return value - next step can't access created user's ID!
   })
@@ -953,7 +963,9 @@ export default [
       () => client.http.createHttpClient({ url: "http://localhost:8080" }),
     )
     .step("Create user with empty name", async (ctx) => {
-      const res = await ctx.resources.http.post("/users", { name: "" });
+      const res = await ctx.resources.http.post("/users", {
+        body: { name: "" },
+      });
       expect(res).toHaveStatus(400);
     })
     .build(),
@@ -967,18 +979,22 @@ export default [
     )
     .setup(async (ctx) => {
       const res = await ctx.resources.http.post("/users", {
-        name: "Alice",
-        email: "alice@example.com",
+        body: {
+          name: "Alice",
+          email: "alice@example.com",
+        },
       });
-      const user = res.data<{ id: number }>();
+      const user = res.json<{ id: number }>();
       return async () => {
         await ctx.resources.http.delete(`/users/${user!.id}`);
       };
     })
     .step("Create user with duplicate email", async (ctx) => {
       const res = await ctx.resources.http.post("/users", {
-        name: "Bob",
-        email: "alice@example.com",
+        body: {
+          name: "Bob",
+          email: "alice@example.com",
+        },
       });
       expect(res).toHaveStatus(409);
     })
@@ -993,8 +1009,10 @@ export default [
     )
     .step("Create user with invalid email", async (ctx) => {
       const res = await ctx.resources.http.post("/users", {
-        name: "Alice",
-        email: "not-an-email",
+        body: {
+          name: "Alice",
+          email: "not-an-email",
+        },
       });
       expect(res).toHaveStatus(400);
     })
@@ -1014,26 +1032,34 @@ export default scenario("User validation", { tags: ["api", "validation"] })
     () => client.http.createHttpClient({ url: "http://localhost:8080" }),
   )
   .step("Reject empty name", async (ctx) => {
-    const res = await ctx.resources.http.post("/users", { name: "" });
+    const res = await ctx.resources.http.post("/users", {
+      body: { name: "" },
+    });
     expect(res).toHaveStatus(400);
   })
   .step("Reject duplicate email", async (ctx) => {
     // Create first user
     await ctx.resources.http.post("/users", {
-      name: "Alice",
-      email: "alice@example.com",
+      body: {
+        name: "Alice",
+        email: "alice@example.com",
+      },
     });
     // Try to create another user with same email
     const res = await ctx.resources.http.post("/users", {
-      name: "Bob",
-      email: "alice@example.com",
+      body: {
+        name: "Bob",
+        email: "alice@example.com",
+      },
     });
     expect(res).toHaveStatus(409);
   })
   .step("Reject invalid email format", async (ctx) => {
     const res = await ctx.resources.http.post("/users", {
-      name: "Alice",
-      email: "not-an-email",
+      body: {
+        name: "Alice",
+        email: "not-an-email",
+      },
     });
     expect(res).toHaveStatus(400);
   })
@@ -1057,20 +1083,22 @@ export default scenario("User CRUD workflow", { tags: ["api", "crud"] })
   )
   .step("Create user", async (ctx) => {
     const res = await ctx.resources.http.post("/users", {
-      name: "Alice",
-      email: "alice@example.com",
+      body: {
+        name: "Alice",
+        email: "alice@example.com",
+      },
     });
     expect(res).toHaveStatus(201);
-    return res.data<{ id: number }>()!;
+    return res.json<{ id: number }>()!;
   })
   .step("Get user", async (ctx) => {
     const res = await ctx.resources.http.get(`/users/${ctx.previous.id}`);
-    expect(res).toHaveStatus(200).toHaveDataMatching({ name: "Alice" });
+    expect(res).toHaveStatus(200).toHaveJsonMatching({ name: "Alice" });
     return ctx.previous;
   })
   .step("Update user", async (ctx) => {
     const res = await ctx.resources.http.patch(`/users/${ctx.previous.id}`, {
-      name: "Alice Smith",
+      body: { name: "Alice Smith" },
     });
     expect(res).toHaveStatus(200);
     return ctx.previous;
@@ -1097,8 +1125,10 @@ export default [
     )
     .step("Create user", async (ctx) => {
       const res = await ctx.resources.http.post("/users", {
-        name: "Alice",
-        email: "alice@example.com",
+        body: {
+          name: "Alice",
+          email: "alice@example.com",
+        },
       });
       expect(res).toHaveStatus(201);
       // Problem: How do we pass the user ID to the next scenario?

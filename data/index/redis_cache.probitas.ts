@@ -11,7 +11,7 @@ export default scenario("Redis Cache Test", {
   .setup((ctx) => {
     const { redis, key } = ctx.resources;
     return async () => {
-      await redis.del(key);
+      await redis.del([key]);
     };
   })
   .step("SET and GET value", async (ctx) => {
@@ -29,6 +29,6 @@ export default scenario("Redis Cache Test", {
     expect(res).toBeOk().toHaveValue(1);
 
     // Cleanup
-    await redis.del("test:counter");
+    await redis.del(["test:counter"]);
   })
   .build();

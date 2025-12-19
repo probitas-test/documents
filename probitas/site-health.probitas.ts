@@ -79,7 +79,7 @@ export default scenario("Probitas docs site health", {
         .toBeOk()
         .toHaveStatus(200)
         .toHaveHeadersPropertyContaining("content-type", "text/html")
-        .toHaveTextContaining( doc.label);
+        .toHaveTextContaining(doc.label);
     }
   })
   .step("provides LLM endpoints", async ({ resources }) => {
@@ -106,7 +106,7 @@ export default scenario("Probitas docs site health", {
         .toBeOk()
         .toHaveStatus(200)
         .toHaveHeadersPropertyContaining("content-type", "application/json")
-        .toHaveDataMatching({ name: pkg.name, specifier: pkg.specifier });
+        .toHaveJsonMatching({ name: pkg.name, specifier: pkg.specifier });
     }
   })
   .step("renders API markdown endpoints", async ({ resources }) => {
@@ -117,7 +117,7 @@ export default scenario("Probitas docs site health", {
         .toBeOk()
         .toHaveStatus(200)
         .toHaveHeadersPropertyContaining("content-type", "text/markdown")
-        .toHaveTextContaining( pkg.specifier);
+        .toHaveTextContaining(pkg.specifier);
     }
   })
   .step("serves static assets", async ({ resources }) => {

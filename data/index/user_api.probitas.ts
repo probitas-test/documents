@@ -33,6 +33,6 @@ export default scenario("User API Integration Test", {
     expect(res)
       .toBeOk()
       .toHaveStatus(200)
-      .toHaveDataMatching({ id: user.id, name: user.name });
+      .toHaveJsonMatching({ id: user.id, name: user.name });
   })
   .build();
