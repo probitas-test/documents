@@ -4,7 +4,7 @@
  * Implements the llms.txt standard: https://llmstxt.org/
  */
 
-import { docPages, siteMetadata } from "../data/docs.ts";
+import { basePath, docPages, siteMetadata } from "../data/docs.ts";
 import { getPackageGroups, loadPackageDoc } from "../data/api-pages.ts";
 
 /**
@@ -47,7 +47,7 @@ export async function generateLlmsTxt(): Promise<string> {
     "## Documentation",
     "",
     ...docPages.map((doc) =>
-      `- [${doc.title}](${doc.path}.md): ${doc.description}`
+      `- [${doc.title}](${basePath}${doc.path}index.md): ${doc.description}`
     ),
     "",
     "## API Reference",
@@ -59,7 +59,9 @@ export async function generateLlmsTxt(): Promise<string> {
     lines.push(`### ${group.name}`, "");
     for (const pkg of group.packages) {
       const desc = await getPackageDescription(pkg.name);
-      lines.push(`- [\`${pkg.specifier}\`](/api/${pkg.name}.md): ${desc}`);
+      lines.push(
+        `- [\`${pkg.specifier}\`](${basePath}/api/${pkg.name}/index.md): ${desc}`,
+      );
     }
     lines.push("");
   }

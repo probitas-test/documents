@@ -18,11 +18,11 @@ documents/
 
 ## Routes
 
-| Path                  | Description              |
-| --------------------- | ------------------------ |
-| `/`                   | Landing page             |
-| `/docs/{page}`        | Documentation pages      |
-| `/api/{package}`      | API reference            |
+| Path             | Description         |
+| ---------------- | ------------------- |
+| `/`              | Landing page        |
+| `/docs/{page}`   | Documentation pages |
+| `/api/{package}` | API reference       |
 
 ## API Generation
 
