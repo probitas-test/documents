@@ -1,8 +1,8 @@
 # Probitas
 
-Probitas is a scenario-based testing framework for Deno. It provides intuitive
-APIs for writing integration tests for APIs, databases, message queues, and
-other backend services.
+Probitas is a scenario-based testing framework. It provides intuitive APIs for
+writing integration tests for APIs, databases, message queues, and other backend
+services.
 
 ## Features
 
@@ -19,7 +19,7 @@ other backend services.
 Install the CLI to run scenarios. Choose your preferred method:
 
 ```bash
-# Shell installer (requires Deno)
+# Shell installer (requires Deno v2.x+)
 curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | bash
 
 # Homebrew (macOS/Linux)
@@ -116,13 +116,12 @@ probitas lint
 probitas check
 ```
 
-These commands run Deno's built-in tools on discovered scenario files. They use
-the same file discovery mechanism as `probitas run`, respecting your `includes`
-and `excludes` configuration.
+These commands use the same file discovery mechanism as `probitas run`,
+respecting your `includes` and `excludes` configuration.
 
 ### fmt
 
-Formats scenario files using `deno fmt`:
+Formats scenario files:
 
 ```bash
 probitas fmt                    # Format all discovered scenarios
@@ -131,8 +130,8 @@ probitas fmt probitas/auth/     # Format specific directory
 
 ### lint
 
-Lints scenario files using `deno lint`. Automatically excludes rules that
-conflict with scenario imports (`no-import-prefix`, `no-unversioned-import`):
+Lints scenario files. Automatically excludes rules that conflict with scenario
+imports (`no-import-prefix`, `no-unversioned-import`):
 
 ```bash
 probitas lint                   # Lint all discovered scenarios
@@ -141,7 +140,7 @@ probitas lint probitas/auth/    # Lint specific directory
 
 ### check
 
-Type-checks scenario files using `deno check`:
+Type-checks scenario files:
 
 ```bash
 probitas check                  # Type-check all discovered scenarios

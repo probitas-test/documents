@@ -2,11 +2,9 @@
 
 This guide covers all methods to install Probitas CLI.
 
-## Requirements
-
-- [Deno](https://deno.land/) v2.x or later
-
 ## Shell Installer
+
+Requires [Deno](https://deno.land/) v2.x or later.
 
 Install the CLI using the shell installer:
 
@@ -38,8 +36,6 @@ brew install probitas
 # Or install directly
 brew install jsr-probitas/tap/probitas
 ```
-
-Deno is installed automatically as a dependency.
 
 ## Nix
 
@@ -85,7 +81,6 @@ Add Probitas to your project's development environment using the overlay:
       in {
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            deno
             probitas
           ];
         };
@@ -107,14 +102,13 @@ cleaner configuration:
 ```nix
 overlays = [ probitas.overlays.default ];
 # ...
-packages = with pkgs; [ deno probitas ];  # probitas is now part of pkgs
+packages = with pkgs; [ probitas ];  # probitas is now part of pkgs
 ```
 
 Benefits:
 
 - **Unified namespace**: Access `probitas` like any nixpkgs package
 - **Composable**: Combine with other overlays seamlessly
-- **Consistent Deno**: Uses your project's nixpkgs Deno version automatically
 
 ### Why Use inputs.follows?
 
@@ -130,7 +124,6 @@ Benefits:
 
 - **Single nixpkgs version**: All dependencies share one nixpkgs, reducing
   closure size
-- **Consistent tooling**: Deno version matches across your project
 - **Faster evaluation**: Fewer inputs to fetch and evaluate
 
 ### Pin a Specific Version
@@ -157,7 +150,7 @@ The Probitas CLI flake provides:
 | `packages.${system}.default`  | The `probitas` CLI package        |
 | `packages.${system}.probitas` | Alias for the CLI package         |
 | `apps.${system}.default`      | App for `nix run`                 |
-| `devShells.${system}.default` | Development shell with Deno       |
+| `devShells.${system}.default` | Development shell                 |
 
 ## Verify Installation
 
