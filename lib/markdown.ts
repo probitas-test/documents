@@ -184,13 +184,28 @@ export function extractTitle(content: string): string | undefined {
  * Transforms [text](/path) to [text](/basePath/path) for internal links.
  */
 export function rewriteMarkdownLinks(content: string): string {
-  if (!basePath) return content;
-
   // Match markdown links: [text](url) or [text](url "title")
   // Only rewrite internal links starting with /
   return content.replace(
-    /\[([^\]]*)\]\((\/)([^)"'\s]*)((?:\s+"[^"]*")?\))/g,
-    (_, text, _slash, path, rest) => `[${text}](${basePath}/${path}${rest}`,
+    /\[([^\]]*)\]\((\/[^)"'\s]*)(\s+"[^"]*")?\)/g,
+    (_, text, href, title) => {
+      if (href.startsWith("//")) {
+        const titlePart = title ?? "";
+        return `[${text}](${href}${titlePart})`;
+      }
+
+      const [path, fragment] = href.split("#");
+      const normalizedPath = path.endsWith("/") ? `${path}index.md` : path;
+      let nextHref = fragment
+        ? `${normalizedPath}#${fragment}`
+        : normalizedPath;
+      if (basePath) {
+        nextHref = `${basePath}${nextHref}`;
+      }
+
+      const titlePart = title ?? "";
+      return `[${text}](${nextHref}${titlePart})`;
+    },
   );
 }
 
