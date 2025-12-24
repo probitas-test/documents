@@ -183,7 +183,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     await ensureHljs();
     if (window.hljs) {
-      hljs.highlightAll();
+      // Highlight all code blocks, including those in hidden carousel slides
+      document.querySelectorAll('pre code').forEach(block => {
+        hljs.highlightElement(block);
+      });
     }
   } catch (err) {
     console.warn('Failed to load highlight.js', err);
