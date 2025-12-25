@@ -9,7 +9,7 @@ Requires [Deno](https://deno.land/) v2.x or later.
 Install the CLI using the shell installer:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/probitas-test/cli/main/install.sh | bash
 ```
 
 ### Options
@@ -18,10 +18,10 @@ Configure installation via environment variables:
 
 ```bash
 # Install specific version
-curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | PROBITAS_VERSION=0.7.3 bash
+curl -fsSL https://raw.githubusercontent.com/probitas-test/cli/main/install.sh | PROBITAS_VERSION=0.7.3 bash
 
 # Install to custom directory
-curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | PROBITAS_INSTALL_DIR=/usr/local/bin bash
+curl -fsSL https://raw.githubusercontent.com/probitas-test/cli/main/install.sh | PROBITAS_INSTALL_DIR=/usr/local/bin bash
 ```
 
 ## Homebrew (macOS/Linux)
@@ -30,11 +30,11 @@ Install via the official Homebrew tap:
 
 ```bash
 # Add the tap and install
-brew tap jsr-probitas/tap
+brew tap probitas-test/tap
 brew install probitas
 
 # Or install directly
-brew install jsr-probitas/tap/probitas
+brew install probitas-test/tap/probitas
 ```
 
 ## Nix
@@ -46,7 +46,7 @@ The Probitas CLI provides a Nix flake with multiple usage patterns.
 Execute `probitas` directly without installing:
 
 ```bash
-nix run github:jsr-probitas/cli
+nix run github:probitas-test/cli
 ```
 
 ### Install to Profile
@@ -54,7 +54,7 @@ nix run github:jsr-probitas/cli
 Install into your Nix profile for persistent access:
 
 ```bash
-nix profile install github:jsr-probitas/cli
+nix profile install github:probitas-test/cli
 ```
 
 ### Add to Project's flake.nix
@@ -66,7 +66,7 @@ Add Probitas to your project's development environment using the overlay:
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    probitas.url = "github:jsr-probitas/cli";
+    probitas.url = "github:probitas-test/cli";
     probitas.inputs.nixpkgs.follows = "nixpkgs";
     probitas.inputs.flake-utils.follows = "flake-utils";
   };
@@ -131,13 +131,13 @@ Benefits:
 Lock to a specific CLI version using a commit hash or tag:
 
 ```nix
-probitas.url = "github:jsr-probitas/cli/v0.7.3";
+probitas.url = "github:probitas-test/cli/v0.7.3";
 ```
 
 Or using a commit:
 
 ```nix
-probitas.url = "github:jsr-probitas/cli/abc1234";
+probitas.url = "github:probitas-test/cli/abc1234";
 ```
 
 ### Flake Outputs Reference

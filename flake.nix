@@ -1,10 +1,10 @@
 {
-  description = "Development environment for jsr-probitas/documents";
+  description = "Development environment for probitas-test/documents";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    probitas.url = "github:jsr-probitas/cli";
+    probitas.url = "github:probitas-test/cli";
     probitas.inputs.nixpkgs.follows = "nixpkgs";
     probitas.inputs.flake-utils.follows = "flake-utils";
   };

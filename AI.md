@@ -7,8 +7,8 @@ How to let AI assistants write and run Probitas scenario tests.
 Install the official marketplace and Probitas plugin:
 
 ```bash
-/plugin marketplace add jsr-probitas/claude-plugins
-/plugin install probitas@jsr-probitas
+/plugin marketplace add probitas-test/claude-plugins
+/plugin install probitas@probitas-test
 ```
 
 Enable it in `.claude/settings.json`:
@@ -16,11 +16,11 @@ Enable it in `.claude/settings.json`:
 ```json
 {
   "plugins": {
-    "marketplaces": ["jsr-probitas/claude-plugins"],
-    "installed": ["probitas@jsr-probitas"]
+    "marketplaces": ["probitas-test/claude-plugins"],
+    "installed": ["probitas@probitas-test"]
   },
   "enabledPlugins": {
-    "probitas@jsr-probitas": true
+    "probitas@probitas-test": true
   }
 }
 ```
@@ -81,6 +81,6 @@ Local probitas CLI tasks:
 
 ## Links
 
-- Claude plugin marketplace: https://github.com/jsr-probitas/claude-plugins
+- Claude plugin marketplace: https://github.com/probitas-test/claude-plugins
 - Probitas plugin docs:
-  https://github.com/jsr-probitas/claude-plugins/tree/main/plugins/probitas
+  https://github.com/probitas-test/claude-plugins/tree/main/plugins/probitas

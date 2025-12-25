@@ -1,6 +1,6 @@
 # Probitas Documentation
 
-[![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://jsr-probitas.github.io/documents)
+[![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://probitas-test.github.io/documents)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 Documentation site for [Probitas](https://jsr.io/@probitas/probitas) - a
@@ -17,7 +17,7 @@ scenario-based testing framework for Deno.
 
 ```bash
 # Clone the repository
-git clone https://github.com/jsr-probitas/documents.git
+git clone https://github.com/probitas-test/documents.git
 cd documents
 
 # Start development server
@@ -138,7 +138,7 @@ This site is deployed to **GitHub Pages** via GitHub Actions.
 2. GitHub Actions runs `deno task build`
 3. Static files in `dist/` are deployed to GitHub Pages
 
-Live site: https://jsr-probitas.github.io/documents
+Live site: https://probitas-test.github.io/documents
 
 ## License
 

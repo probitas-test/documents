@@ -199,7 +199,7 @@ function AiFriendlySection() {
             authoring.
           </p>
           <a
-            href="https://github.com/jsr-probitas/claude-plugins"
+            href="https://github.com/probitas-test/claude-plugins"
             class="ai-friendly-link"
             target="_blank"
             rel="noopener"

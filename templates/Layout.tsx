@@ -5,7 +5,7 @@ import type { Child } from "hono/jsx";
 import { basePath, docPages, siteMetadata } from "../data/docs.ts";
 import { mainScript, themeInitScript } from "./scripts.ts";
 
-const GITHUB_URL = "https://github.com/jsr-probitas/probitas";
+const GITHUB_URL = "https://github.com/probitas-test/probitas";
 
 const CDN = {
   fonts:

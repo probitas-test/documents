@@ -20,13 +20,13 @@ Install the CLI to run scenarios. Choose your preferred method:
 
 ```bash
 # Shell installer (requires Deno v2.x+)
-curl -fsSL https://raw.githubusercontent.com/jsr-probitas/cli/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/probitas-test/cli/main/install.sh | bash
 
 # Homebrew (macOS/Linux)
-brew install jsr-probitas/tap/probitas
+brew install probitas-test/tap/probitas
 
 # Nix
-nix run github:jsr-probitas/cli
+nix run github:probitas-test/cli
 ```
 
 See [Installation Guide](/docs/installation/) for detailed options including Nix
