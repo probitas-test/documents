@@ -1,17 +1,17 @@
 {
   "name": "builder",
   "specifier": "@probitas/builder",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "moduleDoc": "Builder module for creating scenario definitions with a fluent, type-safe API.\n\nThis package provides the {@linkcode scenario} fn function that returns a builder\nfor constructing scenario definitions. The builder uses method chaining to define\nresources, setup functions, and test steps with full TypeScript type inference.\n\n## Links\n\n- [GitHub Repository](https://github.com/probitas-test/probitas)\n- [@probitas/probitas](https://jsr.io/@probitas/probitas) - Main package (recommended for most users)\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [@probitas/core](https://jsr.io/@probitas/core) | Core type definitions used by this builder |\n| [@probitas/runner](https://jsr.io/@probitas/runner) | Executes scenarios built with this package |\n\n## Key Features\n\n- **Fluent API**: Chain methods naturally to build complex scenarios\n- **Type-safe context**: Each step receives typed access to previous step results\n- **Resource management**: Register resources with automatic lifecycle handling\n- **Setup/Cleanup**: Define setup functions with automatic cleanup support\n- **Configurable defaults**: Override timeout and retry settings at any level\n\n## Core Exports\n\n- {@linkcode scenario} - Factory function to create a new scenario builder\n- {@linkcode StepContext} - Type representing the context passed to step functions\n- {@linkcode StepFunction} - Type signature for step functions\n- {@linkcode SetupFunction} - Type signature for setup functions\n- {@linkcode ResourceFunction} - Type signature for resource fn functions\n- {@linkcode BuilderScenarioOptions} - Partial options for scenario configuration\n- {@linkcode BuilderStepOptions} - Partial options for step configuration\n- {@linkcode DEFAULT_SCENARIO_OPTIONS} - Default values for scenario options\n- {@linkcode DEFAULT_STEP_OPTIONS} - Default values for step options\n",
   "exports": [
     {
       "name": "scenario",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/builder/0.4.4/scenario_builder.ts",
+        "filename": "https://jsr.io/@probitas/builder/0.5.0/scenario_builder.ts",
         "line": 644,
         "col": 0,
-        "byteIndex": 20517
+        "byteIndex": 20505
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -102,10 +102,10 @@
       "name": "BuilderStepContext",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/builder/0.4.4/types.ts",
+        "filename": "https://jsr.io/@probitas/builder/0.5.0/types.ts",
         "line": 44,
         "col": 0,
-        "byteIndex": 1337
+        "byteIndex": 1333
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -163,10 +163,10 @@
                       "doc": "Result from the previous step.\n\nFully typed based on what the previous step returned.\nFor the first step, this is `unknown`."
                     },
                     "location": {
-                      "filename": "https://jsr.io/@probitas/builder/0.4.4/types.ts",
+                      "filename": "https://jsr.io/@probitas/builder/0.5.0/types.ts",
                       "line": 55,
                       "col": 2,
-                      "byteIndex": 1678
+                      "byteIndex": 1674
                     },
                     "params": [],
                     "readonly": true,
@@ -188,10 +188,10 @@
                       "doc": "All accumulated results as a typed tuple.\n\nAllows accessing any previous result by index:\n- `ctx.results[0]` - First step's result\n- `ctx.results[1]` - Second step's result"
                     },
                     "location": {
-                      "filename": "https://jsr.io/@probitas/builder/0.4.4/types.ts",
+                      "filename": "https://jsr.io/@probitas/builder/0.5.0/types.ts",
                       "line": 64,
                       "col": 2,
-                      "byteIndex": 1912
+                      "byteIndex": 1908
                     },
                     "params": [],
                     "readonly": true,
@@ -213,10 +213,10 @@
                       "doc": "Named resources registered with `.resource()`.\n\nResources are typed based on their registration:\n```ts\nimport { scenario } from \"@probitas/builder\";\n\n// Mock database connection for example\nconst createDbConnection = () => ({ query: (_sql: string) => [{ id: 1 }] });\n\nscenario(\"test\")\n  .resource(\"db\", () => createDbConnection())\n  .step((ctx) => ctx.resources.db.query(\"SELECT 1\"))\n  .build();\n```"
                     },
                     "location": {
-                      "filename": "https://jsr.io/@probitas/builder/0.4.4/types.ts",
+                      "filename": "https://jsr.io/@probitas/builder/0.5.0/types.ts",
                       "line": 82,
                       "col": 2,
-                      "byteIndex": 2415
+                      "byteIndex": 2411
                     },
                     "params": [],
                     "readonly": true,
@@ -331,10 +331,10 @@
       "name": "BuilderStepFunction",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/builder/0.4.4/types.ts",
+        "filename": "https://jsr.io/@probitas/builder/0.5.0/types.ts",
         "line": 117,
         "col": 0,
-        "byteIndex": 3428
+        "byteIndex": 3424
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -551,10 +551,10 @@
       "name": "BuilderStepDefinition",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/builder/0.4.4/types.ts",
+        "filename": "https://jsr.io/@probitas/builder/0.5.0/types.ts",
         "line": 139,
         "col": 0,
-        "byteIndex": 4203
+        "byteIndex": 4199
       },
       "declarationKind": "export",
       "jsDoc": {
@@ -613,10 +613,10 @@
                       "doc": "Step function to execute"
                     },
                     "location": {
-                      "filename": "https://jsr.io/@probitas/builder/0.4.4/types.ts",
+                      "filename": "https://jsr.io/@probitas/builder/0.5.0/types.ts",
                       "line": 146,
                       "col": 2,
-                      "byteIndex": 4443
+                      "byteIndex": 4439
                     },
                     "params": [],
                     "readonly": true,

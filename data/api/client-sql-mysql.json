@@ -1,14 +1,14 @@
 {
   "name": "client-sql-mysql",
   "specifier": "@probitas/client-sql-mysql",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "moduleDoc": "MySQL client for [Probitas](https://github.com/probitas-test/probitas) scenario testing framework.\n\nThis package provides a MySQL client designed for integration testing,\nwith transaction support and prepared statement capabilities.\n\n## Features\n\n- **Query Execution**: Parameterized queries with type-safe results\n- **Transactions**: Full transaction support with isolation levels\n- **Prepared Statements**: Automatic parameter escaping and type conversion\n- **Connection Pooling**: Configurable pool with idle timeout\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-sql-mysql\n```\n\n## Quick Start\n\n```ts\nimport { createMySqlClient } from \"@probitas/client-sql-mysql\";\n\nconst client = await createMySqlClient({\n  url: {\n    host: \"localhost\",\n    port: 3306,\n    username: \"root\",\n    password: \"secret\",\n    database: \"mydb\",\n  },\n});\n\n// Query with parameters (uses ? placeholders)\nconst result = await client.query<{ id: number; name: string }>(\n  \"SELECT id, name FROM users WHERE active = ?\",\n  [true]\n);\nconsole.log(result.rows);\n\n// Get first row\nconst user = await client.queryOne<{ id: number; name: string }>(\n  \"SELECT * FROM users WHERE id = ?\",\n  [1]\n);\n\nawait client.close();\n```\n\n## Transactions\n\n```ts\nimport { createMySqlClient } from \"@probitas/client-sql-mysql\";\nimport type { SqlTransaction } from \"@probitas/client-sql\";\n\nconst client = await createMySqlClient({ url: \"mysql://localhost:3306/testdb\" });\nawait client.transaction(async (tx: SqlTransaction) => {\n  await tx.query(\"INSERT INTO accounts (id, balance) VALUES (?, ?)\", [1, 100]);\n  await tx.query(\"INSERT INTO accounts (id, balance) VALUES (?, ?)\", [2, 200]);\n  // Automatically committed if no error, rolled back on exception\n}, { isolationLevel: \"serializable\" });\nawait client.close();\n```\n\n## Using with `using` Statement\n\n```ts\nimport { createMySqlClient } from \"@probitas/client-sql-mysql\";\n\nawait using client = await createMySqlClient({\n  url: { host: \"localhost\", username: \"root\", database: \"testdb\" },\n});\n\nconst result = await client.query(\"SELECT 1 as n\");\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client-sql`](https://jsr.io/@probitas/client-sql) | Common SQL types and utilities |\n| [`@probitas/client-sql-postgres`](https://jsr.io/@probitas/client-sql-postgres) | PostgreSQL client |\n| [`@probitas/client-sql-sqlite`](https://jsr.io/@probitas/client-sql-sqlite) | SQLite client |\n| [`@probitas/client-sql-duckdb`](https://jsr.io/@probitas/client-sql-duckdb) | DuckDB client |\n\n## Links\n\n- [GitHub Repository](https://github.com/probitas-test/probitas-client)\n- [Probitas Framework](https://github.com/probitas-test/probitas)\n- [MySQL](https://www.mysql.com/)\n",
   "exports": [
     {
       "name": "MySqlClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
         "line": 23,
         "col": 0,
         "byteIndex": 699
@@ -55,7 +55,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 1100
@@ -175,7 +175,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
               "line": 50,
               "col": 2,
               "byteIndex": 1477
@@ -292,7 +292,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
               "line": 62,
               "col": 2,
               "byteIndex": 1834
@@ -388,7 +388,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
               "line": 70,
               "col": 2,
               "byteIndex": 2014
@@ -419,7 +419,7 @@
               "doc": "The client configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
               "line": 25,
               "col": 2,
               "byteIndex": 791
@@ -444,7 +444,7 @@
               "doc": "The SQL dialect identifier."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
               "line": 28,
               "col": 2,
               "byteIndex": 867
@@ -473,7 +473,7 @@
       "name": "createMySqlClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/client.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/client.ts",
         "line": 193,
         "col": 0,
         "byteIndex": 5524
@@ -553,7 +553,7 @@
       "name": "MySqlTransaction",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
         "line": 19,
         "col": 0,
         "byteIndex": 489
@@ -590,7 +590,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 24,
               "col": 2,
               "byteIndex": 621
@@ -638,7 +638,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 30,
               "col": 2,
               "byteIndex": 740
@@ -686,7 +686,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 36,
               "col": 2,
               "byteIndex": 865
@@ -731,7 +731,7 @@
       "name": "MySqlTransactionImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
         "line": 49,
         "col": 0,
         "byteIndex": 1220
@@ -761,7 +761,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 53,
               "col": 2,
               "byteIndex": 1351
@@ -833,7 +833,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 60,
               "col": 2,
               "byteIndex": 1488
@@ -941,7 +941,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 81,
               "col": 2,
               "byteIndex": 2162
@@ -1051,7 +1051,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 145,
               "col": 2,
               "byteIndex": 4127
@@ -1086,7 +1086,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 162,
               "col": 2,
               "byteIndex": 4592
@@ -1121,7 +1121,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 177,
               "col": 2,
               "byteIndex": 4935
@@ -1167,7 +1167,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 192,
               "col": 2,
               "byteIndex": 5282
@@ -1213,7 +1213,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 205,
               "col": 2,
               "byteIndex": 5683
@@ -1259,7 +1259,7 @@
               "typeParams": []
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/transaction.ts",
               "line": 220,
               "col": 2,
               "byteIndex": 6125
@@ -1285,7 +1285,7 @@
       "name": "MySqlTlsConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 143
@@ -1306,7 +1306,7 @@
               "doc": "Root CA certificate (PEM format)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 8,
               "col": 2,
               "byteIndex": 222
@@ -1328,7 +1328,7 @@
               "doc": "Client certificate (PEM format)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 10,
               "col": 2,
               "byteIndex": 288
@@ -1350,7 +1350,7 @@
               "doc": "Client private key (PEM format)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 12,
               "col": 2,
               "byteIndex": 356
@@ -1372,7 +1372,7 @@
               "doc": "Skip server certificate verification (use only for testing)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 14,
               "col": 2,
               "byteIndex": 451
@@ -1398,7 +1398,7 @@
       "name": "MySqlPoolConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
         "line": 20,
         "col": 0,
         "byteIndex": 535
@@ -1425,7 +1425,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 25,
               "col": 2,
               "byteIndex": 649
@@ -1453,7 +1453,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 31,
               "col": 2,
               "byteIndex": 756
@@ -1481,7 +1481,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 897
@@ -1509,7 +1509,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 1019
@@ -1537,7 +1537,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 49,
               "col": 2,
               "byteIndex": 1157
@@ -1563,7 +1563,7 @@
       "name": "MySqlConnectionConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
         "line": 57,
         "col": 0,
         "byteIndex": 1300
@@ -1593,7 +1593,7 @@
               "doc": "Database name to connect to."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 61,
               "col": 2,
               "byteIndex": 1420
@@ -1615,7 +1615,7 @@
               "doc": "TLS configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 66,
               "col": 2,
               "byteIndex": 1487
@@ -1640,7 +1640,7 @@
               "doc": "Character set."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 71,
               "col": 2,
               "byteIndex": 1553
@@ -1666,7 +1666,7 @@
       "name": "MySqlClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
         "line": 77,
         "col": 0,
         "byteIndex": 1637
@@ -1696,7 +1696,7 @@
               "doc": "Connection URL or configuration.\n\nCan be a connection URL string (e.g., \"mysql://user:pass@host:port/database\")\nor a detailed MySqlConnectionConfig object."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 84,
               "col": 2,
               "byteIndex": 1885
@@ -1732,7 +1732,7 @@
               "doc": "Connection pool configuration."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 87,
               "col": 2,
               "byteIndex": 1974
@@ -1757,7 +1757,7 @@
               "doc": "Timezone for the connection."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 90,
               "col": 2,
               "byteIndex": 2048
@@ -1785,7 +1785,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/types.ts",
               "line": 98,
               "col": 2,
               "byteIndex": 2304
@@ -1811,7 +1811,7 @@
       "name": "MySqlErrorKind",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
         "line": 13,
         "col": 0,
         "byteIndex": 201
@@ -1851,7 +1851,7 @@
       "name": "MySqlErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
         "line": 18,
         "col": 0,
         "byteIndex": 318
@@ -1881,7 +1881,7 @@
               "doc": "MySQL error code (e.g., 1045, 1062)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 20,
               "col": 2,
               "byteIndex": 427
@@ -1907,7 +1907,7 @@
       "name": "MySqlError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
         "line": 27,
         "col": 0,
         "byteIndex": 573
@@ -1950,7 +1950,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 31,
               "col": 2,
               "byteIndex": 695
@@ -1972,7 +1972,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 28,
               "col": 2,
               "byteIndex": 618
@@ -1991,7 +1991,7 @@
             "isStatic": false,
             "name": "errno",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 29,
               "col": 2,
               "byteIndex": 667
@@ -2010,7 +2010,7 @@
       "name": "AccessDeniedError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
         "line": 43,
         "col": 0,
         "byteIndex": 915
@@ -2053,7 +2053,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 47,
               "col": 2,
               "byteIndex": 1067
@@ -2075,7 +2075,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 44,
               "col": 2,
               "byteIndex": 969
@@ -2097,7 +2097,7 @@
             "isStatic": false,
             "name": "mysqlKind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1017
@@ -2116,7 +2116,7 @@
       "name": "ConnectionRefusedError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
         "line": 55,
         "col": 0,
         "byteIndex": 1215
@@ -2159,7 +2159,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 59,
               "col": 2,
               "byteIndex": 1382
@@ -2181,7 +2181,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 56,
               "col": 2,
               "byteIndex": 1274
@@ -2203,7 +2203,7 @@
             "isStatic": false,
             "name": "mysqlKind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
               "line": 57,
               "col": 2,
               "byteIndex": 1327
@@ -2222,7 +2222,7 @@
       "name": "isConnectionError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
         "line": 83,
         "col": 0,
         "byteIndex": 2146
@@ -2260,7 +2260,7 @@
       "name": "convertMySqlError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql-mysql/0.5.0/errors.ts",
         "line": 138,
         "col": 0,
         "byteIndex": 3349
@@ -2301,7 +2301,7 @@
       "name": "SqlQueryOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
         "line": 7,
         "col": 0,
         "byteIndex": 161
@@ -2337,7 +2337,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
               "line": 13,
               "col": 2,
               "byteIndex": 439
@@ -2363,7 +2363,7 @@
       "name": "SqlIsolationLevel",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
         "line": 19,
         "col": 0,
         "byteIndex": 515
@@ -2419,7 +2419,7 @@
       "name": "SqlTransactionOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
         "line": 28,
         "col": 0,
         "byteIndex": 681
@@ -2440,7 +2440,7 @@
               "doc": "Isolation level for the transaction"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
               "line": 30,
               "col": 2,
               "byteIndex": 769
@@ -2469,7 +2469,7 @@
       "name": "SqlTransaction",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
         "line": 37,
         "col": 0,
         "byteIndex": 936
@@ -2507,7 +2507,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1194
@@ -2627,7 +2627,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
               "line": 58,
               "col": 2,
               "byteIndex": 1571
@@ -2732,7 +2732,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
               "line": 67,
               "col": 2,
               "byteIndex": 1751
@@ -2762,7 +2762,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/transaction.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/transaction.ts",
               "line": 72,
               "col": 2,
               "byteIndex": 1822
@@ -2796,7 +2796,7 @@
       "name": "SqlErrorKind",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 119
@@ -2860,7 +2860,7 @@
       "name": "SqlErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 16,
         "col": 0,
         "byteIndex": 268
@@ -2890,7 +2890,7 @@
               "doc": "SQL State code (e.g., \"23505\" for unique violation)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 18,
               "col": 2,
               "byteIndex": 387
@@ -2916,7 +2916,7 @@
       "name": "SqlError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 25,
         "col": 0,
         "byteIndex": 524
@@ -2972,7 +2972,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 30,
               "col": 2,
               "byteIndex": 694
@@ -2994,7 +2994,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 26,
               "col": 2,
               "byteIndex": 570
@@ -3017,7 +3017,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 27,
               "col": 2,
               "byteIndex": 617
@@ -3047,7 +3047,7 @@
             "isStatic": false,
             "name": "sqlState",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 28,
               "col": 2,
               "byteIndex": 657
@@ -3066,7 +3066,7 @@
       "name": "QuerySyntaxError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 44,
         "col": 0,
         "byteIndex": 960
@@ -3109,7 +3109,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 48,
               "col": 2,
               "byteIndex": 1104
@@ -3131,7 +3131,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1011
@@ -3154,7 +3154,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 46,
               "col": 2,
               "byteIndex": 1058
@@ -3173,7 +3173,7 @@
       "name": "ConstraintError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 56,
         "col": 0,
         "byteIndex": 1267
@@ -3226,7 +3226,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 61,
               "col": 2,
               "byteIndex": 1445
@@ -3248,7 +3248,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 57,
               "col": 2,
               "byteIndex": 1317
@@ -3271,7 +3271,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 58,
               "col": 2,
               "byteIndex": 1363
@@ -3290,7 +3290,7 @@
             "isStatic": false,
             "name": "constraint",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 59,
               "col": 2,
               "byteIndex": 1413
@@ -3309,7 +3309,7 @@
       "name": "DeadlockError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 70,
         "col": 0,
         "byteIndex": 1660
@@ -3352,7 +3352,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 74,
               "col": 2,
               "byteIndex": 1801
@@ -3374,7 +3374,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 71,
               "col": 2,
               "byteIndex": 1708
@@ -3397,7 +3397,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 72,
               "col": 2,
               "byteIndex": 1752
@@ -3416,7 +3416,7 @@
       "name": "SqlConnectionError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 90,
         "col": 0,
         "byteIndex": 2174
@@ -3459,7 +3459,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 94,
               "col": 2,
               "byteIndex": 2327
@@ -3481,7 +3481,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 91,
               "col": 2,
               "byteIndex": 2227
@@ -3504,7 +3504,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
               "line": 92,
               "col": 2,
               "byteIndex": 2276
@@ -3523,7 +3523,7 @@
       "name": "SqlOperationError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 103,
         "col": 0,
         "byteIndex": 2576
@@ -3579,7 +3579,7 @@
       "name": "SqlFailureError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/errors.ts",
         "line": 113,
         "col": 0,
         "byteIndex": 2824
@@ -3627,7 +3627,7 @@
       "name": "SqlQueryResultSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 44,
         "col": 0,
         "byteIndex": 1225
@@ -3666,7 +3666,7 @@
               "doc": "Server processed the query."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 46,
               "col": 2,
               "byteIndex": 1344
@@ -3691,7 +3691,7 @@
               "doc": "Query succeeded."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 49,
               "col": 2,
               "byteIndex": 1399
@@ -3716,7 +3716,7 @@
               "doc": "No error for successful queries."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1463
@@ -3738,7 +3738,7 @@
               "doc": "Query result rows."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1516
@@ -3774,7 +3774,7 @@
               "doc": "Number of affected rows."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 58,
               "col": 2,
               "byteIndex": 1582
@@ -3796,7 +3796,7 @@
               "doc": "Last inserted ID (for INSERT statements)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 61,
               "col": 2,
               "byteIndex": 1663
@@ -3834,7 +3834,7 @@
               "doc": "Warning messages from the database."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1758
@@ -3895,7 +3895,7 @@
       "name": "SqlQueryResultError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 73,
         "col": 0,
         "byteIndex": 2016
@@ -3934,7 +3934,7 @@
               "doc": "Server processed the query."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 75,
               "col": 2,
               "byteIndex": 2133
@@ -3959,7 +3959,7 @@
               "doc": "Query failed."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 78,
               "col": 2,
               "byteIndex": 2185
@@ -3984,7 +3984,7 @@
               "doc": "Error describing the SQL error."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 81,
               "col": 2,
               "byteIndex": 2249
@@ -4009,7 +4009,7 @@
               "doc": "Empty rows for failed queries."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 84,
               "col": 2,
               "byteIndex": 2318
@@ -4042,7 +4042,7 @@
               "doc": "Zero affected rows for failed queries."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 87,
               "col": 2,
               "byteIndex": 2402
@@ -4067,7 +4067,7 @@
               "doc": "No lastInsertId for failed queries."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 90,
               "col": 2,
               "byteIndex": 2472
@@ -4089,7 +4089,7 @@
               "doc": "No warnings for failed queries."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 2545
@@ -4124,7 +4124,7 @@
       "name": "SqlQueryResultFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 103,
         "col": 0,
         "byteIndex": 2824
@@ -4163,7 +4163,7 @@
               "doc": "Server did not process the query."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 105,
               "col": 2,
               "byteIndex": 2949
@@ -4188,7 +4188,7 @@
               "doc": "Query failed."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 108,
               "col": 2,
               "byteIndex": 3002
@@ -4213,7 +4213,7 @@
               "doc": "Error describing the failure."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 111,
               "col": 2,
               "byteIndex": 3064
@@ -4238,7 +4238,7 @@
               "doc": "No rows (query didn't reach server)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 114,
               "col": 2,
               "byteIndex": 3146
@@ -4260,7 +4260,7 @@
               "doc": "No row count (query didn't reach server)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 117,
               "col": 2,
               "byteIndex": 3221
@@ -4282,7 +4282,7 @@
               "doc": "No lastInsertId (query didn't reach server)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 120,
               "col": 2,
               "byteIndex": 3303
@@ -4304,7 +4304,7 @@
               "doc": "No warnings (query didn't reach server)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 123,
               "col": 2,
               "byteIndex": 3385
@@ -4339,7 +4339,7 @@
       "name": "SqlQueryResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 164,
         "col": 0,
         "byteIndex": 4775
@@ -4433,7 +4433,7 @@
       "name": "SqlQueryResultSuccessParams",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 173,
         "col": 0,
         "byteIndex": 4996
@@ -4454,7 +4454,7 @@
               "doc": "The result rows"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 175,
               "col": 2,
               "byteIndex": 5079
@@ -4490,7 +4490,7 @@
               "doc": "Number of affected rows (for INSERT/UPDATE/DELETE)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 178,
               "col": 2,
               "byteIndex": 5171
@@ -4512,7 +4512,7 @@
               "doc": "Query execution duration in milliseconds"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 181,
               "col": 2,
               "byteIndex": 5251
@@ -4534,7 +4534,7 @@
               "doc": "Last inserted ID (for INSERT statements)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 184,
               "col": 2,
               "byteIndex": 5331
@@ -4567,7 +4567,7 @@
               "doc": "Warning messages from the database"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 187,
               "col": 2,
               "byteIndex": 5419
@@ -4613,7 +4613,7 @@
       "name": "SqlQueryResultSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 194,
         "col": 0,
         "byteIndex": 5526
@@ -4660,7 +4660,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 205,
               "col": 2,
               "byteIndex": 5924
@@ -4684,7 +4684,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 195,
               "col": 2,
               "byteIndex": 5608
@@ -4706,7 +4706,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 196,
               "col": 2,
               "byteIndex": 5642
@@ -4728,7 +4728,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 197,
               "col": 2,
               "byteIndex": 5680
@@ -4747,7 +4747,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 198,
               "col": 2,
               "byteIndex": 5711
@@ -4780,7 +4780,7 @@
             "isStatic": false,
             "name": "rows",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 199,
               "col": 2,
               "byteIndex": 5736
@@ -4799,7 +4799,7 @@
             "isStatic": false,
             "name": "rowCount",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 200,
               "col": 2,
               "byteIndex": 5767
@@ -4818,7 +4818,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 201,
               "col": 2,
               "byteIndex": 5796
@@ -4853,7 +4853,7 @@
             "isStatic": false,
             "name": "lastInsertId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 202,
               "col": 2,
               "byteIndex": 5825
@@ -4898,7 +4898,7 @@
             "isStatic": false,
             "name": "warnings",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 203,
               "col": 2,
               "byteIndex": 5874
@@ -4975,7 +4975,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 213,
               "col": 2,
               "byteIndex": 6186
@@ -5049,7 +5049,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 221,
               "col": 2,
               "byteIndex": 6350
@@ -5088,7 +5088,7 @@
       "name": "SqlQueryResultErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 234,
         "col": 0,
         "byteIndex": 6580
@@ -5136,7 +5136,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 245,
               "col": 2,
               "byteIndex": 6954
@@ -5160,7 +5160,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 235,
               "col": 2,
               "byteIndex": 6658
@@ -5182,7 +5182,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 236,
               "col": 2,
               "byteIndex": 6692
@@ -5204,7 +5204,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 237,
               "col": 2,
               "byteIndex": 6730
@@ -5226,7 +5226,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 238,
               "col": 2,
               "byteIndex": 6762
@@ -5256,7 +5256,7 @@
             "isStatic": false,
             "name": "rows",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 239,
               "col": 2,
               "byteIndex": 6790
@@ -5278,7 +5278,7 @@
             "isStatic": false,
             "name": "rowCount",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 240,
               "col": 2,
               "byteIndex": 6830
@@ -5297,7 +5297,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 241,
               "col": 2,
               "byteIndex": 6864
@@ -5316,7 +5316,7 @@
             "isStatic": false,
             "name": "lastInsertId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 242,
               "col": 2,
               "byteIndex": 6893
@@ -5335,7 +5335,7 @@
             "isStatic": false,
             "name": "warnings",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 243,
               "col": 2,
               "byteIndex": 6925
@@ -5412,7 +5412,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 250,
               "col": 2,
               "byteIndex": 7064
@@ -5486,7 +5486,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 254,
               "col": 2,
               "byteIndex": 7124
@@ -5525,7 +5525,7 @@
       "name": "SqlQueryResultFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
         "line": 263,
         "col": 0,
         "byteIndex": 7250
@@ -5573,7 +5573,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 274,
               "col": 2,
               "byteIndex": 7614
@@ -5597,7 +5597,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 264,
               "col": 2,
               "byteIndex": 7332
@@ -5619,7 +5619,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 265,
               "col": 2,
               "byteIndex": 7366
@@ -5641,7 +5641,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 266,
               "col": 2,
               "byteIndex": 7405
@@ -5663,7 +5663,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 267,
               "col": 2,
               "byteIndex": 7437
@@ -5682,7 +5682,7 @@
             "isStatic": false,
             "name": "rows",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 268,
               "col": 2,
               "byteIndex": 7472
@@ -5701,7 +5701,7 @@
             "isStatic": false,
             "name": "rowCount",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 269,
               "col": 2,
               "byteIndex": 7496
@@ -5720,7 +5720,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 270,
               "col": 2,
               "byteIndex": 7524
@@ -5739,7 +5739,7 @@
             "isStatic": false,
             "name": "lastInsertId",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 271,
               "col": 2,
               "byteIndex": 7553
@@ -5758,7 +5758,7 @@
             "isStatic": false,
             "name": "warnings",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 272,
               "col": 2,
               "byteIndex": 7585
@@ -5835,7 +5835,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 279,
               "col": 2,
               "byteIndex": 7731
@@ -5909,7 +5909,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-sql/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-sql/0.5.0/result.ts",
               "line": 283,
               "col": 2,
               "byteIndex": 7791

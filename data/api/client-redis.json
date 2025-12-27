@@ -1,14 +1,14 @@
 {
   "name": "client-redis",
   "specifier": "@probitas/client-redis",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "moduleDoc": "Redis client for [Probitas](https://github.com/probitas-test/probitas) scenario testing framework.\n\nThis package provides a Redis client designed for integration testing of applications using Redis.\n\n## Features\n\n- **Data Structures**: Strings, Hashes, Lists, Sets, Sorted Sets\n- **Pub/Sub**: Publish and subscribe to channels\n- **Transactions**: Atomic operations with MULTI/EXEC\n- **Raw Commands**: Execute any Redis command via `command()`\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-redis\n```\n\n## Quick Start\n\n```ts\nimport { createRedisClient } from \"@probitas/client-redis\";\n\nconst client = await createRedisClient({\n  url: \"redis://localhost:6379/0\",\n});\n\n// String operations\nawait client.set(\"user:1:name\", \"Alice\", { ex: 3600 });\nconst result = await client.get(\"user:1:name\");\nconsole.log(\"Name:\", result.value);\n\n// Hash operations\nawait client.hset(\"user:1\", \"email\", \"alice@example.com\");\nconst email = await client.hget(\"user:1\", \"email\");\nconsole.log(\"Email:\", email.value);\n\n// List operations\nawait client.rpush(\"queue\", [\"job1\", \"job2\", \"job3\"]);\nconst job = await client.lpop(\"queue\");\nconsole.log(\"Job:\", job.value);\n\nawait client.close();\n```\n\n## Transactions\n\n```ts\nimport { createRedisClient } from \"@probitas/client-redis\";\n\nconst client = await createRedisClient({ url: \"redis://localhost:6379\" });\n\n// Atomic transaction\nconst tx = client.multi();\ntx.incr(\"counter\");\ntx.get(\"counter\");\nawait tx.exec();\n\nawait client.close();\n```\n\n## Pub/Sub\n\n```ts\nimport { createRedisClient } from \"@probitas/client-redis\";\n\nconst client = await createRedisClient({ url: \"redis://localhost:6379\" });\n\n// Subscribe to a channel\nconst subscription = client.subscribe(\"events\");\nfor await (const message of subscription) {\n  console.log(\"Received:\", message.message);\n  break;\n}\n\n// Publish to a channel\nawait client.publish(\"events\", JSON.stringify({ type: \"update\" }));\n\nawait client.close();\n```\n\n## Connection Configuration\n\n```ts\nimport { createRedisClient } from \"@probitas/client-redis\";\n\n// Using URL string\nconst client1 = await createRedisClient({ url: \"redis://localhost:6379\" });\n\n// Using URL with password and database\nconst client2 = await createRedisClient({ url: \"redis://:secret@localhost:6379/1\" });\n\n// Using config object\nconst client3 = await createRedisClient({\n  url: { host: \"localhost\", port: 6379, password: \"secret\", db: 1 },\n});\n\nawait client1.close();\nawait client2.close();\nawait client3.close();\n```\n\n## Using with `using` Statement\n\n```ts\nimport { createRedisClient } from \"@probitas/client-redis\";\n\nawait using client = await createRedisClient({ url: \"redis://localhost:6379\" });\n\nawait client.set(\"test\", \"value\");\nconst result = await client.get(\"test\");\nconsole.log(result.value);\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client`](https://jsr.io/@probitas/client) | Core utilities and types |\n| [`@probitas/client-deno-kv`](https://jsr.io/@probitas/client-deno-kv) | Deno KV client |\n\n## Links\n\n- [GitHub Repository](https://github.com/probitas-test/probitas-client)\n- [Probitas Framework](https://github.com/probitas-test/probitas)\n- [Redis](https://redis.io/)\n",
   "exports": [
     {
       "name": "RedisFailureError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 85,
         "col": 0,
         "byteIndex": 2087
@@ -56,7 +56,7 @@
       "name": "RedisOperationError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 94,
         "col": 0,
         "byteIndex": 2305
@@ -104,7 +104,7 @@
       "name": "RedisCommandOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
         "line": 19,
         "col": 0,
         "byteIndex": 449
@@ -140,7 +140,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 28,
               "col": 2,
               "byteIndex": 763
@@ -166,7 +166,7 @@
       "name": "RedisSetOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
         "line": 34,
         "col": 0,
         "byteIndex": 828
@@ -196,7 +196,7 @@
               "doc": "Expiration in seconds"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 36,
               "col": 2,
               "byteIndex": 924
@@ -218,7 +218,7 @@
               "doc": "Expiration in milliseconds"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 38,
               "col": 2,
               "byteIndex": 984
@@ -240,7 +240,7 @@
               "doc": "Only set if key does not exist"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 40,
               "col": 2,
               "byteIndex": 1048
@@ -262,7 +262,7 @@
               "doc": "Only set if key exists"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 42,
               "col": 2,
               "byteIndex": 1105
@@ -288,7 +288,7 @@
       "name": "RedisMessage",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
         "line": 48,
         "col": 0,
         "byteIndex": 1164
@@ -306,7 +306,7 @@
           {
             "name": "channel",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 49,
               "col": 2,
               "byteIndex": 1198
@@ -325,7 +325,7 @@
           {
             "name": "message",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 50,
               "col": 2,
               "byteIndex": 1226
@@ -351,7 +351,7 @@
       "name": "RedisConnectionConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
         "line": 58,
         "col": 0,
         "byteIndex": 1364
@@ -387,7 +387,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 63,
               "col": 2,
               "byteIndex": 1487
@@ -413,7 +413,7 @@
       "name": "RedisClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
         "line": 69,
         "col": 0,
         "byteIndex": 1551
@@ -457,7 +457,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 2305
@@ -499,7 +499,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 103,
               "col": 2,
               "byteIndex": 2585
@@ -525,7 +525,7 @@
       "name": "RedisTransaction",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
         "line": 109,
         "col": 0,
         "byteIndex": 2660
@@ -543,7 +543,7 @@
             "name": "get",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 110,
               "col": 2,
               "byteIndex": 2698
@@ -572,7 +572,7 @@
             "name": "set",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 111,
               "col": 2,
               "byteIndex": 2724
@@ -624,7 +624,7 @@
             "name": "del",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 112,
               "col": 2,
               "byteIndex": 2792
@@ -661,7 +661,7 @@
             "name": "incr",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 113,
               "col": 2,
               "byteIndex": 2824
@@ -690,7 +690,7 @@
             "name": "decr",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 114,
               "col": 2,
               "byteIndex": 2851
@@ -719,7 +719,7 @@
             "name": "hget",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 115,
               "col": 2,
               "byteIndex": 2878
@@ -758,7 +758,7 @@
             "name": "hset",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 116,
               "col": 2,
               "byteIndex": 2920
@@ -807,7 +807,7 @@
             "name": "hgetall",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 117,
               "col": 2,
               "byteIndex": 2977
@@ -836,7 +836,7 @@
             "name": "hdel",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 118,
               "col": 2,
               "byteIndex": 3007
@@ -883,7 +883,7 @@
             "name": "lpush",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 119,
               "col": 2,
               "byteIndex": 3055
@@ -930,7 +930,7 @@
             "name": "rpush",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 120,
               "col": 2,
               "byteIndex": 3104
@@ -977,7 +977,7 @@
             "name": "lpop",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 121,
               "col": 2,
               "byteIndex": 3153
@@ -1006,7 +1006,7 @@
             "name": "rpop",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 122,
               "col": 2,
               "byteIndex": 3180
@@ -1035,7 +1035,7 @@
             "name": "lrange",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 123,
               "col": 2,
               "byteIndex": 3207
@@ -1084,7 +1084,7 @@
             "name": "llen",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 124,
               "col": 2,
               "byteIndex": 3265
@@ -1113,7 +1113,7 @@
             "name": "sadd",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 125,
               "col": 2,
               "byteIndex": 3292
@@ -1160,7 +1160,7 @@
             "name": "srem",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 126,
               "col": 2,
               "byteIndex": 3341
@@ -1207,7 +1207,7 @@
             "name": "smembers",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 127,
               "col": 2,
               "byteIndex": 3390
@@ -1236,7 +1236,7 @@
             "name": "sismember",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 128,
               "col": 2,
               "byteIndex": 3421
@@ -1275,7 +1275,7 @@
             "name": "zadd",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 129,
               "col": 2,
               "byteIndex": 3469
@@ -1312,7 +1312,7 @@
                         {
                           "name": "score",
                           "location": {
-                            "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+                            "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
                             "line": 129,
                             "col": 34,
                             "byteIndex": 3501
@@ -1330,7 +1330,7 @@
                         {
                           "name": "member",
                           "location": {
-                            "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+                            "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
                             "line": 129,
                             "col": 49,
                             "byteIndex": 3516
@@ -1365,7 +1365,7 @@
             "name": "zrange",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 130,
               "col": 2,
               "byteIndex": 3545
@@ -1414,7 +1414,7 @@
             "name": "zscore",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 131,
               "col": 2,
               "byteIndex": 3603
@@ -1453,7 +1453,7 @@
             "name": "exec",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 132,
               "col": 2,
               "byteIndex": 3648
@@ -1503,7 +1503,7 @@
             "name": "discard",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 133,
               "col": 2,
               "byteIndex": 3723
@@ -1528,7 +1528,7 @@
       "name": "RedisClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
         "line": 139,
         "col": 0,
         "byteIndex": 3777
@@ -1555,7 +1555,7 @@
             "name": "get",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 143,
               "col": 2,
               "byteIndex": 3886
@@ -1609,7 +1609,7 @@
             "name": "set",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 144,
               "col": 2,
               "byteIndex": 3962
@@ -1673,7 +1673,7 @@
             "name": "del",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 149,
               "col": 2,
               "byteIndex": 4066
@@ -1731,7 +1731,7 @@
             "name": "incr",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 150,
               "col": 2,
               "byteIndex": 4147
@@ -1785,7 +1785,7 @@
             "name": "decr",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 151,
               "col": 2,
               "byteIndex": 4226
@@ -1839,7 +1839,7 @@
             "name": "hget",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 154,
               "col": 2,
               "byteIndex": 4318
@@ -1903,7 +1903,7 @@
             "name": "hset",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 159,
               "col": 2,
               "byteIndex": 4427
@@ -1977,7 +1977,7 @@
             "name": "hgetall",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 165,
               "col": 2,
               "byteIndex": 4557
@@ -2031,7 +2031,7 @@
             "name": "hdel",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 166,
               "col": 2,
               "byteIndex": 4638
@@ -2099,7 +2099,7 @@
             "name": "lpush",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 173,
               "col": 2,
               "byteIndex": 4764
@@ -2167,7 +2167,7 @@
             "name": "rpush",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 178,
               "col": 2,
               "byteIndex": 4879
@@ -2235,7 +2235,7 @@
             "name": "lpop",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 183,
               "col": 2,
               "byteIndex": 4994
@@ -2289,7 +2289,7 @@
             "name": "rpop",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 184,
               "col": 2,
               "byteIndex": 5071
@@ -2343,7 +2343,7 @@
             "name": "lrange",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 185,
               "col": 2,
               "byteIndex": 5148
@@ -2417,7 +2417,7 @@
             "name": "llen",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 191,
               "col": 2,
               "byteIndex": 5279
@@ -2471,7 +2471,7 @@
             "name": "sadd",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 194,
               "col": 2,
               "byteIndex": 5369
@@ -2539,7 +2539,7 @@
             "name": "srem",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 199,
               "col": 2,
               "byteIndex": 5484
@@ -2607,7 +2607,7 @@
             "name": "smembers",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 204,
               "col": 2,
               "byteIndex": 5599
@@ -2661,7 +2661,7 @@
             "name": "sismember",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 208,
               "col": 2,
               "byteIndex": 5695
@@ -2731,7 +2731,7 @@
             "name": "zadd",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 215,
               "col": 2,
               "byteIndex": 5840
@@ -2764,7 +2764,7 @@
                         {
                           "name": "score",
                           "location": {
-                            "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+                            "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
                             "line": 217,
                             "col": 15,
                             "byteIndex": 5878
@@ -2782,7 +2782,7 @@
                         {
                           "name": "member",
                           "location": {
-                            "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+                            "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
                             "line": 217,
                             "col": 30,
                             "byteIndex": 5893
@@ -2842,7 +2842,7 @@
             "name": "zrange",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 220,
               "col": 2,
               "byteIndex": 5982
@@ -2916,7 +2916,7 @@
             "name": "zscore",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 226,
               "col": 2,
               "byteIndex": 6113
@@ -2997,7 +2997,7 @@
             "name": "publish",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 233,
               "col": 2,
               "byteIndex": 6257
@@ -3061,7 +3061,7 @@
             "name": "subscribe",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 238,
               "col": 2,
               "byteIndex": 6377
@@ -3102,7 +3102,7 @@
             "name": "multi",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 241,
               "col": 2,
               "byteIndex": 6454
@@ -3123,7 +3123,7 @@
             "name": "command",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 245,
               "col": 2,
               "byteIndex": 6539
@@ -3209,7 +3209,7 @@
             "name": "close",
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 251,
               "col": 2,
               "byteIndex": 6669
@@ -3237,7 +3237,7 @@
           {
             "name": "config",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/types.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/types.ts",
               "line": 140,
               "col": 2,
               "byteIndex": 3834
@@ -3266,7 +3266,7 @@
       "name": "RedisGetResultSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 32,
         "col": 0,
         "byteIndex": 948
@@ -3293,7 +3293,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 33,
               "col": 2,
               "byteIndex": 1018
@@ -3315,7 +3315,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 1046
@@ -3337,7 +3337,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 35,
               "col": 2,
               "byteIndex": 1067
@@ -3356,7 +3356,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 36,
               "col": 2,
               "byteIndex": 1091
@@ -3393,7 +3393,7 @@
       "name": "RedisGetResultError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 42,
         "col": 0,
         "byteIndex": 1165
@@ -3420,7 +3420,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 1233
@@ -3442,7 +3442,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 44,
               "col": 2,
               "byteIndex": 1261
@@ -3464,7 +3464,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 45,
               "col": 2,
               "byteIndex": 1283
@@ -3486,7 +3486,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 46,
               "col": 2,
               "byteIndex": 1322
@@ -3512,7 +3512,7 @@
       "name": "RedisGetResultFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 52,
         "col": 0,
         "byteIndex": 1394
@@ -3539,7 +3539,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 53,
               "col": 2,
               "byteIndex": 1464
@@ -3561,7 +3561,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1493
@@ -3583,7 +3583,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 55,
               "col": 2,
               "byteIndex": 1515
@@ -3605,7 +3605,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 56,
               "col": 2,
               "byteIndex": 1552
@@ -3631,7 +3631,7 @@
       "name": "RedisGetResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 62,
         "col": 0,
         "byteIndex": 1606
@@ -3679,7 +3679,7 @@
       "name": "RedisSetResultSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 82,
         "col": 0,
         "byteIndex": 2119
@@ -3706,7 +3706,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 83,
               "col": 2,
               "byteIndex": 2189
@@ -3728,7 +3728,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 84,
               "col": 2,
               "byteIndex": 2217
@@ -3750,7 +3750,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 85,
               "col": 2,
               "byteIndex": 2238
@@ -3769,7 +3769,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 86,
               "col": 2,
               "byteIndex": 2262
@@ -3798,7 +3798,7 @@
       "name": "RedisSetResultError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 92,
         "col": 0,
         "byteIndex": 2327
@@ -3825,7 +3825,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 2395
@@ -3847,7 +3847,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 94,
               "col": 2,
               "byteIndex": 2423
@@ -3869,7 +3869,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 95,
               "col": 2,
               "byteIndex": 2445
@@ -3891,7 +3891,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 96,
               "col": 2,
               "byteIndex": 2484
@@ -3917,7 +3917,7 @@
       "name": "RedisSetResultFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 102,
         "col": 0,
         "byteIndex": 2556
@@ -3944,7 +3944,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 103,
               "col": 2,
               "byteIndex": 2626
@@ -3966,7 +3966,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 104,
               "col": 2,
               "byteIndex": 2655
@@ -3988,7 +3988,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 105,
               "col": 2,
               "byteIndex": 2677
@@ -4010,7 +4010,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 106,
               "col": 2,
               "byteIndex": 2714
@@ -4036,7 +4036,7 @@
       "name": "RedisSetResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 112,
         "col": 0,
         "byteIndex": 2768
@@ -4084,7 +4084,7 @@
       "name": "RedisCountResultSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 132,
         "col": 0,
         "byteIndex": 3295
@@ -4111,7 +4111,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 133,
               "col": 2,
               "byteIndex": 3369
@@ -4133,7 +4133,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 134,
               "col": 2,
               "byteIndex": 3397
@@ -4155,7 +4155,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 135,
               "col": 2,
               "byteIndex": 3418
@@ -4174,7 +4174,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 136,
               "col": 2,
               "byteIndex": 3442
@@ -4200,7 +4200,7 @@
       "name": "RedisCountResultError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 142,
         "col": 0,
         "byteIndex": 3511
@@ -4227,7 +4227,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 143,
               "col": 2,
               "byteIndex": 3583
@@ -4249,7 +4249,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 144,
               "col": 2,
               "byteIndex": 3611
@@ -4271,7 +4271,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 145,
               "col": 2,
               "byteIndex": 3633
@@ -4293,7 +4293,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 146,
               "col": 2,
               "byteIndex": 3672
@@ -4319,7 +4319,7 @@
       "name": "RedisCountResultFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 152,
         "col": 0,
         "byteIndex": 3746
@@ -4346,7 +4346,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 153,
               "col": 2,
               "byteIndex": 3820
@@ -4368,7 +4368,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 154,
               "col": 2,
               "byteIndex": 3849
@@ -4390,7 +4390,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 155,
               "col": 2,
               "byteIndex": 3871
@@ -4412,7 +4412,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 156,
               "col": 2,
               "byteIndex": 3908
@@ -4438,7 +4438,7 @@
       "name": "RedisCountResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 162,
         "col": 0,
         "byteIndex": 3991
@@ -4486,7 +4486,7 @@
       "name": "RedisArrayResultSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 183,
         "col": 0,
         "byteIndex": 4546
@@ -4522,7 +4522,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 185,
               "col": 2,
               "byteIndex": 4637
@@ -4544,7 +4544,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 186,
               "col": 2,
               "byteIndex": 4665
@@ -4566,7 +4566,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 187,
               "col": 2,
               "byteIndex": 4686
@@ -4585,7 +4585,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 188,
               "col": 2,
               "byteIndex": 4710
@@ -4634,7 +4634,7 @@
       "name": "RedisArrayResultError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 194,
         "col": 0,
         "byteIndex": 4785
@@ -4670,7 +4670,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 196,
               "col": 2,
               "byteIndex": 4874
@@ -4692,7 +4692,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 197,
               "col": 2,
               "byteIndex": 4902
@@ -4714,7 +4714,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 198,
               "col": 2,
               "byteIndex": 4924
@@ -4736,7 +4736,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 199,
               "col": 2,
               "byteIndex": 4963
@@ -4771,7 +4771,7 @@
       "name": "RedisArrayResultFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 205,
         "col": 0,
         "byteIndex": 5037
@@ -4807,7 +4807,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 207,
               "col": 2,
               "byteIndex": 5128
@@ -4829,7 +4829,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 208,
               "col": 2,
               "byteIndex": 5157
@@ -4851,7 +4851,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 209,
               "col": 2,
               "byteIndex": 5179
@@ -4873,7 +4873,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 210,
               "col": 2,
               "byteIndex": 5216
@@ -4908,7 +4908,7 @@
       "name": "RedisArrayResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 216,
         "col": 0,
         "byteIndex": 5297
@@ -4992,7 +4992,7 @@
       "name": "RedisHashResultSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 236,
         "col": 0,
         "byteIndex": 5863
@@ -5019,7 +5019,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 237,
               "col": 2,
               "byteIndex": 5935
@@ -5041,7 +5041,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 238,
               "col": 2,
               "byteIndex": 5963
@@ -5063,7 +5063,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 239,
               "col": 2,
               "byteIndex": 5984
@@ -5082,7 +5082,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 240,
               "col": 2,
               "byteIndex": 6008
@@ -5122,7 +5122,7 @@
       "name": "RedisHashResultError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 246,
         "col": 0,
         "byteIndex": 6092
@@ -5149,7 +5149,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 247,
               "col": 2,
               "byteIndex": 6162
@@ -5171,7 +5171,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 248,
               "col": 2,
               "byteIndex": 6190
@@ -5193,7 +5193,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 249,
               "col": 2,
               "byteIndex": 6212
@@ -5215,7 +5215,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 250,
               "col": 2,
               "byteIndex": 6251
@@ -5241,7 +5241,7 @@
       "name": "RedisHashResultFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 256,
         "col": 0,
         "byteIndex": 6324
@@ -5268,7 +5268,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 257,
               "col": 2,
               "byteIndex": 6396
@@ -5290,7 +5290,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 258,
               "col": 2,
               "byteIndex": 6425
@@ -5312,7 +5312,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 259,
               "col": 2,
               "byteIndex": 6447
@@ -5334,7 +5334,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 260,
               "col": 2,
               "byteIndex": 6484
@@ -5360,7 +5360,7 @@
       "name": "RedisHashResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 266,
         "col": 0,
         "byteIndex": 6549
@@ -5408,7 +5408,7 @@
       "name": "RedisCommonResultSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 287,
         "col": 0,
         "byteIndex": 7120
@@ -5444,7 +5444,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 289,
               "col": 2,
               "byteIndex": 7210
@@ -5466,7 +5466,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 290,
               "col": 2,
               "byteIndex": 7238
@@ -5488,7 +5488,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 291,
               "col": 2,
               "byteIndex": 7259
@@ -5507,7 +5507,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 292,
               "col": 2,
               "byteIndex": 7283
@@ -5545,7 +5545,7 @@
       "name": "RedisCommonResultError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 299,
         "col": 0,
         "byteIndex": 7384
@@ -5581,7 +5581,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 301,
               "col": 2,
               "byteIndex": 7472
@@ -5603,7 +5603,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 302,
               "col": 2,
               "byteIndex": 7500
@@ -5625,7 +5625,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 303,
               "col": 2,
               "byteIndex": 7522
@@ -5647,7 +5647,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 304,
               "col": 2,
               "byteIndex": 7561
@@ -5682,7 +5682,7 @@
       "name": "RedisCommonResultFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 311,
         "col": 0,
         "byteIndex": 7672
@@ -5718,7 +5718,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 313,
               "col": 2,
               "byteIndex": 7762
@@ -5740,7 +5740,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 314,
               "col": 2,
               "byteIndex": 7791
@@ -5762,7 +5762,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 315,
               "col": 2,
               "byteIndex": 7813
@@ -5784,7 +5784,7 @@
           {
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 316,
               "col": 2,
               "byteIndex": 7850
@@ -5819,7 +5819,7 @@
       "name": "RedisCommonResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 325,
         "col": 0,
         "byteIndex": 8026
@@ -5903,7 +5903,7 @@
       "name": "RedisResult",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 338,
         "col": 0,
         "byteIndex": 8418
@@ -6002,7 +6002,7 @@
       "name": "RedisGetResultSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 353,
         "col": 0,
         "byteIndex": 8788
@@ -6057,7 +6057,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 361,
               "col": 2,
               "byteIndex": 9061
@@ -6081,7 +6081,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 354,
               "col": 2,
               "byteIndex": 8864
@@ -6103,7 +6103,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 355,
               "col": 2,
               "byteIndex": 8904
@@ -6125,7 +6125,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 356,
               "col": 2,
               "byteIndex": 8942
@@ -6144,7 +6144,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 357,
               "col": 2,
               "byteIndex": 8973
@@ -6174,7 +6174,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 358,
               "col": 2,
               "byteIndex": 8998
@@ -6193,7 +6193,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 359,
               "col": 2,
               "byteIndex": 9031
@@ -6221,7 +6221,7 @@
       "name": "RedisGetResultErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 370,
         "col": 0,
         "byteIndex": 9197
@@ -6268,7 +6268,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 378,
               "col": 2,
               "byteIndex": 9473
@@ -6292,7 +6292,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 371,
               "col": 2,
               "byteIndex": 9269
@@ -6314,7 +6314,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 372,
               "col": 2,
               "byteIndex": 9309
@@ -6336,7 +6336,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 373,
               "col": 2,
               "byteIndex": 9347
@@ -6358,7 +6358,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 374,
               "col": 2,
               "byteIndex": 9379
@@ -6377,7 +6377,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 375,
               "col": 2,
               "byteIndex": 9418
@@ -6396,7 +6396,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 376,
               "col": 2,
               "byteIndex": 9443
@@ -6424,7 +6424,7 @@
       "name": "RedisGetResultFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 387,
         "col": 0,
         "byteIndex": 9615
@@ -6471,7 +6471,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 395,
               "col": 2,
               "byteIndex": 9894
@@ -6495,7 +6495,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 388,
               "col": 2,
               "byteIndex": 9691
@@ -6517,7 +6517,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 389,
               "col": 2,
               "byteIndex": 9731
@@ -6539,7 +6539,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 390,
               "col": 2,
               "byteIndex": 9770
@@ -6561,7 +6561,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 391,
               "col": 2,
               "byteIndex": 9802
@@ -6580,7 +6580,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 392,
               "col": 2,
               "byteIndex": 9839
@@ -6599,7 +6599,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 393,
               "col": 2,
               "byteIndex": 9864
@@ -6627,7 +6627,7 @@
       "name": "RedisSetResultSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 404,
         "col": 0,
         "byteIndex": 10034
@@ -6661,7 +6661,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 412,
               "col": 2,
               "byteIndex": 10308
@@ -6685,7 +6685,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 405,
               "col": 2,
               "byteIndex": 10110
@@ -6707,7 +6707,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 406,
               "col": 2,
               "byteIndex": 10150
@@ -6729,7 +6729,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 407,
               "col": 2,
               "byteIndex": 10188
@@ -6748,7 +6748,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 408,
               "col": 2,
               "byteIndex": 10219
@@ -6770,7 +6770,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 409,
               "col": 2,
               "byteIndex": 10244
@@ -6789,7 +6789,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 410,
               "col": 2,
               "byteIndex": 10278
@@ -6817,7 +6817,7 @@
       "name": "RedisSetResultErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 420,
         "col": 0,
         "byteIndex": 10398
@@ -6864,7 +6864,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 428,
               "col": 2,
               "byteIndex": 10674
@@ -6888,7 +6888,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 421,
               "col": 2,
               "byteIndex": 10470
@@ -6910,7 +6910,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 422,
               "col": 2,
               "byteIndex": 10510
@@ -6932,7 +6932,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 423,
               "col": 2,
               "byteIndex": 10548
@@ -6954,7 +6954,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 424,
               "col": 2,
               "byteIndex": 10580
@@ -6973,7 +6973,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 425,
               "col": 2,
               "byteIndex": 10619
@@ -6992,7 +6992,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 426,
               "col": 2,
               "byteIndex": 10644
@@ -7020,7 +7020,7 @@
       "name": "RedisSetResultFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 437,
         "col": 0,
         "byteIndex": 10816
@@ -7067,7 +7067,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 445,
               "col": 2,
               "byteIndex": 11095
@@ -7091,7 +7091,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 438,
               "col": 2,
               "byteIndex": 10892
@@ -7113,7 +7113,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 439,
               "col": 2,
               "byteIndex": 10932
@@ -7135,7 +7135,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 440,
               "col": 2,
               "byteIndex": 10971
@@ -7157,7 +7157,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 441,
               "col": 2,
               "byteIndex": 11003
@@ -7176,7 +7176,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 442,
               "col": 2,
               "byteIndex": 11040
@@ -7195,7 +7195,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 443,
               "col": 2,
               "byteIndex": 11065
@@ -7223,7 +7223,7 @@
       "name": "RedisCountResultSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 454,
         "col": 0,
         "byteIndex": 11235
@@ -7267,7 +7267,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 462,
               "col": 2,
               "byteIndex": 11507
@@ -7291,7 +7291,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 455,
               "col": 2,
               "byteIndex": 11315
@@ -7313,7 +7313,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 456,
               "col": 2,
               "byteIndex": 11357
@@ -7335,7 +7335,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 457,
               "col": 2,
               "byteIndex": 11395
@@ -7354,7 +7354,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 458,
               "col": 2,
               "byteIndex": 11426
@@ -7373,7 +7373,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 459,
               "col": 2,
               "byteIndex": 11451
@@ -7392,7 +7392,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 460,
               "col": 2,
               "byteIndex": 11477
@@ -7420,7 +7420,7 @@
       "name": "RedisCountResultErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 471,
         "col": 0,
         "byteIndex": 11636
@@ -7467,7 +7467,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 479,
               "col": 2,
               "byteIndex": 11918
@@ -7491,7 +7491,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 472,
               "col": 2,
               "byteIndex": 11712
@@ -7513,7 +7513,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 473,
               "col": 2,
               "byteIndex": 11754
@@ -7535,7 +7535,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 474,
               "col": 2,
               "byteIndex": 11792
@@ -7557,7 +7557,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 475,
               "col": 2,
               "byteIndex": 11824
@@ -7576,7 +7576,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 476,
               "col": 2,
               "byteIndex": 11863
@@ -7595,7 +7595,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 477,
               "col": 2,
               "byteIndex": 11888
@@ -7623,7 +7623,7 @@
       "name": "RedisCountResultFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 488,
         "col": 0,
         "byteIndex": 12060
@@ -7670,7 +7670,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 496,
               "col": 2,
               "byteIndex": 12345
@@ -7694,7 +7694,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 489,
               "col": 2,
               "byteIndex": 12140
@@ -7716,7 +7716,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 490,
               "col": 2,
               "byteIndex": 12182
@@ -7738,7 +7738,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 491,
               "col": 2,
               "byteIndex": 12221
@@ -7760,7 +7760,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 492,
               "col": 2,
               "byteIndex": 12253
@@ -7779,7 +7779,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 493,
               "col": 2,
               "byteIndex": 12290
@@ -7798,7 +7798,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 494,
               "col": 2,
               "byteIndex": 12315
@@ -7826,7 +7826,7 @@
       "name": "RedisArrayResultSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 505,
         "col": 0,
         "byteIndex": 12485
@@ -7884,7 +7884,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 514,
               "col": 2,
               "byteIndex": 12780
@@ -7908,7 +7908,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 507,
               "col": 2,
               "byteIndex": 12582
@@ -7930,7 +7930,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 508,
               "col": 2,
               "byteIndex": 12624
@@ -7952,7 +7952,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 509,
               "col": 2,
               "byteIndex": 12662
@@ -7971,7 +7971,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 510,
               "col": 2,
               "byteIndex": 12693
@@ -8004,7 +8004,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 511,
               "col": 2,
               "byteIndex": 12718
@@ -8023,7 +8023,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 512,
               "col": 2,
               "byteIndex": 12750
@@ -8069,7 +8069,7 @@
       "name": "RedisArrayResultErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 523,
         "col": 0,
         "byteIndex": 12915
@@ -8116,7 +8116,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 532,
               "col": 2,
               "byteIndex": 13214
@@ -8140,7 +8140,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 525,
               "col": 2,
               "byteIndex": 13008
@@ -8162,7 +8162,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 526,
               "col": 2,
               "byteIndex": 13050
@@ -8184,7 +8184,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 527,
               "col": 2,
               "byteIndex": 13088
@@ -8206,7 +8206,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 528,
               "col": 2,
               "byteIndex": 13120
@@ -8225,7 +8225,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 529,
               "col": 2,
               "byteIndex": 13159
@@ -8244,7 +8244,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 530,
               "col": 2,
               "byteIndex": 13184
@@ -8290,7 +8290,7 @@
       "name": "RedisArrayResultFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 541,
         "col": 0,
         "byteIndex": 13356
@@ -8337,7 +8337,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 550,
               "col": 2,
               "byteIndex": 13658
@@ -8361,7 +8361,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 543,
               "col": 2,
               "byteIndex": 13453
@@ -8383,7 +8383,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 544,
               "col": 2,
               "byteIndex": 13495
@@ -8405,7 +8405,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 545,
               "col": 2,
               "byteIndex": 13534
@@ -8427,7 +8427,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 546,
               "col": 2,
               "byteIndex": 13566
@@ -8446,7 +8446,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 547,
               "col": 2,
               "byteIndex": 13603
@@ -8465,7 +8465,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 548,
               "col": 2,
               "byteIndex": 13628
@@ -8511,7 +8511,7 @@
       "name": "RedisHashResultSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 559,
         "col": 0,
         "byteIndex": 13798
@@ -8569,7 +8569,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 567,
               "col": 2,
               "byteIndex": 14083
@@ -8593,7 +8593,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 560,
               "col": 2,
               "byteIndex": 13876
@@ -8615,7 +8615,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 561,
               "col": 2,
               "byteIndex": 13917
@@ -8637,7 +8637,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 562,
               "col": 2,
               "byteIndex": 13955
@@ -8656,7 +8656,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 563,
               "col": 2,
               "byteIndex": 13986
@@ -8689,7 +8689,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 564,
               "col": 2,
               "byteIndex": 14011
@@ -8708,7 +8708,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 565,
               "col": 2,
               "byteIndex": 14053
@@ -8736,7 +8736,7 @@
       "name": "RedisHashResultErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 576,
         "col": 0,
         "byteIndex": 14228
@@ -8783,7 +8783,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 584,
               "col": 2,
               "byteIndex": 14507
@@ -8807,7 +8807,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 577,
               "col": 2,
               "byteIndex": 14302
@@ -8829,7 +8829,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 578,
               "col": 2,
               "byteIndex": 14343
@@ -8851,7 +8851,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 579,
               "col": 2,
               "byteIndex": 14381
@@ -8873,7 +8873,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 580,
               "col": 2,
               "byteIndex": 14413
@@ -8892,7 +8892,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 581,
               "col": 2,
               "byteIndex": 14452
@@ -8911,7 +8911,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 582,
               "col": 2,
               "byteIndex": 14477
@@ -8939,7 +8939,7 @@
       "name": "RedisHashResultFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 593,
         "col": 0,
         "byteIndex": 14649
@@ -8986,7 +8986,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 601,
               "col": 2,
               "byteIndex": 14931
@@ -9010,7 +9010,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 594,
               "col": 2,
               "byteIndex": 14727
@@ -9032,7 +9032,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 595,
               "col": 2,
               "byteIndex": 14768
@@ -9054,7 +9054,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 596,
               "col": 2,
               "byteIndex": 14807
@@ -9076,7 +9076,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 597,
               "col": 2,
               "byteIndex": 14839
@@ -9095,7 +9095,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 598,
               "col": 2,
               "byteIndex": 14876
@@ -9114,7 +9114,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 599,
               "col": 2,
               "byteIndex": 14901
@@ -9142,7 +9142,7 @@
       "name": "RedisCommonResultSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 610,
         "col": 0,
         "byteIndex": 15071
@@ -9189,7 +9189,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 619,
               "col": 2,
               "byteIndex": 15349
@@ -9213,7 +9213,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 612,
               "col": 2,
               "byteIndex": 15161
@@ -9235,7 +9235,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 613,
               "col": 2,
               "byteIndex": 15204
@@ -9257,7 +9257,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 614,
               "col": 2,
               "byteIndex": 15242
@@ -9276,7 +9276,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 615,
               "col": 2,
               "byteIndex": 15273
@@ -9298,7 +9298,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 616,
               "col": 2,
               "byteIndex": 15298
@@ -9317,7 +9317,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 617,
               "col": 2,
               "byteIndex": 15319
@@ -9358,7 +9358,7 @@
       "name": "RedisCommonResultErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 628,
         "col": 0,
         "byteIndex": 15473
@@ -9405,7 +9405,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 637,
               "col": 2,
               "byteIndex": 15766
@@ -9429,7 +9429,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 630,
               "col": 2,
               "byteIndex": 15559
@@ -9451,7 +9451,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 631,
               "col": 2,
               "byteIndex": 15602
@@ -9473,7 +9473,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 632,
               "col": 2,
               "byteIndex": 15640
@@ -9495,7 +9495,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 633,
               "col": 2,
               "byteIndex": 15672
@@ -9514,7 +9514,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 634,
               "col": 2,
               "byteIndex": 15711
@@ -9533,7 +9533,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 635,
               "col": 2,
               "byteIndex": 15736
@@ -9574,7 +9574,7 @@
       "name": "RedisCommonResultFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
         "line": 646,
         "col": 0,
         "byteIndex": 15908
@@ -9621,7 +9621,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 655,
               "col": 2,
               "byteIndex": 16204
@@ -9645,7 +9645,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 648,
               "col": 2,
               "byteIndex": 15998
@@ -9667,7 +9667,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 649,
               "col": 2,
               "byteIndex": 16041
@@ -9689,7 +9689,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 650,
               "col": 2,
               "byteIndex": 16080
@@ -9711,7 +9711,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 651,
               "col": 2,
               "byteIndex": 16112
@@ -9730,7 +9730,7 @@
             "isStatic": false,
             "name": "value",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 652,
               "col": 2,
               "byteIndex": 16149
@@ -9749,7 +9749,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/result.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/result.ts",
               "line": 653,
               "col": 2,
               "byteIndex": 16174
@@ -9790,7 +9790,7 @@
       "name": "RedisErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 6,
         "col": 0,
         "byteIndex": 119
@@ -9817,7 +9817,7 @@
           {
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 7,
               "col": 2,
               "byteIndex": 179
@@ -9843,7 +9843,7 @@
       "name": "RedisError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 13,
         "col": 0,
         "byteIndex": 259
@@ -9901,7 +9901,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 383
@@ -9923,7 +9923,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 14,
               "col": 2,
               "byteIndex": 307
@@ -9942,7 +9942,7 @@
             "isStatic": false,
             "name": "code",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 15,
               "col": 2,
               "byteIndex": 356
@@ -9961,7 +9961,7 @@
       "name": "RedisConnectionError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 30,
         "col": 0,
         "byteIndex": 628
@@ -10004,7 +10004,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 787
@@ -10026,7 +10026,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 31,
               "col": 2,
               "byteIndex": 685
@@ -10049,7 +10049,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 32,
               "col": 2,
               "byteIndex": 736
@@ -10068,7 +10068,7 @@
       "name": "RedisCommandErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 42,
         "col": 0,
         "byteIndex": 942
@@ -10095,7 +10095,7 @@
           {
             "name": "command",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 43,
               "col": 2,
               "byteIndex": 1014
@@ -10121,7 +10121,7 @@
       "name": "RedisCommandError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 49,
         "col": 0,
         "byteIndex": 1095
@@ -10164,7 +10164,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 54,
               "col": 2,
               "byteIndex": 1273
@@ -10186,7 +10186,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 50,
               "col": 2,
               "byteIndex": 1149
@@ -10209,7 +10209,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 51,
               "col": 2,
               "byteIndex": 1197
@@ -10228,7 +10228,7 @@
             "isStatic": false,
             "name": "command",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 52,
               "col": 2,
               "byteIndex": 1244
@@ -10247,7 +10247,7 @@
       "name": "RedisScriptErrorOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 63,
         "col": 0,
         "byteIndex": 1466
@@ -10274,7 +10274,7 @@
           {
             "name": "script",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 64,
               "col": 2,
               "byteIndex": 1537
@@ -10300,7 +10300,7 @@
       "name": "RedisScriptError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
         "line": 70,
         "col": 0,
         "byteIndex": 1620
@@ -10343,7 +10343,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 75,
               "col": 2,
               "byteIndex": 1794
@@ -10365,7 +10365,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 71,
               "col": 2,
               "byteIndex": 1673
@@ -10388,7 +10388,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 72,
               "col": 2,
               "byteIndex": 1720
@@ -10407,7 +10407,7 @@
             "isStatic": false,
             "name": "script",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-redis/0.4.2/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-redis/0.5.0/errors.ts",
               "line": 73,
               "col": 2,
               "byteIndex": 1766
@@ -10426,7 +10426,7 @@
       "name": "createRedisClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-redis/0.4.2/client.ts",
+        "filename": "https://jsr.io/@probitas/client-redis/0.5.0/client.ts",
         "line": 305,
         "col": 0,
         "byteIndex": 8637

@@ -1,7 +1,7 @@
 {
   "name": "client-graphql",
   "specifier": "@probitas/client-graphql",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "moduleDoc": "GraphQL client for [Probitas](https://github.com/probitas-test/probitas) scenario testing framework.\n\nThis package provides a GraphQL client designed for integration testing of GraphQL APIs.\n\n## Features\n\n- **Query & Mutation**: Full support for GraphQL operations\n- **Variables Support**: Pass typed variables to queries and mutations\n- **Duration Tracking**: Built-in timing for performance monitoring\n- **Error Inspection**: Inspect GraphQL errors and their structure\n- **Resource Management**: Implements `AsyncDisposable` for proper cleanup\n- **Template Literals**: Re-exports `outdent` for clean multi-line queries\n\n## Installation\n\n```bash\ndeno add jsr:@probitas/client-graphql\n```\n\n## Quick Start\n\n```ts\nimport { createGraphqlClient, outdent } from \"@probitas/client-graphql\";\n\nconst client = createGraphqlClient({ url: \"http://localhost:4000/graphql\" });\n\n// Query with variables\nconst res = await client.query(outdent`\n  query GetUser($id: ID!) {\n    user(id: $id) { id name email }\n  }\n`, { id: \"123\" });\nconsole.log(\"User:\", res.data);\n\n// Mutation\nconst created = await client.mutation(outdent`\n  mutation CreateUser($input: CreateUserInput!) {\n    createUser(input: $input) { id name }\n  }\n`, { input: { name: \"Jane\", email: \"jane@example.com\" } });\nconsole.log(\"Created:\", created.data);\n\nawait client.close();\n```\n\n## Using with `using` Statement\n\n```ts\nimport { createGraphqlClient } from \"@probitas/client-graphql\";\n\nawait using client = createGraphqlClient({ url: \"http://localhost:4000/graphql\" });\n\nconst res = await client.query(`{ __typename }`);\nconsole.log(res.data);\n// Client automatically closed when block exits\n```\n\n## Related Packages\n\n| Package | Description |\n|---------|-------------|\n| [`@probitas/client`](https://jsr.io/@probitas/client) | Core utilities and types |\n| [`@probitas/client-http`](https://jsr.io/@probitas/client-http) | HTTP client |\n\n## Links\n\n- [GitHub Repository](https://github.com/probitas-test/probitas-client)\n- [Probitas Framework](https://github.com/probitas-test/probitas)\n",
   "exports": [
     {
@@ -31,7 +31,7 @@
       "name": "GraphqlErrorItem",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
         "line": 13,
         "col": 0,
         "byteIndex": 357
@@ -58,7 +58,7 @@
               "doc": "Error message"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 15,
               "col": 2,
               "byteIndex": 418
@@ -80,7 +80,7 @@
               "doc": "Location(s) in the GraphQL document where the error occurred"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 18,
               "col": 2,
               "byteIndex": 517
@@ -111,7 +111,7 @@
                             {
                               "name": "line",
                               "location": {
-                                "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+                                "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
                                 "line": 18,
                                 "col": 33,
                                 "byteIndex": 548
@@ -129,7 +129,7 @@
                             {
                               "name": "column",
                               "location": {
-                                "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+                                "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
                                 "line": 18,
                                 "col": 47,
                                 "byteIndex": 562
@@ -167,7 +167,7 @@
               "doc": "Path to the field that caused the error"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 21,
               "col": 2,
               "byteIndex": 641
@@ -226,7 +226,7 @@
               "doc": "Additional error metadata"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 24,
               "col": 2,
               "byteIndex": 731
@@ -277,7 +277,7 @@
       "name": "GraphqlResponse",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 166,
         "col": 0,
         "byteIndex": 4260
@@ -361,7 +361,7 @@
       "name": "GraphqlResponseError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 105,
         "col": 0,
         "byteIndex": 2591
@@ -397,7 +397,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 106,
               "col": 2,
               "byteIndex": 2673
@@ -419,7 +419,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 107,
               "col": 2,
               "byteIndex": 2701
@@ -441,7 +441,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 108,
               "col": 2,
               "byteIndex": 2723
@@ -466,7 +466,7 @@
               "doc": "HTTP status code."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 111,
               "col": 2,
               "byteIndex": 2792
@@ -488,7 +488,7 @@
               "doc": "HTTP response headers."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 114,
               "col": 2,
               "byteIndex": 2852
@@ -513,7 +513,7 @@
               "doc": "Response extensions."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 117,
               "col": 2,
               "byteIndex": 2912
@@ -560,7 +560,7 @@
               "doc": "Raw Web standard Response."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 120,
               "col": 2,
               "byteIndex": 3004
@@ -585,7 +585,7 @@
               "doc": "Response data (null if no data, may be partial data with errors)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 123,
               "col": 2,
               "byteIndex": 3117
@@ -634,7 +634,7 @@
       "name": "GraphqlResponseFailure",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 132,
         "col": 0,
         "byteIndex": 3302
@@ -670,7 +670,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 134,
               "col": 2,
               "byteIndex": 3388
@@ -692,7 +692,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 135,
               "col": 2,
               "byteIndex": 3417
@@ -714,7 +714,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 136,
               "col": 2,
               "byteIndex": 3439
@@ -739,7 +739,7 @@
               "doc": "Response extensions (always null for failures)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 139,
               "col": 2,
               "byteIndex": 3536
@@ -761,7 +761,7 @@
               "doc": "HTTP status code (null for network failures)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 142,
               "col": 2,
               "byteIndex": 3621
@@ -783,7 +783,7 @@
               "doc": "HTTP response headers (null for failures)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 145,
               "col": 2,
               "byteIndex": 3699
@@ -805,7 +805,7 @@
               "doc": "No raw response (request didn't reach server)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 148,
               "col": 2,
               "byteIndex": 3782
@@ -827,7 +827,7 @@
               "doc": "No data (request didn't reach server)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 151,
               "col": 2,
               "byteIndex": 3853
@@ -862,7 +862,7 @@
       "name": "GraphqlResponseSuccess",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 76,
         "col": 0,
         "byteIndex": 1872
@@ -898,7 +898,7 @@
           {
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 78,
               "col": 2,
               "byteIndex": 1958
@@ -920,7 +920,7 @@
           {
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 79,
               "col": 2,
               "byteIndex": 1986
@@ -942,7 +942,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 80,
               "col": 2,
               "byteIndex": 2007
@@ -964,7 +964,7 @@
               "doc": "HTTP status code."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 83,
               "col": 2,
               "byteIndex": 2059
@@ -986,7 +986,7 @@
               "doc": "HTTP response headers."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 86,
               "col": 2,
               "byteIndex": 2119
@@ -1011,7 +1011,7 @@
               "doc": "Response extensions."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 89,
               "col": 2,
               "byteIndex": 2179
@@ -1058,7 +1058,7 @@
               "doc": "Raw Web standard Response."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 92,
               "col": 2,
               "byteIndex": 2271
@@ -1083,7 +1083,7 @@
               "doc": "Response data (null if no data)."
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 95,
               "col": 2,
               "byteIndex": 2351
@@ -1132,7 +1132,7 @@
       "name": "GraphqlOptions",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
         "line": 37,
         "col": 0,
         "byteIndex": 952
@@ -1162,7 +1162,7 @@
               "doc": "Additional request headers"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 39,
               "col": 2,
               "byteIndex": 1046
@@ -1187,7 +1187,7 @@
               "doc": "Operation name (for documents with multiple operations)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 42,
               "col": 2,
               "byteIndex": 1146
@@ -1215,7 +1215,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 48,
               "col": 2,
               "byteIndex": 1345
@@ -1241,7 +1241,7 @@
       "name": "GraphqlConnectionConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
         "line": 56,
         "col": 0,
         "byteIndex": 1494
@@ -1277,7 +1277,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 61,
               "col": 2,
               "byteIndex": 1625
@@ -1322,7 +1322,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 67,
               "col": 2,
               "byteIndex": 1731
@@ -1348,7 +1348,7 @@
       "name": "GraphqlClientConfig",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
         "line": 73,
         "col": 0,
         "byteIndex": 1799
@@ -1388,7 +1388,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 93,
               "col": 2,
               "byteIndex": 2436
@@ -1424,7 +1424,7 @@
               "doc": "Default headers for all requests"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 96,
               "col": 2,
               "byteIndex": 2529
@@ -1449,7 +1449,7 @@
               "doc": "WebSocket endpoint URL (for subscriptions)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 99,
               "col": 2,
               "byteIndex": 2616
@@ -1471,7 +1471,7 @@
               "doc": "Custom fetch implementation (for testing/mocking)"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 102,
               "col": 2,
               "byteIndex": 2708
@@ -1499,7 +1499,7 @@
               ]
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 109,
               "col": 2,
               "byteIndex": 2912
@@ -1525,7 +1525,7 @@
       "name": "GraphqlClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
         "line": 115,
         "col": 0,
         "byteIndex": 2985
@@ -1555,7 +1555,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 121,
               "col": 2,
               "byteIndex": 3186
@@ -1665,7 +1665,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 129,
               "col": 2,
               "byteIndex": 3432
@@ -1775,7 +1775,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 137,
               "col": 2,
               "byteIndex": 3704
@@ -1885,7 +1885,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 145,
               "col": 2,
               "byteIndex": 3978
@@ -1995,7 +1995,7 @@
             },
             "kind": "method",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 152,
               "col": 2,
               "byteIndex": 4211
@@ -2026,7 +2026,7 @@
               "doc": "Client configuration"
             },
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/types.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/types.ts",
               "line": 117,
               "col": 2,
               "byteIndex": 3074
@@ -2055,7 +2055,7 @@
       "name": "GraphqlExecutionError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
         "line": 10,
         "col": 0,
         "byteIndex": 345
@@ -2112,7 +2112,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
               "line": 17,
               "col": 2,
               "byteIndex": 591
@@ -2134,7 +2134,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
               "line": 11,
               "col": 2,
               "byteIndex": 404
@@ -2157,7 +2157,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
               "line": 12,
               "col": 2,
               "byteIndex": 456
@@ -2193,7 +2193,7 @@
             "isStatic": false,
             "name": "errors",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
               "line": 15,
               "col": 2,
               "byteIndex": 542
@@ -2212,7 +2212,7 @@
       "name": "GraphqlNetworkError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
         "line": 33,
         "col": 0,
         "byteIndex": 995
@@ -2255,7 +2255,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
               "line": 37,
               "col": 2,
               "byteIndex": 1150
@@ -2277,7 +2277,7 @@
             "isOverride": true,
             "name": "name",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
               "line": 34,
               "col": 2,
               "byteIndex": 1052
@@ -2300,7 +2300,7 @@
             "isOverride": true,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
               "line": 35,
               "col": 2,
               "byteIndex": 1102
@@ -2319,7 +2319,7 @@
       "name": "GraphqlFailureError",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/errors.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/errors.ts",
         "line": 62,
         "col": 0,
         "byteIndex": 1779
@@ -2367,7 +2367,7 @@
       "name": "GraphqlResponseSuccessParams",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 174,
         "col": 0,
         "byteIndex": 4454
@@ -2385,7 +2385,7 @@
           {
             "name": "url",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 175,
               "col": 2,
               "byteIndex": 4507
@@ -2404,7 +2404,7 @@
           {
             "name": "data",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 176,
               "col": 2,
               "byteIndex": 4531
@@ -2437,7 +2437,7 @@
           {
             "name": "extensions",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 177,
               "col": 2,
               "byteIndex": 4558
@@ -2481,7 +2481,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 178,
               "col": 2,
               "byteIndex": 4613
@@ -2500,7 +2500,7 @@
           {
             "name": "status",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 179,
               "col": 2,
               "byteIndex": 4642
@@ -2519,7 +2519,7 @@
           {
             "name": "raw",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 180,
               "col": 2,
               "byteIndex": 4669
@@ -2552,7 +2552,7 @@
       "name": "GraphqlResponseErrorParams",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 186,
         "col": 0,
         "byteIndex": 4768
@@ -2570,7 +2570,7 @@
           {
             "name": "url",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 187,
               "col": 2,
               "byteIndex": 4819
@@ -2589,7 +2589,7 @@
           {
             "name": "data",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 188,
               "col": 2,
               "byteIndex": 4843
@@ -2622,7 +2622,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 189,
               "col": 2,
               "byteIndex": 4870
@@ -2644,7 +2644,7 @@
           {
             "name": "extensions",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 190,
               "col": 2,
               "byteIndex": 4911
@@ -2688,7 +2688,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 191,
               "col": 2,
               "byteIndex": 4966
@@ -2707,7 +2707,7 @@
           {
             "name": "status",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 192,
               "col": 2,
               "byteIndex": 4995
@@ -2726,7 +2726,7 @@
           {
             "name": "raw",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 193,
               "col": 2,
               "byteIndex": 5022
@@ -2759,7 +2759,7 @@
       "name": "GraphqlResponseFailureParams",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 199,
         "col": 0,
         "byteIndex": 5122
@@ -2777,7 +2777,7 @@
           {
             "name": "url",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 200,
               "col": 2,
               "byteIndex": 5172
@@ -2796,7 +2796,7 @@
           {
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 201,
               "col": 2,
               "byteIndex": 5196
@@ -2818,7 +2818,7 @@
           {
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 202,
               "col": 2,
               "byteIndex": 5235
@@ -2844,7 +2844,7 @@
       "name": "GraphqlResponseSuccessImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 209,
         "col": 0,
         "byteIndex": 5331
@@ -2891,7 +2891,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 224,
               "col": 2,
               "byteIndex": 5779
@@ -2915,7 +2915,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 211,
               "col": 2,
               "byteIndex": 5417
@@ -2937,7 +2937,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 212,
               "col": 2,
               "byteIndex": 5455
@@ -2959,7 +2959,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 213,
               "col": 2,
               "byteIndex": 5493
@@ -2978,7 +2978,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 214,
               "col": 2,
               "byteIndex": 5524
@@ -3022,7 +3022,7 @@
             "isStatic": false,
             "name": "extensions",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 215,
               "col": 2,
               "byteIndex": 5549
@@ -3041,7 +3041,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 216,
               "col": 2,
               "byteIndex": 5604
@@ -3060,7 +3060,7 @@
             "isStatic": false,
             "name": "url",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 217,
               "col": 2,
               "byteIndex": 5633
@@ -3079,7 +3079,7 @@
             "isStatic": false,
             "name": "status",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 218,
               "col": 2,
               "byteIndex": 5657
@@ -3101,7 +3101,7 @@
             "isStatic": false,
             "name": "headers",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 219,
               "col": 2,
               "byteIndex": 5684
@@ -3134,7 +3134,7 @@
             "isStatic": false,
             "name": "data",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 221,
               "col": 2,
               "byteIndex": 5714
@@ -3156,7 +3156,7 @@
             "isStatic": false,
             "name": "raw",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 222,
               "col": 2,
               "byteIndex": 5741
@@ -3197,7 +3197,7 @@
       "name": "GraphqlResponseErrorImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 239,
         "col": 0,
         "byteIndex": 6138
@@ -3244,7 +3244,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 253,
               "col": 2,
               "byteIndex": 6597
@@ -3268,7 +3268,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 240,
               "col": 2,
               "byteIndex": 6218
@@ -3290,7 +3290,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 241,
               "col": 2,
               "byteIndex": 6256
@@ -3312,7 +3312,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 242,
               "col": 2,
               "byteIndex": 6294
@@ -3334,7 +3334,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 243,
               "col": 2,
               "byteIndex": 6326
@@ -3378,7 +3378,7 @@
             "isStatic": false,
             "name": "extensions",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 244,
               "col": 2,
               "byteIndex": 6367
@@ -3397,7 +3397,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 245,
               "col": 2,
               "byteIndex": 6422
@@ -3416,7 +3416,7 @@
             "isStatic": false,
             "name": "url",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 246,
               "col": 2,
               "byteIndex": 6451
@@ -3435,7 +3435,7 @@
             "isStatic": false,
             "name": "status",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 247,
               "col": 2,
               "byteIndex": 6475
@@ -3457,7 +3457,7 @@
             "isStatic": false,
             "name": "headers",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 248,
               "col": 2,
               "byteIndex": 6502
@@ -3490,7 +3490,7 @@
             "isStatic": false,
             "name": "data",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 250,
               "col": 2,
               "byteIndex": 6532
@@ -3512,7 +3512,7 @@
             "isStatic": false,
             "name": "raw",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 251,
               "col": 2,
               "byteIndex": 6559
@@ -3553,7 +3553,7 @@
       "name": "GraphqlResponseFailureImpl",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
         "line": 269,
         "col": 0,
         "byteIndex": 6987
@@ -3591,7 +3591,7 @@
               }
             ],
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 283,
               "col": 2,
               "byteIndex": 7405
@@ -3615,7 +3615,7 @@
             "isStatic": false,
             "name": "kind",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 271,
               "col": 2,
               "byteIndex": 7073
@@ -3637,7 +3637,7 @@
             "isStatic": false,
             "name": "processed",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 272,
               "col": 2,
               "byteIndex": 7111
@@ -3659,7 +3659,7 @@
             "isStatic": false,
             "name": "ok",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 273,
               "col": 2,
               "byteIndex": 7150
@@ -3681,7 +3681,7 @@
             "isStatic": false,
             "name": "error",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 274,
               "col": 2,
               "byteIndex": 7182
@@ -3700,7 +3700,7 @@
             "isStatic": false,
             "name": "extensions",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 275,
               "col": 2,
               "byteIndex": 7221
@@ -3719,7 +3719,7 @@
             "isStatic": false,
             "name": "status",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 276,
               "col": 2,
               "byteIndex": 7251
@@ -3738,7 +3738,7 @@
             "isStatic": false,
             "name": "headers",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 277,
               "col": 2,
               "byteIndex": 7277
@@ -3757,7 +3757,7 @@
             "isStatic": false,
             "name": "duration",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 278,
               "col": 2,
               "byteIndex": 7304
@@ -3776,7 +3776,7 @@
             "isStatic": false,
             "name": "url",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 279,
               "col": 2,
               "byteIndex": 7333
@@ -3795,7 +3795,7 @@
             "isStatic": false,
             "name": "data",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 280,
               "col": 2,
               "byteIndex": 7357
@@ -3814,7 +3814,7 @@
             "isStatic": false,
             "name": "raw",
             "location": {
-              "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/response.ts",
+              "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/response.ts",
               "line": 281,
               "col": 2,
               "byteIndex": 7381
@@ -3855,7 +3855,7 @@
       "name": "createGraphqlClient",
       "isDefault": false,
       "location": {
-        "filename": "https://jsr.io/@probitas/client-graphql/0.5.1/client.ts",
+        "filename": "https://jsr.io/@probitas/client-graphql/0.6.0/client.ts",
         "line": 580,
         "col": 0,
         "byteIndex": 16746

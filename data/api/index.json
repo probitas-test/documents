@@ -3,7 +3,7 @@
     {
       "name": "builder",
       "specifier": "@probitas/builder",
-      "version": "0.4.4",
+      "version": "0.5.0",
       "exportCount": 4,
       "counts": {
         "classes": 0,
@@ -17,7 +17,7 @@
     {
       "name": "client",
       "specifier": "@probitas/client",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 8,
       "counts": {
         "classes": 4,
@@ -31,7 +31,7 @@
     {
       "name": "client-connectrpc",
       "specifier": "@probitas/client-connectrpc",
-      "version": "0.6.2",
+      "version": "0.7.0",
       "exportCount": 34,
       "counts": {
         "classes": 5,
@@ -45,7 +45,7 @@
     {
       "name": "client-deno-kv",
       "specifier": "@probitas/client-deno-kv",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 54,
       "counts": {
         "classes": 19,
@@ -59,7 +59,7 @@
     {
       "name": "client-graphql",
       "specifier": "@probitas/client-graphql",
-      "version": "0.5.1",
+      "version": "0.6.0",
       "exportCount": 20,
       "counts": {
         "classes": 5,
@@ -73,7 +73,7 @@
     {
       "name": "client-grpc",
       "specifier": "@probitas/client-grpc",
-      "version": "0.5.3",
+      "version": "0.6.0",
       "exportCount": 22,
       "counts": {
         "classes": 2,
@@ -87,7 +87,7 @@
     {
       "name": "client-http",
       "specifier": "@probitas/client-http",
-      "version": "0.5.1",
+      "version": "0.6.0",
       "exportCount": 22,
       "counts": {
         "classes": 5,
@@ -101,7 +101,7 @@
     {
       "name": "client-mongodb",
       "specifier": "@probitas/client-mongodb",
-      "version": "0.5.2",
+      "version": "0.6.0",
       "exportCount": 72,
       "counts": {
         "classes": 28,
@@ -115,7 +115,7 @@
     {
       "name": "client-rabbitmq",
       "specifier": "@probitas/client-rabbitmq",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 63,
       "counts": {
         "classes": 20,
@@ -129,7 +129,7 @@
     {
       "name": "client-redis",
       "specifier": "@probitas/client-redis",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 60,
       "counts": {
         "classes": 22,
@@ -143,7 +143,7 @@
     {
       "name": "client-sql",
       "specifier": "@probitas/client-sql",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 21,
       "counts": {
         "classes": 8,
@@ -157,7 +157,7 @@
     {
       "name": "client-sql-duckdb",
       "specifier": "@probitas/client-sql-duckdb",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 33,
       "counts": {
         "classes": 12,
@@ -171,7 +171,7 @@
     {
       "name": "client-sql-mysql",
       "specifier": "@probitas/client-sql-mysql",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 36,
       "counts": {
         "classes": 12,
@@ -185,7 +185,7 @@
     {
       "name": "client-sql-postgres",
       "specifier": "@probitas/client-sql-postgres",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 32,
       "counts": {
         "classes": 9,
@@ -199,7 +199,7 @@
     {
       "name": "client-sql-sqlite",
       "specifier": "@probitas/client-sql-sqlite",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 35,
       "counts": {
         "classes": 13,
@@ -213,7 +213,7 @@
     {
       "name": "client-sqs",
       "specifier": "@probitas/client-sqs",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "exportCount": 77,
       "counts": {
         "classes": 28,
@@ -227,7 +227,7 @@
     {
       "name": "core",
       "specifier": "@probitas/core",
-      "version": "0.2.4",
+      "version": "0.3.0",
       "exportCount": 9,
       "counts": {
         "classes": 0,
@@ -241,7 +241,7 @@
     {
       "name": "discover",
       "specifier": "@probitas/discover",
-      "version": "0.3.6",
+      "version": "0.4.0",
       "exportCount": 3,
       "counts": {
         "classes": 0,
@@ -255,7 +255,7 @@
     {
       "name": "expect",
       "specifier": "@probitas/expect",
-      "version": "0.3.6",
+      "version": "0.4.0",
       "exportCount": 503,
       "counts": {
         "classes": 141,
@@ -283,7 +283,7 @@
     {
       "name": "probitas",
       "specifier": "@probitas/probitas",
-      "version": "0.6.4",
+      "version": "0.7.0",
       "exportCount": 84,
       "counts": {
         "classes": 6,
@@ -297,7 +297,7 @@
     {
       "name": "reporter",
       "specifier": "@probitas/reporter",
-      "version": "0.6.4",
+      "version": "0.7.0",
       "exportCount": 5,
       "counts": {
         "classes": 2,
@@ -311,7 +311,7 @@
     {
       "name": "runner",
       "specifier": "@probitas/runner",
-      "version": "0.4.4",
+      "version": "0.5.0",
       "exportCount": 11,
       "counts": {
         "classes": 2,
