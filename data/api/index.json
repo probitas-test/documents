@@ -87,7 +87,7 @@
     {
       "name": "client-http",
       "specifier": "@probitas/client-http",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "exportCount": 22,
       "counts": {
         "classes": 5,
@@ -267,23 +267,9 @@
       }
     },
     {
-      "name": "logger",
-      "specifier": "@probitas/logger",
-      "version": "0.3.4",
-      "exportCount": 5,
-      "counts": {
-        "classes": 0,
-        "interfaces": 1,
-        "functions": 3,
-        "types": 1,
-        "variables": 0,
-        "enums": 0
-      }
-    },
-    {
       "name": "probitas",
       "specifier": "@probitas/probitas",
-      "version": "0.7.0",
+      "version": "0.18.0",
       "exportCount": 84,
       "counts": {
         "classes": 6,
@@ -297,7 +283,7 @@
     {
       "name": "reporter",
       "specifier": "@probitas/reporter",
-      "version": "0.7.0",
+      "version": "0.7.1",
       "exportCount": 5,
       "counts": {
         "classes": 2,

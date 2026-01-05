@@ -587,7 +587,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
     expect(res).toBeOk().toHaveStatus(201).toHaveJsonMatching({
       name: "Alice",
     });
-    return res.json<{ id: number }>()!;
+    return res.json() as { id: number };
   })
   .step("Get user", async (ctx) => {
     const { http } = ctx.resources;
@@ -597,7 +597,7 @@ export default scenario("User CRUD API", { tags: ["api", "integration"] })
       id,
       name: "Alice",
     });
-    return res.json<{ id: number }>()!;
+    return res.json() as { id: number };
   })
   .step("Update user", async (ctx) => {
     const { http } = ctx.resources;
@@ -759,7 +759,7 @@ export default scenario("Full Stack Test", {
       body: { name: "Test Item" },
     });
     expect(res).toBeOk().toHaveStatus(201);
-    return res.json<{ id: number }>()!;
+    return res.json() as { id: number };
   })
   .step("Verify in database", async (ctx) => {
     const { pg } = ctx.resources;
@@ -915,7 +915,7 @@ scenario("User creation and retrieval")
         email: "alice@example.com",
       },
     });
-    return res.json<{ id: number }>()!;
+    return res.json() as { id: number };
   })
   .step("Get created user", async (ctx) => {
     // ctx.previous is typed as { id: number }
@@ -1080,9 +1080,9 @@ export default [
           email: "alice@example.com",
         },
       });
-      const user = res.json<{ id: number }>();
+      const user = res.json() as { id: number };
       return async () => {
-        await ctx.resources.http.delete(`/users/${user!.id}`);
+        await ctx.resources.http.delete(`/users/${user.id}`);
       };
     })
     .step("Create user with duplicate email", async (ctx) => {
@@ -1185,7 +1185,7 @@ export default scenario("User CRUD workflow", { tags: ["api", "crud"] })
       },
     });
     expect(res).toHaveStatus(201);
-    return res.json<{ id: number }>()!;
+    return res.json() as { id: number };
   })
   .step("Get user", async (ctx) => {
     const res = await ctx.resources.http.get(`/users/${ctx.previous.id}`);

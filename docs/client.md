@@ -165,6 +165,152 @@ expect(res).toHaveTextContaining("success");
 expect(res).toHaveJsonPresent(); // Check if response has JSON data
 ```
 
+### OIDC Authentication
+
+The HTTP client supports OIDC (OpenID Connect) authentication for testing
+authenticated API endpoints. This module provides utilities for automated login
+flows with token management.
+
+**Important**: This is designed for testing only. Use proper OIDC libraries in
+production.
+
+```typescript
+import { client } from "jsr:@probitas/probitas";
+
+await using http = await client.http.oidc.createOidcHttpClient({
+  url: "http://localhost:8080",
+  oidc: {
+    issuer: "http://localhost:8080", // Auto-discover from /.well-known/openid-configuration
+    clientId: "test-client",
+  },
+});
+```
+
+#### Login Flow
+
+Perform Authorization Code Grant login with automated form submission:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+await using http = await client.http.oidc.createOidcHttpClient({
+  url: "http://localhost:8080",
+  oidc: {
+    issuer: "http://localhost:8080",
+    clientId: "test-client",
+  },
+});
+
+// Login with username/password
+const result = await http.login({
+  type: "authorization_code",
+  username: "testuser",
+  password: "testpass",
+});
+
+if (result.ok) {
+  console.log("Access token:", result.token.accessToken);
+  console.log("Token type:", result.token.tokenType);
+  console.log("Expires in:", result.token.expiresIn);
+} else {
+  console.error("Login failed:", result.error.message);
+}
+```
+
+#### Authenticated Requests
+
+After successful login, the Authorization header is automatically injected into
+all requests:
+
+```typescript
+import { client, expect } from "jsr:@probitas/probitas";
+
+await using http = await client.http.oidc.createOidcHttpClient({
+  url: "http://localhost:8080",
+  oidc: {
+    issuer: "http://localhost:8080",
+    clientId: "test-client",
+  },
+});
+
+const result = await http.login({
+  type: "authorization_code",
+  username: "testuser",
+  password: "testpass",
+});
+
+expect(result.ok).toBe(true);
+
+// Authorization header automatically set
+const res = await http.get("/api/profile");
+expect(res).toBeOk().toHaveJsonMatching({ username: "testuser" });
+
+// Works with all HTTP methods
+await http.post("/api/data", { body: { value: 42 } });
+await http.put("/api/data/1", { body: { value: 100 } });
+```
+
+#### OIDC Discovery
+
+OIDC Discovery (RFC 8414) automatically fetches endpoints from
+`/.well-known/openid-configuration`:
+
+```typescript
+import { client } from "jsr:@probitas/probitas";
+
+// Auto-discovery (recommended)
+await using http1 = await client.http.oidc.createOidcHttpClient({
+  url: "http://localhost:8080",
+  oidc: {
+    issuer: "http://localhost:8080", // Discovers authorization_endpoint and token_endpoint
+    clientId: "test-client",
+  },
+});
+
+// Manual configuration (when discovery isn't available)
+await using http2 = await client.http.oidc.createOidcHttpClient({
+  url: "http://localhost:8080",
+  oidc: {
+    authUrl: "/oauth/authorize",
+    tokenUrl: "/oauth/token",
+    clientId: "test-client",
+    clientSecret: "secret",
+  },
+});
+```
+
+#### Token Management
+
+Access and manage tokens:
+
+```typescript
+import { client } from "jsr:@probitas/probitas";
+
+await using http = await client.http.oidc.createOidcHttpClient({
+  url: "http://localhost:8080",
+  oidc: {
+    issuer: "http://localhost:8080",
+    clientId: "test-client",
+  },
+});
+
+await http.login({
+  type: "authorization_code",
+  username: "testuser",
+  password: "testpass",
+});
+
+// Get current token
+const token = http.getToken();
+if (token) {
+  console.log("Access token:", token.accessToken);
+  console.log("Refresh token:", token.refreshToken);
+}
+
+// Clear authentication
+await http.logout();
+```
+
 ## SQL Clients
 
 Probitas supports multiple SQL databases with a consistent query interface.
@@ -461,7 +607,7 @@ expect(res).toBeOk().toHaveDataMatching({
   user: { name: "Alice" },
 });
 const user =
-  res.data<{ user: { id: string; name: string; email: string } }>()!.user;
+  (res.data() as { user: { id: string; name: string; email: string } }).user;
 ```
 
 ### Mutations
@@ -489,7 +635,7 @@ const res = await graphql.mutation(
 
 expect(res).toBeOk();
 const newUser =
-  res.data<{ createUser: { id: string; name: string } }>()!.createUser;
+  (res.data() as { createUser: { id: string; name: string } }).createUser;
 ```
 
 ### Subscriptions
@@ -516,7 +662,7 @@ for await (const res of subscription) {
   expect(res).toBeOk();
   console.log(
     "New user:",
-    res.data<{ userCreated: { id: string; name: string } }>()!.userCreated,
+    (res.data() as { userCreated: { id: string; name: string } }).userCreated,
   );
 }
 ```
@@ -799,6 +945,7 @@ for (const msg of receiveResult.messages ?? []) {
 | Client     | Factory Function                                                                               | Use Case             |
 | ---------- | ---------------------------------------------------------------------------------------------- | -------------------- |
 | HTTP       | [`client.http.createHttpClient()`](/api/client-http/#createHttpClient)                         | REST APIs, webhooks  |
+| HTTP OIDC  | [`client.http.oidc.createOidcHttpClient()`](/api/client-http/#createOidcHttpClient)            | Authenticated APIs   |
 | PostgreSQL | [`client.sql.postgres.createPostgresClient()`](/api/client-sql-postgres/#createPostgresClient) | PostgreSQL databases |
 | MySQL      | [`client.sql.mysql.createMySqlClient()`](/api/client-sql-mysql/#createMySqlClient)             | MySQL databases      |
 | SQLite     | [`client.sql.sqlite.createSqliteClient()`](/api/client-sql-sqlite/#createSqliteClient)         | Embedded databases   |
