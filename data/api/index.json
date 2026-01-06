@@ -87,7 +87,7 @@
     {
       "name": "client-http",
       "specifier": "@probitas/client-http",
-      "version": "0.7.0",
+      "version": "0.7.1",
       "exportCount": 22,
       "counts": {
         "classes": 5,
@@ -269,7 +269,7 @@
     {
       "name": "probitas",
       "specifier": "@probitas/probitas",
-      "version": "0.18.0",
+      "version": "0.18.1",
       "exportCount": 84,
       "counts": {
         "classes": 6,

@@ -258,23 +258,14 @@ OIDC Discovery (RFC 8414) automatically fetches endpoints from
 ```typescript
 import { client } from "jsr:@probitas/probitas";
 
-// Auto-discovery (recommended)
-await using http1 = await client.http.oidc.createOidcHttpClient({
+await using http = await client.http.oidc.createOidcHttpClient({
   url: "http://localhost:8080",
   oidc: {
     issuer: "http://localhost:8080", // Discovers authorization_endpoint and token_endpoint
     clientId: "test-client",
-  },
-});
-
-// Manual configuration (when discovery isn't available)
-await using http2 = await client.http.oidc.createOidcHttpClient({
-  url: "http://localhost:8080",
-  oidc: {
-    authUrl: "/oauth/authorize",
-    tokenUrl: "/oauth/token",
-    clientId: "test-client",
-    clientSecret: "secret",
+    // Optional: customize redirect URI and scope
+    // redirectUri: "http://localhost/callback",
+    // scope: "openid profile email",
   },
 });
 ```
