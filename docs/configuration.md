@@ -34,6 +34,14 @@ The first file found is used. JSONC files support `//` and `/* */` comments.
   "maxFailures": 0,
   // Default timeout for scenarios
   "timeout": "30s",
+  // Default step options for all scenarios
+  "stepOptions": {
+    "timeout": 30000,
+    "retry": {
+      "maxAttempts": 1,
+      "backoff": "linear"
+    }
+  },
   // Default selectors for filtering scenarios
   "selectors": ["!tag:wip"]
 }
@@ -47,6 +55,7 @@ The first file found is used. JSONC files support `//` and `/* */` comments.
 | `maxConcurrency` | Maximum parallel scenario execution       | unlimited (`0`)                       |
 | `maxFailures`    | Maximum failures before stopping          | unlimited (`0`)                       |
 | `timeout`        | Default timeout for scenarios             | `"30s"`                               |
+| `stepOptions`    | Default step options (timeout, retry)     | See [stepOptions](#stepOptions)       |
 | `selectors`      | Default selectors for filtering scenarios | `[]`                                  |
 
 \*Default exclude patterns:
@@ -69,6 +78,44 @@ Controls when the test runner stops execution:
   "maxFailures": 1
 }
 ```
+
+### stepOptions
+
+Set default timeout and retry behavior for all steps across all scenarios. These
+defaults can be overridden at the scenario level or individual step level.
+
+```jsonc
+{
+  "stepOptions": {
+    // Default timeout for each step in milliseconds
+    "timeout": 30000,
+    // Default retry configuration for transient failures
+    "retry": {
+      // Maximum retry attempts (1 = no retry)
+      "maxAttempts": 3,
+      // Backoff strategy: "linear" or "exponential"
+      "backoff": "exponential"
+    }
+  }
+}
+```
+
+| Option              | Description                                     | Default    |
+| ------------------- | ----------------------------------------------- | ---------- |
+| `timeout`           | Step timeout in milliseconds                    | `30000`    |
+| `retry.maxAttempts` | Maximum retry attempts (1 = no retry)           | `1`        |
+| `retry.backoff`     | Backoff strategy: `"linear"` or `"exponential"` | `"linear"` |
+
+These project-level defaults apply to all scenarios unless overridden. Override
+precedence (highest to lowest):
+
+1. Individual step options (highest priority)
+2. Scenario-level `stepOptions`
+3. Project-level `stepOptions` (this setting)
+4. Framework defaults (lowest priority)
+
+See [Scenario Options](#scenario-options) and [Step Options](#step-options) for
+how to override these defaults.
 
 ### Selectors
 
