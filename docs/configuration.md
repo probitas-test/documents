@@ -20,7 +20,7 @@ The first file found is used. JSONC files support `//` and `/* */` comments.
 
 ### Configuration Options
 
-```jsonc
+```json
 {
   // Glob patterns for scenario file discovery
   "includes": ["probitas/**/*.probitas.ts"],
@@ -72,7 +72,7 @@ Controls when the test runner stops execution:
 - `1`: Fail-fast mode - stop immediately on first failure
 - `n`: Stop after n failures
 
-```jsonc
+```json
 {
   // Fail-fast: stop on first failure
   "maxFailures": 1
@@ -84,7 +84,7 @@ Controls when the test runner stops execution:
 Set default timeout and retry behavior for all steps across all scenarios. These
 defaults can be overridden at the scenario level or individual step level.
 
-```jsonc
+```json
 {
   "stepOptions": {
     // Default timeout for each step in milliseconds

@@ -33,6 +33,7 @@ async function ensureHljs() {
   if (window.hljs) return;
   await loadScript(\`\${HLJS_CDN}/highlight.min.js\`);
   await loadScript(\`\${HLJS_CDN}/languages/typescript.min.js\`);
+  await loadScript(\`\${HLJS_CDN}/languages/json.min.js\`);
 }
 
 function updateHljsTheme(theme) {
