@@ -10,7 +10,6 @@ import {
 } from "../../lib/markdown.ts";
 import { DocLayout, TableOfContents } from "../components.tsx";
 import { Layout } from "../Layout.tsx";
-import { mainScript } from "../scripts.ts";
 
 interface MarkdownDocProps {
   /** Raw markdown content */
@@ -67,7 +66,6 @@ export function MarkdownDoc(
           />
         </div>
       </DocLayout>
-      <script dangerouslySetInnerHTML={{ __html: mainScript }} />
     </Layout>
   );
 }

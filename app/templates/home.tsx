@@ -6,7 +6,6 @@ import { features } from "../../data/features.ts";
 import { loadSampleCodes, type SampleCode } from "../../data/sample_codes.ts";
 import { basePath } from "../lib/path.ts";
 import { HomeLayout } from "./HomeLayout.tsx";
-import { mainScript } from "./scripts.ts";
 
 function CarouselTabs({ sampleCodes }: { sampleCodes: SampleCode[] }) {
   return (
@@ -221,7 +220,6 @@ export async function HomePage() {
       <FeaturesSection />
       <ClientsSection />
       <AiFriendlySection />
-      <script dangerouslySetInnerHTML={{ __html: mainScript }} />
     </HomeLayout>
   );
 }

@@ -17,7 +17,6 @@ import {
 import { basePath } from "../../lib/path.ts";
 import { parseApiMarkdown } from "../../lib/markdown.ts";
 import { Layout } from "../Layout.tsx";
-import { mainScript } from "../scripts.ts";
 import { ApiToc, DocNodeRenderer, PackageSidebar } from "./components.tsx";
 
 // ============================================================================
@@ -59,7 +58,6 @@ export async function ApiIndexPage() {
           </article>
         </main>
       </div>
-      <script dangerouslySetInnerHTML={{ __html: mainScript }} />
     </Layout>
   );
 }
@@ -271,7 +269,6 @@ export async function PackagePage({ packageName }: PackagePageProps) {
           </div>
         </main>
       </div>
-      <script dangerouslySetInnerHTML={{ __html: mainScript }} />
     </Layout>
   );
 }

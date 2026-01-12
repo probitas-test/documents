@@ -107,6 +107,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <SearchModal />
         <ScrollToTop />
         <script src={basePath("/pagefind/pagefind-ui.js")} />
+        <script type="module" src={basePath("/static/client.js")} />
       </body>
     </html>
   );

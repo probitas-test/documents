@@ -4,7 +4,7 @@
 import type { Child } from "hono/jsx";
 import { siteMetadata } from "../../data/docs.ts";
 import { basePath } from "../lib/path.ts";
-import { mainScript, themeInitScript } from "./scripts.ts";
+import { themeInitScript } from "./scripts.ts";
 import { Header } from "../components/Header.js";
 import { SearchModal } from "../components/SearchModal.js";
 import { ScrollToTop } from "../components/ScrollToTop.js";
@@ -145,7 +145,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <SearchModal />
         <ScrollToTop />
         <script src={basePath("/pagefind/pagefind-ui.js")} />
-        <script dangerouslySetInnerHTML={{ __html: mainScript }} />
+        <script type="module" src={basePath("/static/client.js")} />
       </body>
     </html>
   );
