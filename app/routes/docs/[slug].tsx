@@ -42,8 +42,8 @@ export default createRoute(
       filePath,
       docPage.title,
       docPage.path,
-      docPage.description
+      docPage.description,
     );
     return c.html(content);
-  }
+  },
 );

@@ -3,11 +3,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { basePath } from "../../lib/path.ts";
-import {
-  extractTitle,
-  extractToc,
-  parseMarkdown,
-} from "../../lib/markdown.ts";
+import { extractTitle, extractToc, parseMarkdown } from "../../lib/markdown.ts";
 import { DocLayout, TableOfContents } from "../components.tsx";
 import { Layout } from "../Layout.tsx";
 

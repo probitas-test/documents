@@ -30,5 +30,5 @@ export default createRoute(
     const packageName = c.req.param("package");
     const content = await PackagePage({ packageName });
     return c.html(content);
-  }
+  },
 );

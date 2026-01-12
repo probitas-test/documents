@@ -17,7 +17,7 @@ export default createRoute(async (c) => {
     filePath,
     "AI Scenario Testing",
     "/AI",
-    "How to have AI write and run Probitas scenario tests with Claude plugins"
+    "How to have AI write and run Probitas scenario tests with Claude plugins",
   );
   return c.html(content);
 });

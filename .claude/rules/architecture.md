@@ -92,12 +92,14 @@ npm run build
 ```
 
 1. **Client Build**: Builds client.ts → dist/static/client.js
-2. **SSG Build**: HonoX + Vite SSG generates HTML/JSON/Markdown files (Vite automatically copies public/ to dist/)
+2. **SSG Build**: HonoX + Vite SSG generates HTML/JSON/Markdown files (Vite
+   automatically copies public/ to dist/)
 3. **Post-Build**: Renames llms.txt.html → llms.txt, runs Pagefind
 
 ## Client-Side Features
 
-The site includes JavaScript functionality (see `app/client.ts` and `app/templates/scripts.ts`):
+The site includes JavaScript functionality (see `app/client.ts` and
+`app/templates/scripts.ts`):
 
 - **Theme switching**: Light/dark mode with localStorage persistence
 - **Code highlighting**: Dynamic highlight.js loading with theme sync

@@ -15,7 +15,7 @@ import {
 } from "../app/lib/api-docs.js";
 
 // Re-export for convenience
-export type { PackageDoc, PackageInfo, ApiDocsIndex };
+export type { ApiDocsIndex, PackageDoc, PackageInfo };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

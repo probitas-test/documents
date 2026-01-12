@@ -24,25 +24,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: npm
 
-      - run: npm install -g pagefind
+      - run: npm ci
 
-      - run: deno fmt --check
-      - run: deno lint
-      - run: deno task check
-
-      - run: deno task build
-        env:
-          BASE_PATH: /documents
-
-      - run: deno task test
+      - run: npm run build
 
       # Upload artifact for GitHub Pages
       - name: Upload artifact

@@ -10,7 +10,10 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { PackageDoc } from "../data/api-pages.js";
-import { loadPackageDoc as loadPkg, getPackageGroups } from "../data/api-pages.js";
+import {
+  getPackageGroups,
+  loadPackageDoc as loadPkg,
+} from "../data/api-pages.js";
 import { generateApiMarkdown } from "./lib/api-markdown.js";
 import { rewriteMarkdownLinks } from "./lib/markdown.js";
 import { generateLlmsTxt } from "./lib/llms.js";
