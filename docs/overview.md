@@ -99,6 +99,9 @@ probitas run -s tag:example
 
 # Run with different reporter
 probitas run --reporter json
+
+# Re-run only failed scenarios from previous run
+probitas run --failed
 ```
 
 ## Code Quality Commands

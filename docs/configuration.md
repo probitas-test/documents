@@ -156,6 +156,108 @@ probitas run --max-failures 1
 probitas run -s tag:smoke
 ```
 
+## Re-running Failed Scenarios
+
+Use the `--failed` (`-F`) flag to re-run only scenarios that failed in the
+previous run. This is useful for iterating on failing tests without waiting for
+all scenarios to complete.
+
+```bash
+# Run all scenarios
+probitas run
+
+# Re-run only scenarios that failed
+probitas run --failed
+
+# Short form
+probitas run -F
+```
+
+### How It Works
+
+1. After each `probitas run`, the CLI saves the list of failed scenarios to
+   `.probitas/last-run.json`
+2. When `--failed` is specified, only scenarios matching the saved list are
+   executed
+3. The filter is applied after selectors (AND logic)
+
+```bash
+# Run failed scenarios that also have @api tag
+probitas run -F -s tag:api
+
+# Run failed scenarios excluding @slow tag
+probitas run -F -s "!tag:slow"
+```
+
+### State File
+
+The `.probitas/` directory contains machine-specific state and should be added
+to `.gitignore`:
+
+```gitignore
+# Probitas state directory
+.probitas/
+```
+
+The state file (`last-run.json`) contains:
+
+- Schema version for forward compatibility
+- Timestamp of when the run completed
+- List of failed scenarios (name, file path, and error message)
+
+## Unknown Argument Detection
+
+Probitas CLI provides helpful error messages when you use unknown options. This
+helps catch typos and guides you toward the correct syntax.
+
+### Common Mistakes
+
+The CLI recognizes common mistakes and provides contextual hints:
+
+```bash
+# Mistake: --tag instead of -s "tag:value"
+$ probitas run --tag api
+Unknown option: --tag
+Did you mean '-s "tag:api"'? Use the selector option to filter by tag.
+
+# Mistake: --name instead of -s "name:value"
+$ probitas run --name Login
+Unknown option: --name
+Did you mean '-s "name:Login"'? Use the selector option to filter by name.
+
+# Mistake: --filter instead of -s
+$ probitas run --filter smoke
+Unknown option: --filter
+Did you mean '-s "smoke"'? Use the selector option to filter scenarios.
+```
+
+### Typo Detection
+
+For other unknown options, the CLI suggests similar known options using
+Levenshtein distance:
+
+```bash
+# Typo: --verbos instead of --verbose
+$ probitas run --verbos
+Unknown option: --verbos
+Did you mean '--verbose'?
+
+# Typo: --time-out instead of --timeout
+$ probitas run --time-out 10s
+Unknown option: --time-out
+Did you mean '--timeout'?
+```
+
+### Fallback Help
+
+When no similar option is found, you'll be directed to the help command:
+
+```bash
+$ probitas run --unknown-flag
+Unknown option: --unknown-flag
+Run 'probitas run --help' for available options.
+```
+
 ## Scenario Options
 
 Configure scenarios using the options parameter of
